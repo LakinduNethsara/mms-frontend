@@ -1,0 +1,39 @@
+.back-button-div {
+    text-align: right;
+    margin-bottom: 10px;
+    position: sticky;
+  }
+.ar-medical-table-head{
+    background-color: #ffffff;
+    position: sticky;
+    top: 65px;
+    z-index: 1;
+}
+
+.dataTable {
+  text-align: center;
+}
+
+
+.yearSelection {
+  padding: 8px; /* Add padding to the select box */
+  font-size: 16px; /* Set the font size */
+  border: 1px solid #ccc; /* Add border */
+  border-radius: 10px; /* Add border radius */
+  width: 200px; /* Set width */
+  background-color: #f9f9f9; /* Set background color */
+  color: #333; /* Set text color */
+}
+
+/* Styling the options within the select element */
+.selectionOptions {
+  padding: 8px; /* Add padding to the options */
+  font-size: 16px; /* Set the font size */
+  background-color: #fff; /* Set background color */
+  color: #333; /* Set text color */
+}
+
+/* Styling the select element when hovered */
+.yearSelection:hover {
+  border-color: #999; /* Change border color on hover */
+}
