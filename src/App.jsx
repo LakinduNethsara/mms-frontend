@@ -25,6 +25,7 @@ import DeanFinalMarkSheet from './components/common/DeanFinalMarkSheet';
 import StudentmedicalView from './pages/Users/Students/StudentMedicalView/StudentMedicalView';
 import StudentViewEligibility from './pages/Users/Students/StudentViewEligibility/StudentViewEligibility';
 import StudentWithHeldSubjects from './pages/Users/Students/StudentWithHeldSubjects/StudentWithHeldSubjects';
+import StudentMarkSheetList from './pages/Users/Students/StudentMarkSheetList/StudentMarkSheetList';
 
 
 function App() {
@@ -64,6 +65,7 @@ function App() {
             <Route exact path="/studentMedicalView" component={StudentmedicalView} />           {/* Student Medical View */}
             <Route exact path="/studentEligibilityView" component={StudentViewEligibility} />       {/* Student Eligibility View */}
             <Route exact path="/studentViewWithHeldSubjects" component={StudentWithHeldSubjects} />    {/* Student View With Held Subjects */}
+            <Route exact path="/StudentViewMarkSheetList" component={StudentMarkSheetList} />
             {/* Student navigations ends here ---------------------------------------------*/}
 
 
