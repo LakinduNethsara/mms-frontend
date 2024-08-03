@@ -13,6 +13,8 @@ import VCProfile from './components/Users/VC/VCProfile';
 import StudentProfile from './components/Users/Students/StudentProfile';
 import LecturerProfile from './components/Users/Lecturer/LecturerProfile';
 import CourseCard from './components/common/CourseCard';
+import HODMarksReturnSheet from './components/common/HODMarksReturnSheet';
+import MarksCheckingForm from './components/common/MarksCheckingForm';
 
 function App() {
   return (
@@ -40,6 +42,16 @@ function App() {
             <Route exact path="/CourseCard/:level/:semester/:department" 
               render={(props) => <CourseCard {...props} approved_level={"lecturer"} />} 
             />
+            <Route exact path="/HODMarksReturnSheet/:course_id/:course_name/:department" 
+              render={(props) => <HODMarksReturnSheet {...props}  approved_level={"lecturer"} />} 
+            />
+
+            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level" 
+              render={() => <MarksCheckingForm/>} 
+            />
+           
+
+
 
             {/* Catch-all route */}
             {/* <Route path="*" component={NotFoundPage} /> */}
