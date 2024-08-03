@@ -13,6 +13,7 @@ import VCProfile from './components/Users/VC/VCProfile';
 import StudentProfile from './components/Users/Students/StudentProfile';
 import LecturerProfile from './components/Users/Lecturer/LecturerProfile';
 import CourseCard from './components/common/CourseCard';
+import HomePageAR from './pages/Users/AR/HomePage/HomePageAR';
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
             <Route exact path="/admin_profile" component={AdminProfile} />
             <Route exact path="/dean_profile" component={DeanProfile} />
             <Route exact path="/hod_profile" component={HODProfile} />
-            <Route exact path="/ar_profile" component={ARProfile} />
+            <Route exact path="/ar_profile" component={HomePageAR} />
             <Route exact path="/vc_profile" component={VCProfile} />
             <Route exact path="/st_profile" component={StudentProfile} />
             <Route exact path="/lec_profile" component={LecturerProfile} />
