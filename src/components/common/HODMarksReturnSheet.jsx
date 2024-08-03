@@ -115,8 +115,22 @@ export default function HODMarksReturnSheet(props) {
     });
     ;
 
+    const [user, setUser] = useState({
+        
+    });
+
+    const storedData = localStorage.getItem('user');
+    useEffect(() => {
+        if(storedData){
+            setUser(JSON.parse(storedData));
+        }else{
+            setUser(null);
+        }
+    }, []);
     // const { oktaAuth, authState } = useOktaAuth();
-    // const userNameAuth = authState?.idToken?.claims.preferred_username;
+     const userNameAuth = user?.userName;
+
+     console.log(userNameAuth)
 
     
     
