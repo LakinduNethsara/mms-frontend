@@ -22,6 +22,8 @@ import HODMarksReturnSheet from './components/common/HODMarksReturnSheet';
 import MarksCheckingForm from './components/common/MarksCheckingForm';
 import CertifyMarksheet from './components/common/CertifyMarksheet';
 import DeanFinalMarkSheet from './components/common/DeanFinalMarkSheet';
+import StudentmedicalView from './pages/Users/Students/StudentMedicalView/StudentMedicalView';
+import StudentViewEligibility from './pages/Users/Students/StudentViewEligibility/StudentViewEligibility';
 
 
 function App() {
@@ -61,7 +63,8 @@ function App() {
             {/* Student navigations starts here ---------------------------------------------*/}
 
             <Route exact path="/st_profile" component={HomePageStudent} />
-
+            <Route exact path="/studentMedicalView" component={StudentmedicalView} />
+            <Route exact path="/studentEligibilityView" component={StudentViewEligibility} />
             {/* Student navigations ends here ---------------------------------------------*/}
 
 
