@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useState, useEffect } from 'react';
-import { fetchAcademicYear, saveAcademicYearToLocal, loadAcademicYearFromLocal } from '../../../services/academicYearService';
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../components/common/AcademicYearManagerSingleton';
 
 export default function HODProfile() {
 
@@ -10,6 +10,8 @@ export default function HODProfile() {
     const[academicYear,setAcademicYear]=useState("")
 
   const levels =[1,2,3,4]
+
+  
 
   useEffect(() => {
     const fetchAndSaveYear = async () => {
@@ -24,13 +26,17 @@ export default function HODProfile() {
 }, []);
 
 useEffect(() => {
+  setAcademicYear("2023-2024");
+  setCurrent_semester("1");
     if (academicDetails) { // Check if academicDetails is not null or undefined
-        setAcademicYear(academicDetails.current_academic_year);
-        setCurrent_semester(academicDetails.current_semester);
+        // setAcademicYear(academicDetails.current_academic_year);
+        // setCurrent_semester(academicDetails.current_semester);
+        setAcademicYear("2023-2024");
+        setCurrent_semester("1");
     }
 }, [academicDetails]); // Depend on academicDetails to trigger this effect
 
-
+console.log(academicDetails)
    const [user, setUser] = useState({
         
     });
@@ -44,11 +50,11 @@ useEffect(() => {
         }
     }, []);
     
-     const userNameAuth = user?.userName;
+     const userNameAuth = user?.full_name;
 
-     console.log(userNameAuth)
-    const department = user?.department;
-
+    const department = user?.department_id;
+   
+    console.log(userNameAuth,department,current_semester,academicYear)
 
 
 
@@ -56,20 +62,20 @@ useEffect(() => {
     <>
         
           
-          {levels.map((level, index) => {
+          {levels.map((level, index) => (
         
                       <>
 
                         <div className="col mb-4"> 
                             <div className="card text-center functionCard">
                             <div className="card-body">
-                                <a href={`/CourseCard/${level}/${current_semester}/${department}`} className="btn btn-primary home-page-class-button">Level {level} Sem {semester}</a>
+                                <a href={`/CourseCard/${level}/${current_semester}/${department}`} className="btn btn-primary home-page-class-button">Level {level} Sem {current_semester}</a>
                             </div>
                             </div>
                         </div>
                       </>
                     
-             })}
+             ))}
 
           <div className="col mb-4"> 
             <div className="card text-center functionCard">

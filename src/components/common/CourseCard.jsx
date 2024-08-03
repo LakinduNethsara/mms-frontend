@@ -1,8 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../services/academicYearService';
-import Navbar from './Navbar';
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../common/AcademicYearManagerSingleton'
 
 export default function CourseCard(props) {
 
@@ -21,8 +20,29 @@ export default function CourseCard(props) {
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const[academicYear,setAcademicYear]=useState("")
 
+    useEffect(() => {
+        const fetchAndSaveYear = async () => {
+            const details = await fetchAcademicYear();
+            if (details) {
+                saveAcademicYearToLocal(details);
+                setAcademicDetails(details);
+            }
+        };
+
+        fetchAndSaveYear();
+    }, []);
+
+    useEffect(() => {
+        if (academicDetails) { // Check if academicDetails is not null or undefined
+            setAcademicYear(academicDetails.current_academic_year);
+            setCurrent_semester(academicDetails.current_semester);
+        }
+    }, [academicDetails]); // Depend on academicDetails to trigger this effect
+
 
     console.log(level,semester,department,approved_level,academicYear)
+
+
    
   
     const result = async () => {
@@ -91,7 +111,7 @@ export default function CourseCard(props) {
        return (
         <>
            <div className="row" style={{marginTop:"70px", padding:"2%"}}>
-            <Navbar/>
+           
              {
                cidN && cidN.length > 0 ? (
                  cidN.map((courseInfo, index) => (
