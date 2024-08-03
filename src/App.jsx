@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Navbar from './components/common/Navbar';
 import LoginPage from './components/auth/LoginPage';
 import FooterComponent from './components/common/Footer';
@@ -12,38 +12,43 @@ import HODProfile from './components/Users/HOD/HODProfile';
 import VCProfile from './components/Users/VC/VCProfile';
 import StudentProfile from './components/Users/Students/StudentProfile';
 import LecturerProfile from './components/Users/Lecturer/LecturerProfile';
-
+import CourseCard from './components/common/CourseCard';
 
 function App() {
-
   return (
-    <BrowserRouter>
+    <Router>
       <div className="App">
         <Navbar />
         <div className="content">
-          <Routes>
-            <Route exact path="/" element={<LoginPage />} />
-            <Route exact path="/login" element={<LoginPage />} />
+          <Switch>
+            <Route exact path="/" component={LoginPage} />
+            <Route exact path="/login" component={LoginPage} />
             
-            {/* user landing pages routes begin */}
-            <Route exact path="/system_analyst_profile" element={<SAProfile />} />
-            <Route exact path="/cc_profile" element={<CCProfile />} />
-            <Route exact path="/admin_profile" element={<AdminProfile />} />
-            <Route exact path="/dean_profile" element={<DeanProfile />} />
-            <Route exact path="/hod_profile" element={<HODProfile/>} />
-            <Route exact path="/ar_profile" element={<ARProfile />} />
-            <Route exact path="/vc_profile" element={<VCProfile />} />
-            <Route exact path="/st_profile" element={<StudentProfile />} />
-            <Route exact path="/lec_profile" element={<LecturerProfile />} />
-            {/* user landing pages routes end */}
+            {/* User landing pages routes begin */}
+            <Route exact path="/system_analyst_profile" component={SAProfile} />
+            <Route exact path="/cc_profile" component={CCProfile} />
+            <Route exact path="/admin_profile" component={AdminProfile} />
+            <Route exact path="/dean_profile" component={DeanProfile} />
+            <Route exact path="/hod_profile" component={HODProfile} />
+            <Route exact path="/ar_profile" component={ARProfile} />
+            <Route exact path="/vc_profile" component={VCProfile} />
+            <Route exact path="/st_profile" component={StudentProfile} />
+            <Route exact path="/lec_profile" component={LecturerProfile} />
+            {/* User landing pages routes end */}
 
-            <Route path="*" element={<Navigate to="/login" />} />
-          </Routes>
+            {/* Marks Return Sheets Routes */}
+            <Route exact path="/CourseCard/:level/:semester/:department" 
+              render={(props) => <CourseCard {...props} approved_level={"lecturer"} />} 
+            />
+
+            {/* Catch-all route */}
+            {/* <Route path="*" component={NotFoundPage} /> */}
+          </Switch>
         </div>
         <FooterComponent />
       </div>
-    </BrowserRouter>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;

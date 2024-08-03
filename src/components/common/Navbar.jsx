@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { IoMenuSharp } from 'react-icons/io5';
-import { Link } from 'react-router-dom';
 
 function Navbar() {
     const [user, setUser] = useState({
@@ -32,7 +31,7 @@ function Navbar() {
                     &nbsp;&nbsp;Faculty of Technology | UOR
                 </a>
                 {
-                    user != null?<Link type="button" onClick={logout} className="btn btn-outline-dark btn-sm" style={{widows:"100px"}}>LOGOUT</Link>:null
+                    user != null?<button type="button" onClick={logout} className="btn btn-outline-dark btn-sm" style={{widows:"100px"}}>LOGOUT</button>:null
                 }
                 
             </div>
