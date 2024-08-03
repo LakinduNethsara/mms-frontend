@@ -33,6 +33,7 @@ export default function CourseCard(props) {
     }, []);
 
     useEffect(() => {
+      setAcademicYear("2023-2024");
         if (academicDetails) { // Check if academicDetails is not null or undefined
             setAcademicYear(academicDetails.current_academic_year);
             setCurrent_semester(academicDetails.current_semester);
