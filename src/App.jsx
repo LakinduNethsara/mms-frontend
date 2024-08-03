@@ -24,6 +24,7 @@ import CertifyMarksheet from './components/common/CertifyMarksheet';
 import DeanFinalMarkSheet from './components/common/DeanFinalMarkSheet';
 import StudentmedicalView from './pages/Users/Students/StudentMedicalView/StudentMedicalView';
 import StudentViewEligibility from './pages/Users/Students/StudentViewEligibility/StudentViewEligibility';
+import StudentWithHeldSubjects from './pages/Users/Students/StudentWithHeldSubjects/StudentWithHeldSubjects';
 
 
 function App() {
@@ -46,8 +47,6 @@ function App() {
 
 
             {/* AR navigations starts here ---------------------------------------------*/}
-
-
               <Route exact path="/ar_profile" component={HomePageAR} />           {/* AR Home Page */}
               <Route exact path="/viewMedicals" component={ViewMedicalPage} />
 
@@ -61,10 +60,10 @@ function App() {
 
 
             {/* Student navigations starts here ---------------------------------------------*/}
-
-            <Route exact path="/st_profile" component={HomePageStudent} />
-            <Route exact path="/studentMedicalView" component={StudentmedicalView} />
-            <Route exact path="/studentEligibilityView" component={StudentViewEligibility} />
+            <Route exact path="/st_profile" component={HomePageStudent} />                      {/* Student Home Page */}
+            <Route exact path="/studentMedicalView" component={StudentmedicalView} />           {/* Student Medical View */}
+            <Route exact path="/studentEligibilityView" component={StudentViewEligibility} />       {/* Student Eligibility View */}
+            <Route exact path="/studentViewWithHeldSubjects" component={StudentWithHeldSubjects} />    {/* Student View With Held Subjects */}
             {/* Student navigations ends here ---------------------------------------------*/}
 
 
