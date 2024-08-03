@@ -89,6 +89,7 @@ export default function StudentmedicalView() {
         if(user != null){
             setStudentEmail(user.email);
         }
+        
         loadStudentDetails();
         getAllMedicalSubmissions(selectedOption);       //get medicals for all years
 

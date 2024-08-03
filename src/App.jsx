@@ -26,6 +26,8 @@ import StudentmedicalView from './pages/Users/Students/StudentMedicalView/Studen
 import StudentViewEligibility from './pages/Users/Students/StudentViewEligibility/StudentViewEligibility';
 import StudentWithHeldSubjects from './pages/Users/Students/StudentWithHeldSubjects/StudentWithHeldSubjects';
 import StudentMarkSheetList from './pages/Users/Students/StudentMarkSheetList/StudentMarkSheetList';
+import StudentMarkSheetView from './pages/Users/Students/StudentMarksheetView/StudentMarkSheetView';
+import StudentViewCourseDetails from './pages/Users/Students/StudentViewCourseDetails/StudentViewCourseDetails';
 
 
 function App() {
@@ -65,7 +67,9 @@ function App() {
             <Route exact path="/studentMedicalView" component={StudentmedicalView} />           {/* Student Medical View */}
             <Route exact path="/studentEligibilityView" component={StudentViewEligibility} />       {/* Student Eligibility View */}
             <Route exact path="/studentViewWithHeldSubjects" component={StudentWithHeldSubjects} />    {/* Student View With Held Subjects */}
-            <Route exact path="/StudentViewMarkSheetList" component={StudentMarkSheetList} />
+            <Route exact path="/StudentViewMarkSheetList" component={StudentMarkSheetList} />           {/* Student View Mark Sheet List */}
+            <Route exact path="/viewPublishedMarksSheet" component={StudentMarkSheetView} />            {/* Student View Published Marks Sheet */}
+            <Route exact path="/studentViewCourseDetails" component={StudentViewCourseDetails} />
             {/* Student navigations ends here ---------------------------------------------*/}
 
 
