@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useHistory, useParams } from 'react-router-dom';
-import SignatureForApproval from '../../Components/SignatureForApproval';
-import { useOktaAuth } from '@okta/okta-react';
-import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../AcademicYearManagerSingleton';
+import SignatureForApproval from './SignatureForApproval';
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from './AcademicYearManagerSingleton';
 import DateObject from 'react-date-object';
 
 export default function DeanFinalMarkSheet(props) {
@@ -18,7 +17,6 @@ export default function DeanFinalMarkSheet(props) {
   const { approved_level } = props;
   const [newSignature, setNewSignature] = useState();
   const [nextApprovedlevel, setNextApprovedlevel] = useState("");
-  const { oktaAuth, authState } = useOktaAuth();
   const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
   const [academicYear, setAcademicYear] = useState("");
   const[Allcourses,setAllCourses]=useState([]);
@@ -36,7 +34,7 @@ export default function DeanFinalMarkSheet(props) {
       }
   }, []);
   // const { oktaAuth, authState } = useOktaAuth();
-   const userNameAuth = user?.userName;
+   const userNameAuth = user?.full_name;
 
    console.log(userNameAuth)
 
