@@ -1,0 +1,45 @@
+
+.functionCard {
+    background-color: rgb(245, 245, 245);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.5s ease,color 0.2s ease, background-color 0.5s ease;;
+    color: black;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    width: 19rem;
+}
+
+.functionCard:hover {
+    transform: scale(1.05); /* Increase size on hover */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+    background-color: rgb(162, 158, 173);
+    color: white;
+  }
+
+  .home-page-class-button {
+    width: 150px;
+    border-radius: 10px;
+  }
+
+.functionCardContainer {
+    margin-top: 100px;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.marksheet-select-box-button {
+  background-color:#0d6efd; 
+  color:white;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  width:auto;
+}
+
+select option {
+  background-color: rgb(255, 255, 255);
+  color: black;
+}
+

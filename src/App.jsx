@@ -13,10 +13,16 @@ import VCProfile from './components/Users/VC/VCProfile';
 import StudentProfile from './components/Users/Students/StudentProfile';
 import LecturerProfile from './components/Users/Lecturer/LecturerProfile';
 import CourseCard from './components/common/CourseCard';
+
+import HomePageAR from './pages/Users/AR/HomePage/HomePageAR';
+import ViewMedicalPage from './pages/Users/AR/ViewMedicalTablePage/ViewMedicalPage';
+import HomePageStudent from './pages/Users/Students/HomePageStudent/HomePageStudent';
+
 import HODMarksReturnSheet from './components/common/HODMarksReturnSheet';
 import MarksCheckingForm from './components/common/MarksCheckingForm';
 import CertifyMarksheet from './components/common/CertifyMarksheet';
 import DeanFinalMarkSheet from './components/common/DeanFinalMarkSheet';
+
 
 function App() {
   return (
@@ -34,9 +40,34 @@ function App() {
             <Route exact path="/admin_profile" component={AdminProfile} />
             <Route exact path="/dean_profile" component={DeanProfile} />
             <Route exact path="/hod_profile" component={HODProfile} />
-            <Route exact path="/ar_profile" component={ARProfile} />
+
+
+
+            {/* AR navigations starts here ---------------------------------------------*/}
+
+
+              <Route exact path="/ar_profile" component={HomePageAR} />           {/* AR Home Page */}
+              <Route exact path="/viewMedicals" component={ViewMedicalPage} />
+
+            {/* AR navigations ends here ---------------------------------------------*/}
+
+
+
             <Route exact path="/vc_profile" component={VCProfile} />
-            <Route exact path="/st_profile" component={StudentProfile} />
+
+
+
+
+            {/* Student navigations starts here ---------------------------------------------*/}
+
+            <Route exact path="/st_profile" component={HomePageStudent} />
+
+            {/* Student navigations ends here ---------------------------------------------*/}
+
+
+
+
+
             <Route exact path="/lec_profile" component={LecturerProfile} />
             {/* User landing pages routes end */}
 
