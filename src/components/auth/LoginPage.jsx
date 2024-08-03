@@ -8,7 +8,7 @@ function LoginPage(){
 
     useEffect(() => {
         const typed = new Typed(el.current, {
-            strings: ["MARKING MANAGEMENT SYSTEM", "FACULTY OF TECHNOLOGY", "UNIVERSITY OF RUHUNA"],
+            strings: ["MARKS MANAGEMENT SYSTEM", "FACULTY OF TECHNOLOGY", "UNIVERSITY OF RUHUNA"],
             typeSpeed: 30,
             loop: true,
             loopCount: Infinity,
@@ -38,7 +38,20 @@ function LoginPage(){
                 window.location.href = "/cc_profile";
             }else if(response.data.content.role === "system_analyst"){
                 window.location.href = "/system_analyst_profile";
-            }else{
+            }else if(response.data.content.role === "dean"){
+                window.location.href = "/dean_profile";
+            }else if(response.data.content.role === "hod"){
+                window.location.href = "/hod_profile";
+            }else if(response.data.content.role === "ar"){
+                window.location.href = "/ar_profile";
+            }else if(response.data.content.role === "vc"){
+                window.location.href = "/vc_profile";
+            }else if(response.data.content.role === "student"){
+                window.location.href = "/st_profile";
+            }else if(response.data.content.role === "lectuer"){
+                window.location.href = "/lec_profile";
+            }
+            else{
                 window.location.href = "/";
             }
         }catch(error){
