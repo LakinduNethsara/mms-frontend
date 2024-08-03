@@ -5,13 +5,6 @@ import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
-import { green } from '@mui/material/colors';
-import { NavebarHOD } from './NavebarHOD';
-import NavBarCC from '../CourseCoordinator/NavBarCC';
-import { NavebarDean } from '../Dean/NavebarDean';
-import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
-import { useOktaAuth } from "@okta/okta-react";
-
 
 
 export default function MarksCheckingForm() {
@@ -19,10 +12,21 @@ export default function MarksCheckingForm() {
   const [text, setText] = useState('');
   const[noData,setNoData]=useState('')
   const [calculations, setCalculations] = useState([]);
-  const { oktaAuth, authState } = useOktaAuth();
   const[updatebtn,setEnableupdatebtn]=useState(false);
 
+  const [user, setUser] = useState({
+        
+  });
 
+  const storedData = localStorage.getItem('user');
+  useEffect(() => {
+      if(storedData){
+          setUser(JSON.parse(storedData));
+      }else{
+          setUser(null);
+      }
+  }, []);
+   const userNameAuth = user?.full_name;
 
   const [attendanceEligibility, setAttendenceEligibility] = useState({
     id: "",
@@ -176,12 +180,7 @@ console.log(ele.end)
   return (
     <>
       <ToastContainer />
-      {
-                authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
-                authState?.accessToken?.claims.userType == "course_coordinator" ? <NavBarCC/> :
-                authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
-                authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : null
-      }
+      
       <div className=' bg-white' style={{marginTop:"70px"}}>
       <h2 style={{marginLeft:"30px"}}>{student_id} {ele.student_name}</h2>
       <h3 style={{marginLeft:"30px"}}>{course_id} {course_name}</h3>

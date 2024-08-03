@@ -3,32 +3,16 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import { NavebarHOD } from './NavebarHOD';
-import SignatureCanvas from 'react-signature-canvas';
-import { useDropzone } from 'react-dropzone';
-import { NavebarAR } from '../Components/AR/NavBarAR/NavebarAR';
 
-import { useOktaAuth } from "@okta/okta-react";
-import { NavebarDean } from '../Dean/NavebarDean';
-import NavBarCC from '../CourseCoordinator/NavBarCC';
-import SignatureForApproval from '../Components/SignatureForApproval';
-import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../AcademicYearManagerSingleton';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import SignatureForApproval from '../common/SignatureForApproval';
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../common/AcademicYearManagerSingleton';
 import { ToastContainer } from 'react-toastify';
-import { wait } from '@testing-library/user-event/dist/utils';
 import DateObject from 'react-date-object';
-import { Navebar } from '../../Lecture/layouts/NavbarAndFooter/Navebar';
 import toastr from 'toastr';
 
 
 
 export default function HODMarksReturnSheet(props) {
-    const [marks, setMarks] = useState([]);
-    const [evaluationCriteria, setEvaluationCriteria] = useState([]);
-    const [calculations, setCalculations] = useState([]);
-    const [studentList, setStudentList] = useState([]);
-    const[grade, setGrade] = useState([]);
     const [noData, setNoData] = useState(false); // State to indicate if there is no data to display
     const { course_id, course_name,department } = useParams();
     const {approved_level}=props;
@@ -62,6 +46,7 @@ export default function HODMarksReturnSheet(props) {
     }, []);
 
     useEffect(() => {
+        setAcademicYear("2023-2024")
         if (academicDetails) { // Check if academicDetails is not null or undefined
             setAcademicYear(academicDetails.current_academic_year);
             setCurrent_semester(academicDetails.current_semester);
@@ -128,7 +113,7 @@ export default function HODMarksReturnSheet(props) {
         }
     }, []);
     // const { oktaAuth, authState } = useOktaAuth();
-     const userNameAuth = user?.userName;
+     const userNameAuth = user?.full_name;
 
      console.log(userNameAuth)
 
@@ -313,7 +298,7 @@ useEffect(() => {
 
         
         try {
-            
+            console.log(Returnapproval)
             const response = await axios.post(`http://localhost:9090/api/approvalLevel/return`,Returnapproval);
             if (response.status === 200) {
                 console.log("Marks Sheet Return successfully");
@@ -389,7 +374,6 @@ useEffect(() => {
       }
 
 
-console.log(authState?.accessToken?.claims.userType);
 
 
 
@@ -402,14 +386,7 @@ console.log(authState?.accessToken?.claims.userType);
         <>
             <ToastContainer/>
            
-            {/* <NavebarHOD /> */}
-            {
-                authState?.accessToken?.claims.userType == "HOD" ? <NavebarHOD/> : 
-                authState?.accessToken?.claims.userType == "course_coordinator" ? <NavBarCC/> :
-                authState?.accessToken?.claims.userType == "dean" ? <NavebarDean/>:
-                authState?.accessToken?.claims.userType == "ar" ? <NavebarAR/> : 
-                authState?.accessToken?.claims.userType == "lecture" ? <Navebar/> : null
-            }
+          
             
             
             {loading ? (

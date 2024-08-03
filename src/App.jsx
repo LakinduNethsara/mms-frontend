@@ -13,9 +13,16 @@ import VCProfile from './components/Users/VC/VCProfile';
 import StudentProfile from './components/Users/Students/StudentProfile';
 import LecturerProfile from './components/Users/Lecturer/LecturerProfile';
 import CourseCard from './components/common/CourseCard';
+
 import HomePageAR from './pages/Users/AR/HomePage/HomePageAR';
 import ViewMedicalPage from './pages/Users/AR/ViewMedicalTablePage/ViewMedicalPage';
 import HomePageStudent from './pages/Users/Students/HomePageStudent/HomePageStudent';
+
+import HODMarksReturnSheet from './components/common/HODMarksReturnSheet';
+import MarksCheckingForm from './components/common/MarksCheckingForm';
+import CertifyMarksheet from './components/common/CertifyMarksheet';
+import DeanFinalMarkSheet from './components/common/DeanFinalMarkSheet';
+
 
 function App() {
   return (
@@ -68,6 +75,39 @@ function App() {
             <Route exact path="/CourseCard/:level/:semester/:department" 
               render={(props) => <CourseCard {...props} approved_level={"lecturer"} />} 
             />
+            <Route exact path="/HODMarksReturnSheet/:course_id/:course_name/:department" 
+              render={(props) => <HODMarksReturnSheet {...props}  approved_level={"lecturer"} />} 
+            />
+            <Route exact path="/ccMarksReturnSheet/:course_id/:course_name/:department" 
+              render={(props) => <HODMarksReturnSheet {...props}  approved_level={"finalized"} />} 
+            />
+            <Route exact path="/lMarksReturnSheet/:course_id/:course_name/:department" 
+              render={(props) => <HODMarksReturnSheet {...props}  approved_level={"course_coordinator"} />} 
+            />
+
+            <Route exact path="/deanFinalMarkSheet/:level/:semester/:dept" 
+              render={(props) => <DeanFinalMarkSheet {...props}  approved_level={"AR"} />} 
+            />
+            <Route exact path="/vcFinalMarkSheet/:level/:semester/:dept" 
+              render={(props) => <DeanFinalMarkSheet {...props}  approved_level={"Dean"} />} 
+            />
+
+            <Route exact path="/pendingDeanCertifyMarksheet" 
+              render={(props) => <CertifyMarksheet {...props}  approved_level={"AR"}/>} 
+            />
+            <Route exact path="/pendingVCCertifyMarksheet" 
+              render={(props) => <CertifyMarksheet {...props}  approved_level={"Dean"}/>} 
+            />
+            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level" 
+              render={() => <MarksCheckingForm/>} 
+            />
+
+            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level" 
+              render={() => <MarksCheckingForm/>} 
+            />
+           
+
+
 
             {/* Catch-all route */}
             {/* <Route path="*" component={NotFoundPage} /> */}
