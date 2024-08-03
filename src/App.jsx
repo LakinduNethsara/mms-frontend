@@ -22,6 +22,8 @@ import HODMarksReturnSheet from './components/common/HODMarksReturnSheet';
 import MarksCheckingForm from './components/common/MarksCheckingForm';
 import CertifyMarksheet from './components/common/CertifyMarksheet';
 import DeanFinalMarkSheet from './components/common/DeanFinalMarkSheet';
+import AddCAMarksByLec from './pages/Users/Lecturer/AddCAMarksByLec';
+import LecRelatedCourses from './components/Users/Lecturer/LecRelatedCourses';
 
 
 function App() {
@@ -108,6 +110,13 @@ function App() {
            
 
 
+            {/* Lecturer Profile */}
+            <Route path="/lec_related_course">
+              <LecRelatedCourses />
+            </Route>
+            <Route path="/ca_addby_lec/:course_id/:course_name">
+              <AddCAMarksByLec/>
+            </Route>
 
             {/* Catch-all route */}
             {/* <Route path="*" component={NotFoundPage} /> */}
