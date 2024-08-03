@@ -1,29 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { IoMenuSharp } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
-import UserService from '../service/UserService';
 
 function Navbar() {
-    const isAuthenticated = UserService.isAuthenticated();
-    const isAdmin = UserService.isAdmin();
+    const [user, setUser] = useState({
+        
+    });
 
-
-
-    const handleLogout = () => {
-        const confirmDelete = window.confirm('Are you sure you want to logout this user?');
-        if (confirmDelete) {
-            UserService.logout();
+    const storedData = localStorage.getItem('user');
+    useEffect(() => {
+        if(storedData){
+            setUser(JSON.parse(storedData));
+        }else{
+            setUser(null);
         }
-    };
+    }, []);
 
+    const logout = () => {
+        localStorage.removeItem('user');
+        window.location.href="/";
+    }
 
     return (
-        <nav>
-            <ul>
-                {!isAuthenticated && <li><Link to="/">Phegon Dev</Link></li>}
-                {isAuthenticated && <li><Link to="/profile">Profile</Link></li>}
-                {isAdmin && <li><Link to="/admin/user-management">User Management</Link></li>}
-                {isAuthenticated && <li><Link to="/" onClick={handleLogout}>Logout</Link></li>}
-            </ul>
+        <nav className="navbar bg-body-tertiary">
+            <div className="container-fluid">
+                {
+                    user != null ? <IoMenuSharp size="35"/>:null
+                }
+                <a className="navbar-brand" href="#">
+                    <img src="src/assets/LOGO_OF_RUHUNA-removebg-preview.png" alt="Logo" width="17" height="24" className="d-inline-block align-text-top"/>
+                    &nbsp;&nbsp;Faculty of Technology | UOR
+                </a>
+                {
+                    user != null?<Link type="button" onClick={logout} className="btn btn-outline-dark btn-sm" style={{widows:"100px"}}>LOGOUT</Link>:null
+                }
+                
+            </div>
         </nav>
     );
 }
