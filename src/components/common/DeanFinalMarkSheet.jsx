@@ -37,6 +37,7 @@ export default function DeanFinalMarkSheet(props) {
    const userNameAuth = user?.full_name;
 
    console.log(userNameAuth)
+   console.log(level,semester,dept)
 
   var date = new DateObject({
     date: new Date(),
