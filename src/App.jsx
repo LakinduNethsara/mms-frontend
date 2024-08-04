@@ -42,6 +42,7 @@ import CCMarksApproval from './pages/Users/CC/CCMarksApproval';
 import CreateResultBoard from './pages/Users/AR/CreateResultBoard/CreateResultBoard';
 import ResultBoardMarksSheetAssign from './pages/Users/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign';
 import ARJoinResultBoard from './pages/Users/AR/ARJoinResultBoard/ARJoinResultBoard';
+import CertifyMarksPage from './pages/Users/AR/CertifyMarksPage/CertifyMarksPage';
 
 
 
@@ -105,6 +106,10 @@ function App() {
 
               <Route path ="/arJoinResultsBoard">         {/* Link to join results board page */}
                 <ARJoinResultBoard/>
+              </Route>
+
+              <Route path="/arCertifyMarks">  {/* Link to certify ICT marks page */}
+                <CertifyMarksPage/>
               </Route>
             
             {/* AR navigations ends here ---------------------------------------------*/}
