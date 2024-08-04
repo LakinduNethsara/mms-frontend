@@ -7,10 +7,12 @@ export default function AddCAMarksByLec() {
     const {course_id, course_name} = useParams();
     const [evaluationCriteria, setEvaluationCriteria] = useState([]);
     const [students, setStudents] = useState([]);
+    const [regStudent, setRegStudent] = useState([]);
 
     useEffect(() => {
         fetchEvaluationCriteria();
         fetchStudents();
+        fetchRegStudents();
     }
     , [course_id])
 
@@ -41,6 +43,20 @@ export default function AddCAMarksByLec() {
         }
     }
 
+    const fetchRegStudents = async () => {
+        try {
+            const res = await axios.get(`http://localhost:9090/api/student/getRegStudents/${course_id}`) //methanata API eka danna oni hadala
+            if (res.data.content !== null) throw new Error('Network response was not ok');
+
+            setRegStudent(res.data.content);
+
+        } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error);
+            console.error('Error details:', error.response);
+
+        }
+    }
+
     const handleCancle = () => {
         setEvaluationCriteria([]);
     }
@@ -54,14 +70,14 @@ export default function AddCAMarksByLec() {
             <h4>Course Name: {course_name}</h4>
         </div>
         <div className=' row mt-3'>
-            <div className=' col-8'>
+            <div className=' col-5'>
                 <form>
                     <label for="exampleDataList" className="form-label">Student ID List</label>
                     <input className="form-control mx-4" list="datalistOptions" id="exampleDataList" placeholder="Type to search..."/>
                     <datalist id="datalistOptions">
                         {
                             students.map((student, index) => (
-                                <option value={student.student_id}/>
+                                <option key={index} value={student.student_id}/>
                             ))
                         }
                         
@@ -81,6 +97,28 @@ export default function AddCAMarksByLec() {
             </div>
             <div className=' col-7'>
                 <label class="form-label">CA Marks Table</label>
+
+                <table>
+                    <thead>
+                        <tr>
+                            {
+
+                            }
+                            <th>Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {
+                                
+                            }
+                            <td>
+                                <button className=' btn btn-outline-dark btn-sm' style={{width:"100px"}}>Edit</button>
+                                <button className=' btn btn-outline-danger btn-sm mx-1' style={{width:"100px"}}>Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
             </div>
         </div>
