@@ -1,19 +1,23 @@
 import axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
+import { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 
 export default function LecRelatedCourses() {
     const [courses, setCourses] = useState([])
-    const [user, setUser] = useState({});
     const storedData = localStorage.getItem('user');
-    const email = JSON.parse(storedData).email;
+    const [email,setEmail] =useState(); 
+    const history = useHistory();
 
 
     useEffect(() => {
         if(storedData){
-            setUser(JSON.parse(storedData));
+            
+            setEmail(JSON.parse(storedData).email);
         }else{
-            setUser(null);
+            
+            setEmail(null);
         }
         fetchCourses();
     }, [email])

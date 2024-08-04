@@ -24,6 +24,10 @@ import CertifyMarksheet from './components/common/CertifyMarksheet';
 import DeanFinalMarkSheet from './components/common/DeanFinalMarkSheet';
 import AddCAMarksByLec from './pages/Users/Lecturer/AddCAMarksByLec';
 import LecRelatedCourses from './components/Users/Lecturer/LecRelatedCourses';
+import CCDashBoard from './pages/Users/CC/CCDashBoard';
+import ViewCAEligibile from './pages/Users/CC/ViewCAEligibile';
+import CAEligibility from './pages/Users/CC/CAEligibility';
+import CCMarksApproval from './pages/Users/CC/CCMarksApproval';
 
 
 function App() {
@@ -116,6 +120,18 @@ function App() {
             </Route>
             <Route path="/ca_addby_lec/:course_id/:course_name">
               <AddCAMarksByLec/>
+            </Route>
+            <Route path="/cclandingpage">
+              <CCDashBoard />
+            </Route>
+            <Route path="/viewcaeli">
+              <ViewCAEligibile />
+            </Route>
+            <Route path="/caeli/:course_id/:course_name">
+              <CAEligibility/>
+            </Route>
+            <Route path="/ccmarksapproval">
+              <CCMarksApproval />
             </Route>
 
             {/* Catch-all route */}
