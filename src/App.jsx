@@ -28,6 +28,7 @@ import CCDashBoard from './pages/Users/CC/CCDashBoard';
 import ViewCAEligibile from './pages/Users/CC/ViewCAEligibile';
 import CAEligibility from './pages/Users/CC/CAEligibility';
 import CCMarksApproval from './pages/Users/CC/CCMarksApproval';
+import CourseCriteriaByCC from './pages/Users/CC/CourseCriteriaByCC';
 
 
 function App() {
@@ -132,6 +133,9 @@ function App() {
             </Route>
             <Route path="/ccmarksapproval">
               <CCMarksApproval />
+            </Route>
+            <Route path="/cccbycc">
+              <CourseCriteriaByCC />
             </Route>
 
             {/* Catch-all route */}
