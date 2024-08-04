@@ -6,11 +6,9 @@ import FooterComponent from './components/common/Footer';
 import SAProfile from './components/Users/System_Analyst/SAProfile';
 import CCProfile from './components/Users/CC/CCProfile';
 import AdminProfile from './components/Users/Admin/AdminProfile';
-import ARProfile from './components/Users/AR/ARProfile';
 import DeanProfile from './components/Users/Dean/DeanProfile';
 import HODProfile from './components/Users/HOD/HODProfile';
 import VCProfile from './components/Users/VC/VCProfile';
-import StudentProfile from './components/Users/Students/StudentProfile';
 import LecturerProfile from './components/Users/Lecturer/LecturerProfile';
 import CourseCard from './components/common/CourseCard';
 
@@ -22,12 +20,30 @@ import HODMarksReturnSheet from './components/common/HODMarksReturnSheet';
 import MarksCheckingForm from './components/common/MarksCheckingForm';
 import CertifyMarksheet from './components/common/CertifyMarksheet';
 import DeanFinalMarkSheet from './components/common/DeanFinalMarkSheet';
+
+import StudentmedicalView from './pages/Users/Students/StudentMedicalView/StudentMedicalView';
+import StudentViewEligibility from './pages/Users/Students/StudentViewEligibility/StudentViewEligibility';
+import StudentWithHeldSubjects from './pages/Users/Students/StudentWithHeldSubjects/StudentWithHeldSubjects';
+import StudentMarkSheetList from './pages/Users/Students/StudentMarkSheetList/StudentMarkSheetList';
+import StudentMarkSheetView from './pages/Users/Students/StudentMarksheetView/StudentMarkSheetView';
+import StudentViewCourseDetails from './pages/Users/Students/StudentViewCourseDetails/StudentViewCourseDetails';
+import StudentViewCourseCriteria from './pages/Users/Students/StudentViewCourseCriteria/StudentViewCourseCriteria';
+import ABListPage from './pages/Users/AR/ABListPage/ABListPage';
+import UpdateABPage from './pages/Users/AR/UpdateABPage/UpdateABPage';
+import ViewMarks from './pages/Users/AR/ViewMarks/ViewMarks';
+import ViewMarksTableValidations from './components/Users/AR/DataTable/ViewMarksTableValidations';
+
 import AddCAMarksByLec from './pages/Users/Lecturer/AddCAMarksByLec';
 import LecRelatedCourses from './components/Users/Lecturer/LecRelatedCourses';
 import CCDashBoard from './pages/Users/CC/CCDashBoard';
 import ViewCAEligibile from './pages/Users/CC/ViewCAEligibile';
 import CAEligibility from './pages/Users/CC/CAEligibility';
 import CCMarksApproval from './pages/Users/CC/CCMarksApproval';
+import CreateResultBoard from './pages/Users/AR/CreateResultBoard/CreateResultBoard';
+import ResultBoardMarksSheetAssign from './pages/Users/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign';
+import ARJoinResultBoard from './pages/Users/AR/ARJoinResultBoard/ARJoinResultBoard';
+import CertifyMarksPage from './pages/Users/AR/CertifyMarksPage/CertifyMarksPage';
+
 
 
 function App() {
@@ -50,11 +66,56 @@ function App() {
 
 
             {/* AR navigations starts here ---------------------------------------------*/}
-
-
               <Route exact path="/ar_profile" component={HomePageAR} />           {/* AR Home Page */}
-              <Route exact path="/viewMedicals" component={ViewMedicalPage} />
+              <Route exact path="/viewMedicals" component={ViewMedicalPage} />      {/* Link to view medical table page */}
+              <Route exact path="/viewablist" component={ABListPage} />           {/* Link to view AB student list page */}
+              <Route exact path="/viewABUpdate/updateAB/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year" component={UpdateABPage} />   {/* Link to AB status update form */}
+              
+              <Route path="/arviewictmarks">  {/* Link to view ICT marks page - Level selection */}
+                <ViewMarks department_id={"ICT"}/>
+              </Route>
 
+              <Route path="/arviewetmarks">  {/* Link to view ET marks page - Level selection */}
+                <ViewMarks department_id={"ET"}/>
+              </Route>
+
+              <Route path="/arviewbstmarks">  {/* Link to view BST marks page - Level selection */}
+                <ViewMarks department_id={"BST"}/>
+              </Route>
+
+              <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page - Level selection */}
+                <ViewMarks department_id={"Multi_Disciplinary"}/>
+              </Route>
+
+
+              <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page validations */}
+                <ViewMarksTableValidations/>
+              </Route>
+
+              <Route path="/ARMarksReturnSheet/:course_id/:course_name">    {/* Link to view ar Marks certify sheet*/}
+                <HODMarksReturnSheet approved_level={"HOD"}/>
+              </Route>
+
+              <Route path="/createResultsBoard">   {/* Link to create results board page */}
+                <CreateResultBoard/>
+              </Route>
+
+              <Route path="/arViewResultsBoard">  {/* Link to view results board page */}
+                <ResultBoardMarksSheetAssign/>
+              </Route>  
+
+              <Route path ="/arJoinResultsBoard">         {/* Link to join results board page */}
+                <ARJoinResultBoard/>
+              </Route>
+
+              <Route path="/arCertifyMarks">  {/* Link to certify ICT marks page */}
+                <CertifyMarksPage/>
+              </Route>
+
+              <Route path="/arFinalMarkSheet/:level/:semester/:dept">   {/* Link to view marks remaining to certify page */}
+              <DeanFinalMarkSheet approved_level={"RB"}/>
+            </Route>
+            
             {/* AR navigations ends here ---------------------------------------------*/}
 
 
@@ -65,9 +126,14 @@ function App() {
 
 
             {/* Student navigations starts here ---------------------------------------------*/}
-
-            <Route exact path="/st_profile" component={HomePageStudent} />
-
+            <Route exact path="/st_profile" component={HomePageStudent} />                      {/* Student Home Page */}
+            <Route exact path="/studentMedicalView" component={StudentmedicalView} />           {/* Student Medical View */}
+            <Route exact path="/studentEligibilityView" component={StudentViewEligibility} />       {/* Student Eligibility View */}
+            <Route exact path="/studentViewWithHeldSubjects" component={StudentWithHeldSubjects} />    {/* Student View With Held Subjects */}
+            <Route exact path="/StudentViewMarkSheetList" component={StudentMarkSheetList} />           {/* Student View Mark Sheet List */}
+            <Route exact path="/viewPublishedMarksSheet" component={StudentMarkSheetView} />            {/* Student View Published Marks Sheet */}
+            <Route exact path="/studentViewCourseDetails" component={StudentViewCourseDetails} />       {/* Student View Course Details */}
+            <Route exact path="/studentViewCourseCriteria" component={StudentViewCourseCriteria} />        {/* Student View Course Criteria */}
             {/* Student navigations ends here ---------------------------------------------*/}
 
 
