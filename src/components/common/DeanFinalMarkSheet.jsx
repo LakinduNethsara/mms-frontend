@@ -417,8 +417,8 @@ const alternateRowStyle = {
                   <th scope="col" className='table-info'>Student ID</th>
                   {Allcourses.map((id, index) => (
                     <React.Fragment key={index}>
-                      {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" ?<th className=' table-secondary'>{id.course_id}</th>:null}
-                      <th className=' table-primary'>Grade</th>
+                      <th className=' table-secondary'>{id.course_id}</th>
+                      {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" ?<th className=' table-primary'>Grade</th>:null}
                     </React.Fragment>
                   ))}
                   <th scope="col" className=' table-warning'>SGPA</th>

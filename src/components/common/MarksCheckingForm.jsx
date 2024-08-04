@@ -226,7 +226,10 @@ console.log(ele.end)
 
                 </tbody>
               </table>
-              <button style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 `} value="Update" disabled={!updatebtn} onClick={updateMarks}/>
+              {
+                approval_level=="finalized" ? <button style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 `} value="Update" disabled={!updatebtn} onClick={updateMarks}/>:null
+              }
+              
             </div>
 
             
