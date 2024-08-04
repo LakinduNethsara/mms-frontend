@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./courseSelection.css";
 import { Redirect, useHistory } from 'react-router-dom';
+import { Button } from 'bootstrap';
 
 
 
@@ -69,7 +70,7 @@ export default function CourseSelection(props) {
                     <td>{course.course_id}</td>
                     <td>{course.course_name}</td>
                     <td>{course.type}</td>
-                    <td><a href={`#`} className="btn btn-primary btn-sm"  role="button" aria-disabled="true">View Marks</a></td>  
+                    <td><button className="btn btn-primary btn-sm"  role="button" aria-disabled="true">View Marks</button></td>  
                 </tr>
                 ))
               }
