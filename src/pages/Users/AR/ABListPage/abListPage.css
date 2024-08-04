@@ -1,0 +1,20 @@
+table.table-striped.clickable-row:hover {
+    cursor: pointer;
+    background-color: rgb(226, 223, 223);
+    color: rgb(0, 0, 0);
+  }
+
+  .back-button-div {
+    text-align: right;
+    margin-bottom: 10px;
+    position: sticky;
+  }
+
+  .tableHead {
+    position: sticky;
+    background-color: #ffffff;
+    top: 65px;
+    z-index: 1;
+    
+}
+

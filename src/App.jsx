@@ -29,6 +29,7 @@ import StudentMarkSheetList from './pages/Users/Students/StudentMarkSheetList/St
 import StudentMarkSheetView from './pages/Users/Students/StudentMarksheetView/StudentMarkSheetView';
 import StudentViewCourseDetails from './pages/Users/Students/StudentViewCourseDetails/StudentViewCourseDetails';
 import StudentViewCourseCriteria from './pages/Users/Students/StudentViewCourseCriteria/StudentViewCourseCriteria';
+import ABListPage from './pages/Users/AR/ABListPage/ABListPage';
 
 
 function App() {
@@ -52,7 +53,8 @@ function App() {
 
             {/* AR navigations starts here ---------------------------------------------*/}
               <Route exact path="/ar_profile" component={HomePageAR} />           {/* AR Home Page */}
-              <Route exact path="/viewMedicals" component={ViewMedicalPage} />
+              <Route exact path="/viewMedicals" component={ViewMedicalPage} />      {/* Link to view medical table page */}
+              <Route exact path="/viewablist" component={ABListPage} />           {/* Link to view AB student list page */}
 
             {/* AR navigations ends here ---------------------------------------------*/}
 
