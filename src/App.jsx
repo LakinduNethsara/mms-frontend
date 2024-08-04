@@ -6,11 +6,9 @@ import FooterComponent from './components/common/Footer';
 import SAProfile from './components/Users/System_Analyst/SAProfile';
 import CCProfile from './components/Users/CC/CCProfile';
 import AdminProfile from './components/Users/Admin/AdminProfile';
-import ARProfile from './components/Users/AR/ARProfile';
 import DeanProfile from './components/Users/Dean/DeanProfile';
 import HODProfile from './components/Users/HOD/HODProfile';
 import VCProfile from './components/Users/VC/VCProfile';
-import StudentProfile from './components/Users/Students/StudentProfile';
 import LecturerProfile from './components/Users/Lecturer/LecturerProfile';
 import CourseCard from './components/common/CourseCard';
 
@@ -30,6 +28,9 @@ import StudentMarkSheetView from './pages/Users/Students/StudentMarksheetView/St
 import StudentViewCourseDetails from './pages/Users/Students/StudentViewCourseDetails/StudentViewCourseDetails';
 import StudentViewCourseCriteria from './pages/Users/Students/StudentViewCourseCriteria/StudentViewCourseCriteria';
 import ABListPage from './pages/Users/AR/ABListPage/ABListPage';
+import UpdateABPage from './pages/Users/AR/UpdateABPage/UpdateABPage';
+import ViewMarks from './pages/Users/AR/ViewMarks/ViewMarks';
+import ViewMarksTableValidations from './components/Users/AR/DataTable/ViewMarksTableValidations';
 
 
 function App() {
@@ -55,7 +56,33 @@ function App() {
               <Route exact path="/ar_profile" component={HomePageAR} />           {/* AR Home Page */}
               <Route exact path="/viewMedicals" component={ViewMedicalPage} />      {/* Link to view medical table page */}
               <Route exact path="/viewablist" component={ABListPage} />           {/* Link to view AB student list page */}
+              <Route exact path="/viewABUpdate/updateAB/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year" component={UpdateABPage} />   {/* Link to AB status update form */}
+              
+              <Route path="/arviewictmarks">  {/* Link to view ICT marks page - Level selection */}
+                <ViewMarks department_id={"ICT"}/>
+              </Route>
 
+              <Route path="/arviewetmarks">  {/* Link to view ET marks page - Level selection */}
+                <ViewMarks department_id={"ET"}/>
+              </Route>
+
+              <Route path="/arviewbstmarks">  {/* Link to view BST marks page - Level selection */}
+                <ViewMarks department_id={"BST"}/>
+              </Route>
+
+              <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page - Level selection */}
+                <ViewMarks department_id={"Multi_Disciplinary"}/>
+              </Route>
+
+
+              <Route path="/viewMarks/:course_id/:course_name">   {/* Link to view marks remaining to approve page validations */}
+                <ViewMarksTableValidations/>
+              </Route>
+
+              <Route path="/ARMarksReturnSheet/:course_id/:course_name">    {/* Link to view ar Marks certify sheet*/}
+                <HODMarksReturnSheet approved_level={"HOD"}/>
+              </Route>
+            
             {/* AR navigations ends here ---------------------------------------------*/}
 
 
