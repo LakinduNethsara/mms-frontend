@@ -111,6 +111,10 @@ function App() {
               <Route path="/arCertifyMarks">  {/* Link to certify ICT marks page */}
                 <CertifyMarksPage/>
               </Route>
+
+              <Route path="/arFinalMarkSheet/:level/:semester/:dept">   {/* Link to view marks remaining to certify page */}
+              <DeanFinalMarkSheet approved_level={"RB"}/>
+            </Route>
             
             {/* AR navigations ends here ---------------------------------------------*/}
 
