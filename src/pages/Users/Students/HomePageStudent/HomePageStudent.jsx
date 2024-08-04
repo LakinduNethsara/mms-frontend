@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import './homePageStudent.css'
 import axios from 'axios';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import './homePageStudent.css';
 
 
 
@@ -83,6 +83,7 @@ export default function HomePageStudent() {
   useEffect(() => {
     if(storedData){
       setUser(JSON.parse(storedData));
+      
     }else{
       setUser(null);
     }
@@ -94,21 +95,21 @@ export default function HomePageStudent() {
   }, [studentEmail,studentDepartmentId,studentLevel,studentSemester])
 
 
-  
+
 
 
   return (
     
     <div className='student-home-page-main-div'>
 
-      <div className='student-home-page-main-body'>
+      <div className='student-home-page-main-body' style={{boxShadow:"0 0 10px 0 rgba(0, 0, 0, 0.2)",marginTop: "20px",paddingRight: "2%",paddingLeft: "2%",paddingTop: "10px",marginLeft: "auto",marginRight: "auto",height: "100%",minWidth: "500px",minHeight: "200px",width: "auto",maxWidth: "100%"}}>
 
 
         <div className='row course-row-1'>
-            <div className='col course-col-1'><label>Name - {studentName}</label></div>
-            <div className='col course-col-1'><label>Index - {studentId}</label></div>
-            <div className='col course-col-1'><label>Department - {studentDepartmentId}</label></div>
-            <div className='col course-col-1'><label>Level - {studentLevel}</label></div>
+            <div className='col course-col-1' style={{width: "fit-content", maxWidth: "max-content", marginLeft: "10px", marginTop: "15px", backgroundColor: "rgb(235, 235, 235)", border: "1px solid rgb(171, 171, 171)", borderRadius: "5px"}}><label>Name - {studentName}</label></div>
+            <div className='col course-col-1' style={{width: "fit-content", maxWidth: "max-content", marginLeft: "10px", marginTop: "15px", backgroundColor: "rgb(235, 235, 235)", border: "1px solid rgb(171, 171, 171)", borderRadius: "5px"}}><label>Index - {studentId}</label></div>
+            <div className='col course-col-1' style={{width: "fit-content", maxWidth: "max-content", marginLeft: "10px", marginTop: "15px", backgroundColor: "rgb(235, 235, 235)", border: "1px solid rgb(171, 171, 171)", borderRadius: "5px"}} ><label>Department - {studentDepartmentId}</label></div>
+            <div className='col course-col-1' style={{width: "fit-content", maxWidth: "max-content", marginLeft: "10px", marginTop: "15px", backgroundColor: "rgb(235, 235, 235)", border: "1px solid rgb(171, 171, 171)", borderRadius: "5px"}}><label>Level - {studentLevel}</label></div>
         </div>
 
         <div className='row course-row-1'>
@@ -116,20 +117,20 @@ export default function HomePageStudent() {
             studentSGPA == null ? (
               null
             ):(
-            <div className='course-col-1 custom-lable-1'><label>SGPA - {studentSGPA}</label></div>
+            <div className='course-col-1 custom-lable-1' style={{width: "fit-content", maxWidth: "max-content", marginLeft: "10px", marginTop: "15px", backgroundColor: "rgb(235, 235, 235)", border: "1px solid rgb(171, 171, 171)", borderRadius: "5px"}}><label>SGPA - {studentSGPA}</label></div>
             )
           }
           {
             studentCGPA == null ? (
               null
             ):(
-            <div className='course-col-1 custom-lable-1'><label>CGPA - {studentCGPA}</label></div>
+            <div className='course-col-1 custom-lable-1' style={{width: "fit-content", maxWidth: "max-content", marginLeft: "10px", marginTop: "15px", backgroundColor: "rgb(235, 235, 235)", border: "1px solid rgb(171, 171, 171)", borderRadius: "5px"}}><label>CGPA - {studentCGPA}</label></div>
             )
           }
         </div>
           
 
-        <div className='row course-row-2'>
+        <div className='row course-row-2' style={{marginTop:"40px"}}>
 
           <div className='col grade-col-1'>
 

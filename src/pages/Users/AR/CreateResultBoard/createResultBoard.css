@@ -1,0 +1,42 @@
+.div-body {
+    margin-top: 75px;
+    min-width: 100%;
+    /*height: 30%;*/
+    padding-right: 50px;
+    padding-left: 50px;
+    height: 100%;
+}
+
+@media (max-width: 630px) {
+    .div-body {
+      margin-top: 120px;
+    }
+  }
+
+
+
+
+
+.selection:hover {
+    cursor: pointer;
+    box-shadow: 0 0 6px 0 rgba(28, 19, 109, 0.5);
+}
+
+.label-key, .label-value {
+    font-size: 15px;
+    margin-top: 20px;
+    
+}
+
+
+.add-hod {
+    margin-top: 20px;
+
+}
+
+
+.clickable-row:hover {
+    cursor: pointer;
+    background-color: rgb(226, 223, 223);
+    color: rgb(0, 0, 0);
+  }

@@ -1,0 +1,56 @@
+.formBg{
+    width : 50%;
+    min-height: 200px;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 90px;
+
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 30px;
+    padding-bottom: 10px;
+
+    background-color: #f5f5f5;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    
+
+}
+
+.dataTable {
+    width: 100%;
+    
+}
+
+td {
+    padding-bottom: 10px;
+}
+
+.labelkey {
+    font-weight: bold;
+}
+
+.labelValue {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding-left: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+
+    background-color: #ffffff;
+
+    border-radius: 10px;
+    border: 1px solid #a1a1a138;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.statusLabel {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}

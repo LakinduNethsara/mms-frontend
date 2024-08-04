@@ -1,0 +1,50 @@
+.semesterLabel {
+    text-align:center;
+    font-size:25px;
+}
+
+.level-button {
+    width: 250px;
+    border-radius: 5px;
+}
+
+.level-set{
+    justify-content: center;
+}
+
+
+
+.certify-div-1 {
+    margin-top: 95px;
+    width:100%;
+}
+
+@media (max-width: 630px) {
+    .certify-div-1 {
+      margin-top: 140px;
+    }
+  }
+
+.certify-div-2 {
+    width:50%;
+    min-width: 450px;
+    min-height: 80px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y:auto ;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.certify-table {
+    width: 100%;
+}
+
+
+.certify-table-head {
+    background-color: #ffffff;
+    position: sticky;
+    top: 1px;
+    z-index: 1;
+}
