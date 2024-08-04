@@ -39,6 +39,7 @@ import CCDashBoard from './pages/Users/CC/CCDashBoard';
 import ViewCAEligibile from './pages/Users/CC/ViewCAEligibile';
 import CAEligibility from './pages/Users/CC/CAEligibility';
 import CCMarksApproval from './pages/Users/CC/CCMarksApproval';
+import CreateResultBoard from './pages/Users/AR/CreateResultBoard/CreateResultBoard';
 
 
 
@@ -90,6 +91,10 @@ function App() {
 
               <Route path="/ARMarksReturnSheet/:course_id/:course_name">    {/* Link to view ar Marks certify sheet*/}
                 <HODMarksReturnSheet approved_level={"HOD"}/>
+              </Route>
+
+              <Route path="/createResultsBoard">   {/* Link to create results board page */}
+                <CreateResultBoard/>
               </Route>
             
             {/* AR navigations ends here ---------------------------------------------*/}
