@@ -20,6 +20,7 @@ import HODMarksReturnSheet from './components/common/HODMarksReturnSheet';
 import MarksCheckingForm from './components/common/MarksCheckingForm';
 import CertifyMarksheet from './components/common/CertifyMarksheet';
 import DeanFinalMarkSheet from './components/common/DeanFinalMarkSheet';
+
 import StudentmedicalView from './pages/Users/Students/StudentMedicalView/StudentMedicalView';
 import StudentViewEligibility from './pages/Users/Students/StudentViewEligibility/StudentViewEligibility';
 import StudentWithHeldSubjects from './pages/Users/Students/StudentWithHeldSubjects/StudentWithHeldSubjects';
@@ -31,6 +32,14 @@ import ABListPage from './pages/Users/AR/ABListPage/ABListPage';
 import UpdateABPage from './pages/Users/AR/UpdateABPage/UpdateABPage';
 import ViewMarks from './pages/Users/AR/ViewMarks/ViewMarks';
 import ViewMarksTableValidations from './components/Users/AR/DataTable/ViewMarksTableValidations';
+
+import AddCAMarksByLec from './pages/Users/Lecturer/AddCAMarksByLec';
+import LecRelatedCourses from './components/Users/Lecturer/LecRelatedCourses';
+import CCDashBoard from './pages/Users/CC/CCDashBoard';
+import ViewCAEligibile from './pages/Users/CC/ViewCAEligibile';
+import CAEligibility from './pages/Users/CC/CAEligibility';
+import CCMarksApproval from './pages/Users/CC/CCMarksApproval';
+
 
 
 function App() {
@@ -147,6 +156,25 @@ function App() {
            
 
 
+            {/* Lecturer Profile */}
+            <Route path="/lec_related_course">
+              <LecRelatedCourses />
+            </Route>
+            <Route path="/ca_addby_lec/:course_id/:course_name">
+              <AddCAMarksByLec/>
+            </Route>
+            <Route path="/cclandingpage">
+              <CCDashBoard />
+            </Route>
+            <Route path="/viewcaeli">
+              <ViewCAEligibile />
+            </Route>
+            <Route path="/caeli/:course_id/:course_name">
+              <CAEligibility/>
+            </Route>
+            <Route path="/ccmarksapproval">
+              <CCMarksApproval />
+            </Route>
 
             {/* Catch-all route */}
             {/* <Route path="*" component={NotFoundPage} /> */}
