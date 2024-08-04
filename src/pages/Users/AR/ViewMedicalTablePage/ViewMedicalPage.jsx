@@ -136,7 +136,7 @@ export default function ViewMedicalPage() {
                   
                   {
                     medicalSubmissions.map((submission,index)=>(
-                      <tr key={index}>
+                      <tr key={index} >
                         <td>{submission.student_id}</td>
                         <td>{submission.course_id}</td>
                         <td>{submission.academic_year}</td>

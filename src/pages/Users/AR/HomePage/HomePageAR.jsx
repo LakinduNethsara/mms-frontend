@@ -48,7 +48,7 @@ const handleChange = (link) => {
               <div className="card-body">
                 <br/><h5 className="card-title">Marks Return Sheets </h5><br/>
                 
-                <select className="form-select home-page-class-button marksheet-select-box-button" value={department} onChange={(e)=>{handleChange(e.target.value)}}>
+                <select className="form-select home-page-class-button marksheet-select-box-button" style={{backgroundColor:"#0d6efd",color:"white",marginLeft:"auto",marginRight:"auto",textAlign:"center",width:"max-content"}} value={department} onChange={(e)=>{handleChange(e.target.value)}}>
 
                   <option value={""} disabled style={{color:"rgb(100, 100, 100)"}}>
                     Select department
