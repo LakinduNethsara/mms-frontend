@@ -41,6 +41,7 @@ import CAEligibility from './pages/Users/CC/CAEligibility';
 import CCMarksApproval from './pages/Users/CC/CCMarksApproval';
 import CreateResultBoard from './pages/Users/AR/CreateResultBoard/CreateResultBoard';
 import ResultBoardMarksSheetAssign from './pages/Users/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign';
+import ARJoinResultBoard from './pages/Users/AR/ARJoinResultBoard/ARJoinResultBoard';
 
 
 
@@ -101,6 +102,10 @@ function App() {
               <Route path="/arViewResultsBoard">  {/* Link to view results board page */}
                 <ResultBoardMarksSheetAssign/>
               </Route>  
+
+              <Route path ="/arJoinResultsBoard">         {/* Link to join results board page */}
+                <ARJoinResultBoard/>
+              </Route>
             
             {/* AR navigations ends here ---------------------------------------------*/}
 
