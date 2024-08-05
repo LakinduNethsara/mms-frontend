@@ -87,10 +87,10 @@ export default function ViewMedicalPage() {
             medicalAvailability ? (
 
 
-              <table className="table table-striped dataTable">
+              <table className="table table-striped dataTable" style={{textAlign:"center"}}>
 
 
-                <thead className='ar-medical-table-head'>
+                <thead className='ar-medical-table-head' style={{backgroundColor:"#ffffff",position:"sticky",top:"65px",zIndex:"1"}}>
 
 
                   <tr>
@@ -136,7 +136,7 @@ export default function ViewMedicalPage() {
                   
                   {
                     medicalSubmissions.map((submission,index)=>(
-                      <tr key={index}>
+                      <tr key={index} >
                         <td>{submission.student_id}</td>
                         <td>{submission.course_id}</td>
                         <td>{submission.academic_year}</td>
@@ -157,7 +157,7 @@ export default function ViewMedicalPage() {
               toast.error("No medical submissions available",{autoClose:3000})
             )
           }
-          <div className='right-aligned-div back-button-div'>
+          <div className='right-aligned-div back-button-div' style={{textAlign:"right",marginBottom:"10px",position:"sticky"}}>
             <br/><BackButton/> <br/>&nbsp;
           </div>
             

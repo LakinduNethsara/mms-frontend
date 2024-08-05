@@ -1,0 +1,24 @@
+.student-published-marksheet-list-main-div {
+    max-width: 100%;
+    margin-top: 75px;
+}
+
+@media (max-width: 630px) {
+    .student-published-marksheet-list-main-div {
+      margin-top: 120px;
+    }
+  }
+
+  .marks-sheet-list-table-head {
+    background-color: #ffffff;
+    position: sticky;
+    top: 10px;
+    z-index: 1;
+  }
+
+  .published-mark-sheet-list-main-row {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
