@@ -13,7 +13,7 @@ export default function CourseCard(props) {
     ])
     
     const history = useHistory();
-
+    const[current_semester,setCurrent_semester]=useState("");
     const[errorMsg,seterrorMsg]=useState("");
     const{level,semester,department}=useParams();
     const{approved_level}=props;
@@ -33,7 +33,7 @@ export default function CourseCard(props) {
     }, []);
 
     useEffect(() => {
-      setAcademicYear("2023-2024");
+      
         if (academicDetails) { // Check if academicDetails is not null or undefined
             setAcademicYear(academicDetails.current_academic_year);
             setCurrent_semester(academicDetails.current_semester);

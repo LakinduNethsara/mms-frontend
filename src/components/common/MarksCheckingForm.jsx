@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
+import EditValueModal from './EditValueModal';
 
 
 export default function MarksCheckingForm() {
@@ -13,6 +14,11 @@ export default function MarksCheckingForm() {
   const[noData,setNoData]=useState('')
   const [calculations, setCalculations] = useState([]);
   const[updatebtn,setEnableupdatebtn]=useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState({
+    "key":"",
+    "value":""
+  });
 
   const [user, setUser] = useState({
         
@@ -128,25 +134,26 @@ console.log(ele.end)
   };
 
 
-  const textOnChange = (key, value) => {
-    setEnableupdatebtn(true);
-   
-    
-    // Directly update the 'end' property of the 'endMarks' object
-  setEndMarks(prevState => ({
-    ...prevState,
-    end: prevState.end.map(item =>
-      item.key === key ? { ...item, value } : item
-    )
-  }));
-
-  console.log(endMarks); // Log the updated state
- 
+  const textOnChange = (key, value, reason) => {
+    console.log(key,value,reason)
+    endMarks.end.map((e)=>
+    {
+      if (e.key==key){e.value=value}
+    })
+    // setEndMarks(prevState => ({
+    //   ...prevState,
+    //   end: prevState.end.map(item =>
+    //     item.key === key ? { ...item, value } : item
+    //   )
+    // }));
+    console.log(endMarks); 
+    updateMarks();
   };
 
   
   const updateMarks=async()=>
     {
+      
       try {
         ele.end=endMarks.end;
         console.log(ele.end);
@@ -163,16 +170,18 @@ console.log(ele.end)
     }
   }
 
-  const isValidMark = (value) => {
-    if (value === null || value === undefined || value.trim() === '') {
-      return false; // Invalid if value is null, undefined, or an empty string
-    }
-    if (value === 'AB') {
-      return true; // 'AB' is valid
-    }
-    const numValue = Number(value);
-    return !isNaN(numValue) && numValue >= 0 && numValue <= 100;
+  // Function to open the modal and set the editing item
+  const handleEditClick = (key, value) => {
+    console.log(key,value)
+    setEditingItem({ key, value });
+    setIsModalOpen(true);
   };
+
+  // Function to close the modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   
 
   
@@ -216,8 +225,14 @@ console.log(ele.end)
                    ele.end.map((e)=>
                       (<tr>
                         <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
-                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.description=="score"&& approval_level=="finalized" ? <input type="text" defaultValue={e.value} onChange={(event) => textOnChange(e.key,event.target.value)}
-                        ></input> :e.value}</td>
+                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.description=="score"&& approval_level=="finalized" ? 
+                          <>
+                          <input type="text" defaultValue={e.value} size={5} disabled ></input> 
+                          {/* <button className=' btn btn-outline-dark btn-sm mx-4' style={{width:"80px"}} type='button' >Edit</button> */}
+                          <button className='btn btn-outline-dark btn-sm mx-4' style={{width:"80px"}} type='button' onClick={() => handleEditClick(e.key, e.value)}>Edit</button>
+                          </>
+                          
+                          :e.value}</td>
                         
                       </tr>
                         
@@ -226,7 +241,10 @@ console.log(ele.end)
 
                 </tbody>
               </table>
-              <button style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 `} value="Update" disabled={!updatebtn} onClick={updateMarks}/>
+              {/* {
+                approval_level=="finalized" ? <button style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 `} value="Update" disabled={!updatebtn} onClick={updateMarks}/>:null
+              } */}
+              
             </div>
 
             
@@ -307,6 +325,14 @@ console.log(ele.end)
         <div>
         </div>
       </div>
+        <EditValueModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        initialValue={editingItem?.value}
+        onSubmit={(newValue, reason) => textOnChange(editingItem.key, newValue, reason)}
+        />
+        
+
     </>
   );
 }
