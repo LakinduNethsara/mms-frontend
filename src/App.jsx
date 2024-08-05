@@ -44,6 +44,12 @@ import CreateResultBoard from './pages/Users/AR/CreateResultBoard/CreateResultBo
 import ResultBoardMarksSheetAssign from './pages/Users/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign';
 import ARJoinResultBoard from './pages/Users/AR/ARJoinResultBoard/ARJoinResultBoard';
 import CertifyMarksPage from './pages/Users/AR/CertifyMarksPage/CertifyMarksPage';
+import LecturersManagement from './pages/Users/System_Analyst/UsersManagement/LecturersManagement';
+import AttendanceEligibilityManage from './pages/Users/System_Analyst/Attendance/AttendanceEligibilityManage';
+import MedicalsEligibiltyManage from './pages/Users/System_Analyst/Medical/MedicalsEligibiltyManage';
+import ManageCourseModule from './pages/Users/System_Analyst/CourseModule/ManageCourseModule';
+import AssignLecturerCourse from './pages/Users/System_Analyst/AssignLecturer/AssignLecturerCourse';
+import StudentRegCourses from './pages/Users/System_Analyst/StudentCourseReg/StudentRegCourses';
 
 
 
@@ -206,6 +212,31 @@ function App() {
             </Route>
             <Route path="/cccbycc">
               <CourseCriteriaByCC />
+            </Route>
+
+            {/* System analyst */}
+            <Route path="/managestaff">
+              <LecturersManagement />
+            </Route>
+
+            <Route path="/attendencesysan">
+              <AttendanceEligibilityManage />
+            </Route>
+
+            <Route path="/medicalsysan">
+              <MedicalsEligibiltyManage />
+            </Route>
+
+            <Route path="/sysanicoursemodule">
+              <ManageCourseModule />
+            </Route>
+
+            <Route path="/assignleccourse">
+              <AssignLecturerCourse />
+            </Route>
+
+            <Route path="/screg">
+              <StudentRegCourses />
             </Route>
 
             {/* Catch-all route */}
