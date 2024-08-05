@@ -64,7 +64,7 @@ export default function ABListPage() {
 
         ):(   //If there are absent students under AR approval, display the following table
 
-          <div style={{marginLeft:"auto",marginRight:"auto",marginTop:"65px",alignContent:'center'}}>
+          <div style={{marginLeft:"auto",marginRight:"auto",marginTop:"10px",alignContent:'center'}}>
             <table className="table table-striped">
 
               <thead className='tableHead' style={{position:"sticky",backgroundColor:"#ffffff",top:"65px",zIndex:"1"}}>
