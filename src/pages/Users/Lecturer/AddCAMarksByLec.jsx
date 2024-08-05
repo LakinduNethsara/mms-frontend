@@ -134,26 +134,41 @@ export default function AddCAMarksByLec() {
                 <h4>reversedata: {reversedata}</h4> */}
             </div>
 
-            <select className="form-select" aria-label="Default select example" style={{ width: "200px" }} onChange={handleCriteriaChange}>
-                {
-                    evaluationCriteria.map((criteria, index) => (
-                        <option key={index}>{criteria.assignment_name}</option>
-                    ))
-                }
-            </select>
+        <div className=' row' >
+            <div className=' col-6 p-4' style={{border:"1px solid black",marginRight:"20px"}}>
+                <div>
+                    <label className=' form-label'>Select Assessment Type:</label>
+                    <select className="form-select" aria-label="Default select example" style={{ width: "200px" }} onChange={handleCriteriaChange}>
+                        {
+                            evaluationCriteria.map((criteria, index) => (
+                                <option key={index}>{criteria.assignment_name}</option>
+                            ))
+                        }
+                    </select>
+                </div>
+            
+            
 
-            <div style={{ marginTop: '20px' }}>
+            
+            <div style={{ marginTop: '70px',display:"flex"}}>
                 {regStudent.length > 0 && (
                     <>
                         {console.log(regStudent[currentStudentIndex].id)}
                         <label>
-                            Student ID: {caMarks[currentStudentIndex].student_id}
+                            Student ID : <span style={{ color: "maroon" }}> <b>{caMarks[currentStudentIndex].student_id}</b> </span>
                         </label>
-                        <input
+
+
+                        <div style={{display:"flex"}}>
+                        <label className=' form-label' style={{marginRight:"10px",paddingLeft:"40px"}}>
+                            Marks :
+                        </label>
+                        <input className='form-control' style={{ width: '200px' }}
                             type="number"
                             value={caMarks[currentStudentIndex]?.assignment_score || ''}
                             onChange={handleMarksChange}
                         />
+                        </div>
                     </>
                 )}
             </div>
@@ -165,19 +180,29 @@ export default function AddCAMarksByLec() {
                 <button className='btn btn-dark' onClick={handleNextClick} disabled={currentStudentIndex >= regStudent.length - 1} style={{ marginLeft: '10px' }}>
                     Next
                 </button>
-            </div>
-
-            <div style={{ marginTop: '20px' }}>
-                <button className='btn btn-success' onClick={handleSubmit} disabled={isSubmitDisabled}>
-                    Submit
-                </button>
-            </div>
-
-            <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: '20px' }}>
                 {currentStudentIndex === regStudent.length - 1 && (
-                    <p>All students' marks entered!</p>
+                    <p style={{color:"red"}}>Last Student ID...</p>
                 )}
             </div>
+            </div>
+            </div>
+            <div className=' col-5' style={{border:"1px solid black"}}>
+                <div style={{ marginTop: '20px' }}>
+                    <button className='btn btn-success' onClick={handleSubmit} disabled={isSubmitDisabled}>
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+            
+
+            <div className=' row'>
+                <div className=' '></div>
+            </div>
+
+            
         </div>
     );
 }
