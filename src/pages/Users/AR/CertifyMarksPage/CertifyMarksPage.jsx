@@ -140,8 +140,8 @@ export default function CertifyMarksPage(props) {
 
     return (
       <>
-        <div className='certify-div-1' style={{marginTop:"95px",width:"100%"}}>
-          <div className='certify-div-2' style={{width:"50%",minWidth:"450px",minHeight:"80px",boxShadow:"0 0 10px 0 rgba(0, 0, 0, 0.7)",borderRadius:"5px",overflowX:"auto",overflowY:"auto",marginLeft:"auto",marginRight:"auto"}}>
+        <div className='certify-div-1' style={{marginTop:"20px",width:"100%"}}>
+          <div className='certify-div-2' style={{width:"70%",minWidth:"450px",minHeight:"80px",boxShadow:"0 0 10px 0 rgba(0, 0, 0, 0.7)",borderRadius:"5px",overflowX:"auto",overflowY:"auto",marginLeft:"auto",marginRight:"auto"}}>
             <table className='table table-striped certify-table' style={{width:"100%"}}>
               
               <thead className='certify-table-head'style={{backgroundColor:"#ffffff",position:"sticky",top:"1px",zIndex:"1"}}>

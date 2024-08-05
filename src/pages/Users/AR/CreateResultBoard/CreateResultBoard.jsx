@@ -230,7 +230,7 @@ export default function CreateResultBoard() {
     },[academicYear,department,level,semester,buttonClicked])
 
   return (
-    <div className='div-body container'>
+    <div className='div-body container' style={{marginTop:"20px",minWidth:"100%",paddingRight:"50px",paddingLeft:"50px",height:"100%"}}>
 
         <div className='row justify-content-between'>
 

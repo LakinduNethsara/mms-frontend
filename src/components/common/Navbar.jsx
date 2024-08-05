@@ -39,33 +39,33 @@ function Navbar() {
 
                                 <>
                                     <div className="offcanvas-header">
-                                        <h5 className="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+                                        <h5 className="offcanvas-title" id="offcanvasExampleLabel">Welcome {user.name_with_initials}</h5>
                                         <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                                     </div>
+                                    <hr/>
     
                                     <div className="offcanvas-body">
-    
                                         <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/ar_profile">
                                                 Dashboard
                                                 </a>
                                             </li>
     
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link" href="/viewMedicals">
                                                 Medicals List
                                                 </a>
                                             </li>
     
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link" href="/viewablist">
                                                 Exam Absentees
                                                 </a>
                                             </li>
     
                                             {/* <hr></hr> */}
-                                            <li className="nav-item dropdown">
+                                            <li className="nav-item dropdown" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a
                                                 className="nav-link dropdown-toggle"
                                                 href="#"
@@ -100,13 +100,13 @@ function Navbar() {
                                             </li>
                                             {/* <hr></hr> */}
     
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link" href="/createResultsBoard">
                                                 Manage Results Boards
                                                 </a>
                                             </li>
     
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link" href="/arCertifyMarks">
                                                 Certify Marks
                                                 </a>
@@ -126,45 +126,47 @@ function Navbar() {
 
                                 <>
                                     <div className="offcanvas-header">
-                                        <h5 className="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+                                        <h5 className="offcanvas-title" id="offcanvasExampleLabel">Welcome {user.name_with_initials}</h5>
                                         <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                                     </div>
+
+                                    <hr/>
     
                                     <div className="offcanvas-body">
     
                                         <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
 
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/st_profile">             {/*Link to the student dashboard*/}
                                                 Dashboard
                                                 </a>
                                             </li>
 
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/studentMedicalView">        {/*Link to the student medical view*/}    
                                                 Medicals
                                                 </a>
                                             </li>
 
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/studentEligibilityView">      {/*Link to the student eligibility view*/}
                                                 Eligibility
                                                 </a>
                                             </li>
 
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/studentViewWithHeldSubjects">       {/*Link to the student with held subjects*/}
                                                 With held Subjects
                                                 </a>
                                             </li>
 
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/StudentViewMarkSheetList">        {/*Link to the student mark sheet list*/}
                                                 Published Marks Sheets
                                                 </a>
                                             </li>
 
-                                            <li className="nav-item">
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/studentViewCourseDetails">      {/*Link to the student course details*/}
                                                 Course Details
                                                 </a>
@@ -176,6 +178,18 @@ function Navbar() {
                                 </>
     
     
+                            ):user.role == 'admin'? (
+                                null            //Nave bar links for admin
+                            ):user.role=='system_analyst'? (
+                                null            //Nave bar links for system analyst
+                            ):user.role=='dean'? (
+                                null            //Nave bar links for dean
+                            ):user.role=='hod'? (
+                                null            //Nave bar links for hod
+                            ):user.role=='vc'? (
+                                null            //Nave bar links for vc
+                            ):user.role=='lecturer'? (
+                                null            //Nave bar links for lecturer
                             ):(null)
                         ):(
                             null
