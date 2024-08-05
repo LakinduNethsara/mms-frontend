@@ -24,24 +24,27 @@ export default function CourseCriteriaByCC() {
     const [endSequence, setEndSequence] = useState(1); // Initialize endSequence in state
     const storedData = localStorage.getItem('user');
     const [email,setEmail] =useState();
+    const [userData, setUserData] = useState({});
+    console.log(userData);
     useEffect(() => {
         if(storedData){
 
-            setEmail(JSON.parse(storedData).email);
+          setUserData(JSON.parse(storedData));
         }else{
 
-            setEmail(null);
+          setUserData(null);
         }
+        
+    }, []);
 
-    }, [email]);
+
     const fetchData = async ()=>{
-
         try{
             const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`)
           // console.log(result1.data.content);
             setAssessmentTypesData(result1.data.content);
     
-            const result2  = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${email}`);
+            const result2  = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${userData.email}`);
           // console.log(result2.data.content);
             setCidsData(result2.data.content);
         }catch(error){
@@ -52,7 +55,7 @@ export default function CourseCriteriaByCC() {
 
         useEffect(() => {
             fetchData();
-        }, [usernameofcc,showButton,reloadButton])
+        }, [showButton,reloadButton])
         
           // Function to handle Assessment Type selection
             const handleAssessmentTypeChange = (event) => {
