@@ -81,7 +81,7 @@ export default function ViewMedicalPage() {
   return (
     <div>
       
-        <div style={{width:"97%",marginLeft:"auto",marginRight:"auto",marginTop:"65px"}}>
+        <div style={{width:"97%",marginLeft:"auto",marginRight:"auto",marginTop:"10px"}}>
 
           {
             medicalAvailability ? (
