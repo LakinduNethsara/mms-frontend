@@ -387,7 +387,7 @@ export default function ResultBoardMarksSheetAssign() {
 
 
     return (
-        <div className='marksheet-assign-body container' style={{marginTop:"85px",minWidth:"100%",paddingLeft:"50px",paddingRight:"50px",height:"100%"}}>
+        <div className='marksheet-assign-body container' style={{marginTop:"25px",minWidth:"100%",paddingLeft:"50px",paddingRight:"50px",height:"100%"}}>
             
             <div className='row justify-content-between'>
 
@@ -515,7 +515,7 @@ export default function ResultBoardMarksSheetAssign() {
 
                                         
 
-                <div className='col-4 div2' style={{width:"52%",minWidth:"450px",minHeight:"80px",maxHeight:"70vh",borderRadius:"5px",marginBottom:"20px",boxShadow:"0 0 10px 0 rgba(0, 0, 0, 0.4)",overflowY:"auto"}}>            {/* Assigned Marks  Sheets Section */}
+                <div className='col-4 div2' style={{width:"52%",minWidth:"450px",minHeight:"80px",maxHeight:"auto",borderRadius:"5px",marginBottom:"20px",boxShadow:"0 0 10px 0 rgba(0, 0, 0, 0.4)",overflowY:"auto"}}>            {/* Assigned Marks  Sheets Section */}
                     
 
                     <div className='row justify-content-between'>
