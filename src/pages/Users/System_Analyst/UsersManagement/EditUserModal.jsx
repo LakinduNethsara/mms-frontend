@@ -45,10 +45,10 @@ export default function EditUserModal({ user, onSubmit, onClose }) {
                             </div>
                         </div>
                         <div className=' row g-1'>
-                            <div>
+                            {/* <div>
                                 <label className='form-label' htmlFor="user_name">Username</label>
                                 <input className='form-control' type="text" name="user_name" value={userDetails.user_name} onChange={handleInputChange} size="30" />
-                            </div>
+                            </div> */}
                             <div>
                                 <label className='form-label' htmlFor="email">Email</label>
                                 <input className='form-control' type="text" name="email" value={userDetails.email} onChange={handleInputChange} size="30" />
@@ -56,13 +56,13 @@ export default function EditUserModal({ user, onSubmit, onClose }) {
                             <div>
                                 <label className='form-label' htmlFor="password">Password</label>
                                 <input className='form-control' type="text" name="password" value={userDetails.password} onChange={handleInputChange} size="30" />
-                            </div> 
-                        </div>
-                        <div className=' row g-1'>
+                            </div>
                             <div>
                                 <label className='form-label' htmlFor="registered_year">Registered year</label>
                                 <input className='form-control' type="text" name="registered_year" value={userDetails.registered_year} onChange={handleInputChange} size="30" />
-                            </div>
+                            </div> 
+                        </div>
+                        <div className=' row g-1'>
                             <div>
                                 <label className='form-label' htmlFor="role">Role</label>
                                 <select className='form-select' name="role" value={userDetails.role} onChange={handleInputChange}>
@@ -72,6 +72,14 @@ export default function EditUserModal({ user, onSubmit, onClose }) {
                                     <option value="HOD">HOD</option>
                                 </select>
                             </div>
+                            <div>
+                                <label className='form-label' htmlFor="department_id">Department</label>
+                                <input className='form-control' type="text" name="department_id" value={userDetails.department_id} onChange={handleInputChange} size="30" />
+                            </div>
+                            <div>
+                                <label className='form-label' htmlFor="is_deleted">User Active status</label>
+                                <input className='form-control' type="text" name="is_deleted" value={userDetails.is_deleted} onChange={handleInputChange} size="30"  disabled/>
+                            </div> 
                         </div>
                         
                         

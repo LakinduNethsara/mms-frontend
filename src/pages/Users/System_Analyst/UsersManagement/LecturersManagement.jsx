@@ -69,11 +69,13 @@ export default function LecturersManagement() {
             user_id: "",
             full_name: "",
             name_with_initials: "",
-            user_name: "",
             email: "",
             password: "",
             registered_year: "",
             role: "",
+            department_id: "",
+            is_deleted: ""
+
         });
 
         setRefreshKey(Date.now());
@@ -162,11 +164,12 @@ export default function LecturersManagement() {
                                             <th scope="col">User ID</th>
                                             <th scope="col">Full Name</th>
                                             <th scope="col">Name with Initials</th>
-                                            <th scope="col">User Name</th>
                                             <th scope="col">E-mail</th>
                                             <th scope="col">Password</th>
                                             <th scope="col">Reg-Year</th>
                                             <th scope="col">Role</th>
+                                            <th scope="col">Department</th>
+                                            <th scope="col">Is Deleted</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -177,11 +180,12 @@ export default function LecturersManagement() {
                                                 <td>{user.user_id}</td>
                                                 <td>{user.full_name}</td>
                                                 <td>{user.name_with_initials}</td>
-                                                <td>{user.user_name}</td>
                                                 <td>{user.email}</td>
                                                 <td>{user.password}</td>
                                                 <td>{user.registered_year}</td>
                                                 <td>{user.role}</td>
+                                                <td>{user.department_id}</td>
+                                                <td>{user.is_deleted}</td>
                                                 <td>
                                                     <button className='btn btn-outline-primary mx-2 btn-sm' onClick={() => openEditModal(user)}>Edit</button>
                                                     <button className='btn btn-danger mx-2 btn-sm' onClick={() => deleteUser(user.id)}>Delete</button>
