@@ -157,6 +157,10 @@ function App() {
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"course_coordinator"} />} 
             />
 
+            <Route path="/FinalMarkSheet/:level/:semester/:dept"> 
+              <DeanFinalMarkSheet approved_level={"HOD"}/>
+            </Route>
+
             <Route exact path="/deanFinalMarkSheet/:level/:semester/:dept" 
               render={(props) => <DeanFinalMarkSheet {...props}  approved_level={"AR"} />} 
             />
@@ -211,3 +215,6 @@ function App() {
 }
 
 export default App;
+
+
+

@@ -529,10 +529,10 @@ const alternateRowStyle = {
             
           </div>
 
-          
-          <div style={{float:"right",marginTop:"50px"}}>
+          {approved_level!="HOD"?<div style={{float:"right",marginTop:"50px"}}>
           <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
-          </div>
+          </div>:null}
+          
           
 
           <form onSubmit={handleSubmit}>
