@@ -48,7 +48,7 @@ function LoginPage(){
                 window.location.href = "/vc_profile";
             }else if(response.data.content.role === "student"){
                 window.location.href = "/st_profile";
-            }else if(response.data.content.role === "lectuer"){
+            }else if(response.data.content.role === "lecturer"){
                 window.location.href = "/lec_profile";
             }
             else{
@@ -66,7 +66,7 @@ function LoginPage(){
     }
 
     return(
-        <div className="" style={{marginTop:"15%"}}>
+        <div className="" style={{marginTop:"10%"}}>
             <div className="container py-5 h-100">
                 <div className="row d-flex align-items-center justify-content-center h-100">
                     <div className="col-md-8 col-lg-7 col-xl-3">
