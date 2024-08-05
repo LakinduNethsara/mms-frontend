@@ -39,6 +39,7 @@ import CCDashBoard from './pages/Users/CC/CCDashBoard';
 import ViewCAEligibile from './pages/Users/CC/ViewCAEligibile';
 import CAEligibility from './pages/Users/CC/CAEligibility';
 import CCMarksApproval from './pages/Users/CC/CCMarksApproval';
+import CourseCriteriaByCC from './pages/Users/CC/CourseCriteriaByCC';
 import CreateResultBoard from './pages/Users/AR/CreateResultBoard/CreateResultBoard';
 import ResultBoardMarksSheetAssign from './pages/Users/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign';
 import ARJoinResultBoard from './pages/Users/AR/ARJoinResultBoard/ARJoinResultBoard';
@@ -157,6 +158,10 @@ function App() {
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"course_coordinator"} />} 
             />
 
+            <Route path="/FinalMarkSheet/:level/:semester/:dept"> 
+              <DeanFinalMarkSheet approved_level={"HOD"}/>
+            </Route>
+
             <Route exact path="/deanFinalMarkSheet/:level/:semester/:dept" 
               render={(props) => <DeanFinalMarkSheet {...props}  approved_level={"AR"} />} 
             />
@@ -199,6 +204,9 @@ function App() {
             <Route path="/ccmarksapproval">
               <CCMarksApproval />
             </Route>
+            <Route path="/cccbycc">
+              <CourseCriteriaByCC />
+            </Route>
 
             {/* Catch-all route */}
             {/* <Route path="*" component={NotFoundPage} /> */}
@@ -211,3 +219,6 @@ function App() {
 }
 
 export default App;
+
+
+

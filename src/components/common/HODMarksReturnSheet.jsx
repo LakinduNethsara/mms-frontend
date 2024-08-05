@@ -46,14 +46,13 @@ export default function HODMarksReturnSheet(props) {
     }, []);
 
     useEffect(() => {
-        setAcademicYear("2023-2024")
         if (academicDetails) { // Check if academicDetails is not null or undefined
             setAcademicYear(academicDetails.current_academic_year);
             setCurrent_semester(academicDetails.current_semester);
         }
     }, [academicDetails]); // Depend on academicDetails to trigger this effect
     
-      
+      console.log(academicYear)
      console.log(date.format());
 
     const seenKeys = new Set();
