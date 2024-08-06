@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function VCProfile() {
   return (
-    <>
+    < div className=' container mt-5'>
           <div className="col mb-4"> 
             <div className="card text-center functionCard">
               <div className="card-body">
@@ -10,6 +10,6 @@ export default function VCProfile() {
               </div>
             </div>
           </div>
-    </>
+    </div>
   )
 }
