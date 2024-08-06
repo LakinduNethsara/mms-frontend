@@ -98,7 +98,17 @@ export default function HODMarksReturnSheet(props) {
         department_id: "",
         signature: ""
     });
-    ;
+    
+    const [signlist,setSignList]=useState([{
+        id: "",
+        course_id: "",
+        approved_user_id:"",
+        approval_level: "",
+        academic_year: "",
+        date_time: "",
+        department_id: "",
+        signature: ""
+    }]);
 
     const [user, setUser] = useState({
         
@@ -162,7 +172,7 @@ export default function HODMarksReturnSheet(props) {
         "approved_user_id":userNameAuth,
         "approval_level":nextApprovedlevel,
         "academic_year":academicYear,
-        "date_time":date.format(),
+        "date_time":date.format('YYYY-MM-DD'),
         "department_id":department,
         "signature":newSignature
     }
@@ -207,9 +217,32 @@ useEffect(() => {
 
     };
 
+    const SignFunc = async () => {
+        try {
+            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/${academicYear}`);
+            const signatures = response.data.content; // Adjust this based on your actual response structure
+    
+            const ccLevel = signatures.find(e => e.approval_level === "course_coordinator");
+            const lecLevel = signatures.find(e => e.approval_level === "lecturer");
+            const hodLevel = signatures.find(e => e.approval_level === "HOD");
+    
+            if (ccLevel) setISCClevel(ccLevel);
+            if (lecLevel) setISLeclevel(lecLevel);
+            if (hodLevel) setISHODlevel(hodLevel);
+    
+        } catch (error) {
+            console.error('Error fetching signature data:', error);
+        }
+    };
+    
     useEffect(() => {
-        SigFunc();
+        SignFunc();
     }, [course_id, academicYear]);
+    
+
+   
+    
+
 
 
     const SigFunc = async () => {
@@ -575,8 +608,8 @@ useEffect(() => {
                     </table>
                 </div>
                 <div className=' m-5'></div>
-            <div className=' shadow-lg' style={{width:'100%' ,height:'320px', padding:'10px'}}>
-                <div style={{float:"left",marginTop:"50px",marginLeft:'20px'}}>
+            <div className=' row shadow-lg' style={{width:"1500px",height:'320px', padding:'10px'}}>
+                <div className=' col-5' style={{float:"left",marginTop:"50px",marginLeft:'20px'}}>
                             
                     <div>
                         {console.log(nextApprovedlevel)}
@@ -785,7 +818,7 @@ useEffect(() => {
                     </div>
 
               </div>
-              <div style={{float:"right",marginTop:"50px"}}>
+              <div className=' col-5' style={{marginTop:"50px"}}>
                 {
                     approval_level === "finalized" ||
                     approval_level === "course_coordinator" ||

@@ -122,7 +122,7 @@ export default function SignatureForApproval({ saveDigitalSignature }) {
                 <div className='mx-2'>
                     <div className="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
                         <input type="radio" className="btn-check" name="vbtn-radio" id="vbtn-radio1" autoComplete="off" checked={radioSelection === 'digitalSignature'} onChange={() => setRadioSelection('digitalSignature')} />
-                        <label className="btn btn-outline-primary" htmlFor="vbtn-radio1">Digital Signature</label>
+                        {/* <label className="btn btn-outline-primary" htmlFor="vbtn-radio1">Digital Signature</label> */}
                         {/* <input type="radio" className="btn-check" name="vbtn-radio" id="vbtn-radio2" autoComplete="off" checked={radioSelection === 'uploadSignature'} onChange={() => setRadioSelection('uploadSignature')} />
                         <label className="btn btn-outline-primary" htmlFor="vbtn-radio2">Upload a Signature</label> */}
                     </div>
