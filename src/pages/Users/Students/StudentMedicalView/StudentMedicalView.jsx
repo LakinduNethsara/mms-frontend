@@ -117,7 +117,7 @@ export default function StudentmedicalView() {
 
                     <table className="table table-striped ">
 
-                        <thead className='student-medical-table-head' style={{backgroundColor:" #ffffff",position:"sticky",top:"65px",zIndex:"1"}}>
+                        <thead className='student-medical-table-head' style={{backgroundColor:" #ffffff",position:"sticky",top:"0px",zIndex:"1"}}>
                             <tr>
                                 <th style={{textAlign:"center",backgroundColor:'#ebe8e8',width:"250px"}}>
                                     <select className="form-select w-100 mx-lg-1  medical-year-selection" aria-label="Default select example" onChange={(e)=>{handleSelectedValue(e.target.value)}}>    {/* select box to select the acedemic year */} 

@@ -59,7 +59,7 @@ export default function StudentMarkSheetList() {
         
         <table className="table table-striped student-home-page-table" >
 
-          <thead className='marks-sheet-list-table-head'>
+          <thead className='marks-sheet-list-table-head' style={{backgroundColor:"#ffffff",position:"sticky",top:"0px",zIndex:"1"}}>
             <tr>
               <th className='home-page-table-heading' colSpan={100} style={{textAlign: 'center', backgroundColor: '#ebe8e8', textAlignLast: 'center'}}>
                 Published Marks Sheets <br/>

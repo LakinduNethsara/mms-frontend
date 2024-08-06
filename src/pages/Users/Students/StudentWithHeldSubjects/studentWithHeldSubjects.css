@@ -14,12 +14,6 @@
   }
 
 
-  .student-WH-table-head {
-    background-color: #ffffff;
-    position: sticky;
-    top: 65px;
-    z-index: 1;
-  }
 
   .wh-table-row:hover {
     background-color: #c5c0c0;
