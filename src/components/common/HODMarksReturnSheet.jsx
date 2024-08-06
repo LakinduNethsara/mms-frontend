@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 import SignatureForApproval from '../common/SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../common/AcademicYearManagerSingleton';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import DateObject from 'react-date-object';
 import toastr from 'toastr';
 
@@ -309,12 +309,12 @@ useEffect(() => {
         if(newSignature==null|| newSignature==""){
             e.preventDefault();
             console.log("Empty signature")
-            toastr.error("Empty Signature");
+            toast.error("Empty Signature");
         }
         if(searchTerm==null || searchTerm=="" && nextApprovedlevel==="course_coordinator" ){
             e.preventDefault();
             console.log("Empty signature")
-            toastr.error("Empty Signature");
+            toast.error("Empty Signature");
         }
         else{
            
@@ -328,9 +328,10 @@ useEffect(() => {
             if (response.status === 200) {
                 console.log("Approval level updated successfully");
                 setApprovalLevel(nextApprovedlevel)
+                toast.success('Marks Sheet Sent successfully');
                 history.goBack();
                 console.log(approval_level)
-                toastr.success('Marks Sheet Sent successfully');
+                
                
                
             } else {
@@ -355,13 +356,14 @@ useEffect(() => {
             if (response.status === 200) {
                 console.log("Marks Sheet Return successfully");
                 
-               
-                 toastr.success('Marks Sheet Return successfully');
-                // wait(1);
-                history.goBack();
+                toast.success("Result sheet approved successfully");
+                 
+                setTimeout(() => {
+                    history.goBack();
+                }, 1000);
             } else {
                 console.error("Failed to update approval level");
-                toastr.error('Error Returning Marks Sheet');
+                toast.error('Error Returning Marks Sheet');
             }
         } catch (error) {
             console.error("Error updating approval level: ", error);
@@ -437,7 +439,7 @@ useEffect(() => {
 
     return (
         <>
-            <ToastContainer/>
+            
            
           
             
@@ -447,6 +449,7 @@ useEffect(() => {
             ) : (
                 <>
                 <div id="marks-return-sheet" style={{ width:"95%",marginLeft:"40px"}} className=' container'>
+                <ToastContainer/>
                         <div >
                         <div>
                             <div >
@@ -834,10 +837,10 @@ useEffect(() => {
 
                 
               
-
+            
           </div>
 
-
+          
                 </>
             )}
         </>
