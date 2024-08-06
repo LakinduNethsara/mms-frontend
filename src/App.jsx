@@ -52,6 +52,8 @@ import ManageCourseModule from './pages/Users/System_Analyst/CourseModule/Manage
 import AssignLecturerCourse from './pages/Users/System_Analyst/AssignLecturer/AssignLecturerCourse';
 import StudentRegCourses from './pages/Users/System_Analyst/StudentCourseReg/StudentRegCourses';
 import StudentsManagement from './pages/Users/System_Analyst/UsersManagement/StudentsManagement';
+import AddFAMarksByLec from './pages/Users/Lecturer/AddFAMarksByLec';
+import LecRelatedCoursesFA from './components/Users/Lecturer/LecRelatedCoursesFA';
 
 
 
@@ -253,6 +255,14 @@ function App() {
             <Route path="/screg">
               <StudentRegCourses />
 
+            </Route>
+
+            <Route path="/fa_addby_lec/:course_id/:course_name">
+              <AddFAMarksByLec />
+            </Route>
+
+            <Route path="/lec_related_course_fa">
+              <LecRelatedCoursesFA />
             </Route>
 
             {/* Catch-all route */}
