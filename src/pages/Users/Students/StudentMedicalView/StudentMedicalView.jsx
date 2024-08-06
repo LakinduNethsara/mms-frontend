@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
 import BackButton from '../../../../components/Users/AR/BackButton/BackButton';
+import { useHistory } from 'react-router-dom';
+
 export default function StudentmedicalView() {
 
-    const [user, setUser] = useState({});
-    const storedData = localStorage.getItem('user');
+    const history = useHistory();        //Use history to redirect
+
 
     const [studentId, setStudentId] = useState(null);  
     const [studentName, setStudentName] =useState(null);
@@ -75,21 +77,30 @@ export default function StudentmedicalView() {
     
     }
 
+    const [user, setUser] = useState({});   //Use state to store user data
+    const storedData = localStorage.getItem('user');    //Get user data from local storage
+  
+
 
     useEffect(() => {
+
+        if(storedData){   //Check if user is logged in
+            setUser(JSON.parse(storedData));      //Set user data
+            
+            if(JSON.parse(storedData).role != "student"){     //Check if user is not a valid type one
+              localStorage.removeItem('user');        //Remove user data and re direct to login page
+            }
+            
+          }else{                          //If user is not logged in
+            history.push('/login');       //Redirect to login page
+          }
+      
+
         setUniqueYears(null);
         setErrorMessage(null);
 
-        if(storedData){
-            setUser(JSON.parse(storedData));
-        }else{
-            setUser(null);
-        }
-      
-        if(user != null){
-            setStudentEmail(user.email);
-        }
         
+        setStudentEmail(user.email);
         loadStudentDetails();
         getAllMedicalSubmissions(selectedOption);       //get medicals for all years
 
@@ -99,7 +110,7 @@ export default function StudentmedicalView() {
 
   return (
     <div>
-        <div className='student-medical-view-main-div'>
+        <div className='student-medical-view-main-div' style={{marginTop:20,minWidth:"100%",paddingRight:"2%",paddingLeft:"2%",height:"100%"}}>
             
             {
                 studentMedicalList!=null && studentMedicalList.length>0 ? (

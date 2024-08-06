@@ -6,8 +6,11 @@ import { useState } from 'react';
 import './viewMedicalPage.css';
 import 'react-toastify/dist/ReactToastify.css';
 import BackButton from '../../../../components/Users/AR/BackButton/BackButton';
+import { useHistory } from 'react-router-dom';
 
 export default function ViewMedicalPage() {
+
+  const history = useHistory();        // history object to navigate to different pages
 
   const [medicalAvailability,setMedicalAvailability] = useState(true);        // state to check the availability of medical submissions
   const [medicalSubmissions,setMedicalSubmissions] = useState([]);            // state to store the medical submissions
@@ -69,8 +72,24 @@ export default function ViewMedicalPage() {
 
 
     };
+
+    const [user, setUser] = useState({});   //Use state to store user data
+    const storedData = localStorage.getItem('user');    //Get user data from local storage
+  
     
     useEffect(()=>{                 // fetch data when the page is loaded
+
+      if(storedData){   //Check if user is logged in
+        setUser(JSON.parse(storedData));      //Set user data
+        
+        if(JSON.parse(storedData).role != "ar"){     //Check if user is not a valid type one
+          localStorage.removeItem('user');        //Remove user data and re direct to login page
+        }
+        
+      }else{                          //If user is not logged in
+        history.push('/login');       //Redirect to login page
+      }
+  
         setUniqueYears([]);         // set unique years to empty array
         fetchData(selectedOption);    // fetch data according to the selected option
       },[]);

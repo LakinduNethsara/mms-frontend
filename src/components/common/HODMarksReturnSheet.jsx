@@ -28,6 +28,7 @@ export default function HODMarksReturnSheet(props) {
     console.log(marksSheet)
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const[selectedlec,setSelectedEmail]=useState('')
     const [filteredData, setFilteredData] = useState([]);
     var date = new DateObject({
         date: new Date(),
@@ -167,7 +168,7 @@ export default function HODMarksReturnSheet(props) {
     }
     
     const lecturerCertifyAssign={
-        "lecturer_id":searchTerm,
+        "lecturer_id":selectedlec,
         "course_id": course_id
     }
 
@@ -206,27 +207,45 @@ useEffect(() => {
 
     };
 
-
     useEffect(() => {
         SigFunc();
-    },[course_id,academicYear]);
+    }, [course_id, academicYear]);
+
 
     const SigFunc = async () => {
+        const fetchCCLevel = async () => {
             try {
                 const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/course_coordinator/${academicYear}`);
                 setISCClevel(response.data.content);
-
-                const response1 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
-                setISLeclevel(response1.data.content);
-            
-
-                const response2 = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
-                setISHODlevel(response2.data.content);
             } catch (error) {
-                console.error('Error fetching signature data:', error);
-            }
-       
-    }
+                console.error('Error fetching CC level data:', error);
+            } 
+        };
+    
+        const fetchLecLevel = async () => {
+            try {
+                const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
+                setISLeclevel(response.data.content);
+            } catch (error) {
+                console.error('Error fetching Lecturer level data:', error);
+            } 
+        };
+    
+        const fetchHODLevel = async () => {
+            try {
+                const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
+                setISHODlevel(response.data.content);
+            } catch (error) {
+                console.error('Error fetching HOD level data:', error);
+            } 
+        };
+    
+        // Execute each fetch function independently
+        fetchCCLevel();
+        fetchLecLevel();
+        fetchHODLevel();
+    };
+    
 
     
         
@@ -280,6 +299,7 @@ useEffect(() => {
                 console.log(approval_level)
                 toastr.success('Marks Sheet Sent successfully');
                
+               
             } else {
                 console.error("Failed to update approval level");
             }
@@ -303,7 +323,7 @@ useEffect(() => {
                 console.log("Marks Sheet Return successfully");
                 
                
-                // toastr.success('Marks Sheet Return successfully');
+                 toastr.success('Marks Sheet Return successfully');
                 // wait(1);
                 history.goBack();
             } else {
@@ -368,8 +388,9 @@ useEffect(() => {
         setFilteredData(filtered);
     };
 
-      const handleClick = (userId) => {
+      const handleClick = (userId,email) => {
         setSearchTerm(userId);
+        setSelectedEmail(email);
       }
 
 
@@ -731,7 +752,7 @@ useEffect(() => {
                                     filteredData.map((item, index) => (
                                         searchTerm == ''?
                                         null
-                                        : <button  key={index} type="button" className="list-group-item list-group-item-action"  onClick={() => handleClick(item.name_with_initials)}> {item.name_with_initials}</button >
+                                        : <button  key={index} type="button" className="list-group-item list-group-item-action"  onClick={() => handleClick(item.name_with_initials,item.email)}> {item.name_with_initials}</button >
                                     ))
                                     ) : (
                                         <button  type="button" className="list-group-item list-group-item-action">No results found.</button >

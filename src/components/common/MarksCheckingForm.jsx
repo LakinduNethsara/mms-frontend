@@ -225,7 +225,7 @@ console.log(ele.end)
                    ele.end.map((e)=>
                       (<tr>
                         <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
-                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.description=="score"&& approval_level=="finalized" ? 
+                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.description=="score"&& (approval_level=="finalized" ||approval_level=="AssignedRB")? 
                           <>
                           <input type="text" defaultValue={e.value} size={5} disabled ></input> 
                           {/* <button className=' btn btn-outline-dark btn-sm mx-4' style={{width:"80px"}} type='button' >Edit</button> */}
