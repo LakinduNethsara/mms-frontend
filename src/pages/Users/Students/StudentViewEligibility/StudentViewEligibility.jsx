@@ -4,14 +4,14 @@ import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
 import './studentViewEligibility.css';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import BackButton from '../../../../components/Users/AR/BackButton/BackButton';
 
 
 export default function StudentViewEligibility() {
 
-    const [user, setUser] = useState({});
-    const storedData = localStorage.getItem('user');
+    const history = useHistory();        //Use history to redirect
+
 
     const [studentId, setStudentId] = useState(null);  
     const [studentName, setStudentName] =useState(null);
@@ -63,18 +63,27 @@ export default function StudentViewEligibility() {
     
     }
 
+    const [user, setUser] = useState({});   //Use state to store user data
+    const storedData = localStorage.getItem('user');    //Get user data from local storage
+  
+
 
     useEffect(() => {
         
-        if(storedData){
-            setUser(JSON.parse(storedData));
-        }else{
-            setUser(null);
-        }
-
-        if(user != null){
-            setStudentEmail(user.email);
-        }
+        if(storedData){   //Check if user is logged in
+            setUser(JSON.parse(storedData));      //Set user data
+            
+            if(JSON.parse(storedData).role != "student"){     //Check if user is not a valid type one
+              localStorage.removeItem('user');        //Remove user data and re direct to login page
+            }
+            
+          }else{                          //If user is not logged in
+            history.push('/login');       //Redirect to login page
+          }
+      
+        
+        setStudentEmail(user.email);
+        
 
         loadStudentDetails();
         loadAcademicYearDetails();
@@ -87,7 +96,7 @@ export default function StudentViewEligibility() {
     
   return (
     <div>
-        <div className='student-caEligibility-view-main-div'>
+        <div className='student-caEligibility-view-main-div' style={{marginTop:"10px",minWidth:"100%",paddingRight:"2%",paddingLeft:"2%",height:"100%"}}>
 
             <table className="table table-striped">
 
