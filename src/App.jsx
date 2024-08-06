@@ -51,6 +51,7 @@ import MedicalsEligibiltyManage from './pages/Users/System_Analyst/Medical/Medic
 import ManageCourseModule from './pages/Users/System_Analyst/CourseModule/ManageCourseModule';
 import AssignLecturerCourse from './pages/Users/System_Analyst/AssignLecturer/AssignLecturerCourse';
 import StudentRegCourses from './pages/Users/System_Analyst/StudentCourseReg/StudentRegCourses';
+import StudentsManagement from './pages/Users/System_Analyst/UsersManagement/StudentsManagement';
 
 
 
@@ -218,6 +219,10 @@ function App() {
             <Route path="/cccbycc">
               <CourseCriteriaByCC />
             </Route>
+            <Route path="/manageallstudents">
+              <StudentsManagement />
+            </Route>
+
 
 
             <Route path="/ccresultsboard">

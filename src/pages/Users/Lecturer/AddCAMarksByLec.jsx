@@ -17,7 +17,7 @@ export default function AddCAMarksByLec() {
     const [submitButtonErrorMSG, setSubmitButtonErrorMSG] = useState('');
     const [dataCAMarksAll, setDataCAMarksAll] = useState([]);
     const [uniqueAssigmentName, setUniqueAssigmentName] = useState([]);
-    
+    const [currentAcademicYear, setCurrentAcademicYear] = useState('');
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -67,7 +67,7 @@ export default function AddCAMarksByLec() {
                 
                 const academicYearDetails = await LecturerService.getAcademicYearDetails();
                 const setCurrentAcY = (academicYearDetails[0].current_academic_year);
-                    
+                setCurrentAcademicYear(setCurrentAcY);
                 
 
 
@@ -126,7 +126,7 @@ export default function AddCAMarksByLec() {
         // Here you can set your state or variable based on arraysAreSame value
     }, [uniqueAssigmentName, evaluationCriteria]);
 
-    
+
     const handleMarksChange = (e) => {
         console.log("Handling marks change for student:", regStudent[currentStudentIndex]);
         const updatedCaMarks = caMarks.map((mark, index) =>
@@ -173,6 +173,14 @@ export default function AddCAMarksByLec() {
 
     console.log(caMarks[currentStudentIndex]?.student_id);
     console.log(caMarks);
+
+
+    const handleCACalculation = async () => {
+        const cirtiriaName =  await LecturerService.getCA(course_id);
+        const stMarksCA = await LecturerService.getMarksForCA(course_id,currentAcademicYear);
+        console.log(cirtiriaName);
+    };
+
 
     return (
         <div className='container'>
@@ -307,6 +315,7 @@ export default function AddCAMarksByLec() {
                             }
                         </tbody>
                     </table>
+                    <button className=' btn btn-outline-dark btn-sm' onClick={handleCACalculation}>Calculate CA Eligibility</button>
                 </div>
             </div>
 

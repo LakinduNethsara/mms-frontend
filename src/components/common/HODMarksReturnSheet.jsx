@@ -413,7 +413,7 @@ useEffect(() => {
                 <div>Loading...</div> // Display a loading message or spinner here
             ) : (
                 <>
-                <div id="marks-return-sheet" style={{ marginTop: "70px",width:"95%",marginLeft:"40px"}}>
+                <div id="marks-return-sheet" style={{ width:"95%",marginLeft:"40px"}} className=' container'>
                         <div >
                         <div>
                             <div >

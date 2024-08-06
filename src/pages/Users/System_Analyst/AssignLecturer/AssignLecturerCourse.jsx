@@ -182,19 +182,19 @@ export default function AssignLecturerCourse() {
                 </div>
             </form>
             <div className="mt-4 p-3">
-                <h5>Selected Lecturer IDs:</h5>
+                <h5 style={{color:"maroon"}}>Selected Lecturer IDs:</h5>
                 <ul className='list-group list-group-flush bg-transparent' style={{ width: "300px" }}>
                     {selectedLecturerIds.map((id, index) => (
                         <li key={`selected-${index}`} className='list-group-item bg-transparent d-flex justify-content-between align-items-center'>
                             {id}
-                            <button type="button" onClick={() => handleRemoveLecturerId(id)} className="btn btn-outline-danger btn-sm">Clear</button>
+                            <button type="button" onClick={() => handleRemoveLecturerId(id)} className="btn btn-outline-danger btn-sm" style={{width:"70px"}}>Cancel</button>
                         </li>
                     ))}
                 </ul>
             </div>
             <div className='my-3'>
-                <button type="button" onClick={handleSubmit} className="btn btn-outline-primary btn-sm">Submit</button>
-                <button type="button" onClick={handleClear} className="btn btn-outline-danger mx-2 btn-sm">Clear All</button>
+                <button type="button" onClick={handleSubmit} className="btn btn-outline-dark btn-sm" style={{width:"100px"}}>Submit</button>
+                <button type="button" onClick={handleClear} className="btn btn-outline-danger mx-2 btn-sm" style={{width:"100px"}}>Clear All</button>
             </div>
         </div>
   )

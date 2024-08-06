@@ -104,13 +104,13 @@ export default function ManageCourseModule() {
     };
 
     return (
-    <div className='container' style={{marginTop:"70px"}}>
+    <div className='container'>
         <ToastContainer/>
-        <div className=' mt-4 mb-5'>
-        <div className='h2 mt-lg-5'>Manage Course Module</div>
+        <div className=' mt-2 mb-5'>
+        <div className='h2 mt-lg-2'>Manage Course Module</div>
         </div>
         <form onSubmit={handleSubmit}>
-        <div className="row g-3 my-1">
+        <div className="row g-3">
             <div className="col-md">
             <div className="form-floating">
                 <input type="text" className="form-control" id="course_name" placeholder="Enter course name" value={course_name} onChange={(e) => setCourseName(e.target.value)} />
@@ -175,8 +175,8 @@ export default function ManageCourseModule() {
             </div>
         </div>
         <div className=' my-3'>
-            <button type="submit" className="btn btn-outline-primary btn-sm">Submit</button>
-            <button type="button" className="btn btn-outline-danger mx-2 btn-sm" onClick={() => {
+            <button type="submit" className="btn btn-outline-dark btn-sm" style={{width:"100px"}}>Submit</button>
+            <button type="button" className="btn btn-outline-danger mx-2 btn-sm" style={{width:"100px"}} onClick={() => {
             setCourseName('');
             setCourseId('');
             setType('');
@@ -189,7 +189,7 @@ export default function ManageCourseModule() {
         </div>
         </form>
         <div>
-            <div className="h2 mt-lg-5">Existing Courses</div>
+            <div className="h3 mt-lg-5" style={{color:"maroon"}}>Existing Courses</div>
             {courseData.length > 0 && (
                 <table className='table'>
                 <thead>
