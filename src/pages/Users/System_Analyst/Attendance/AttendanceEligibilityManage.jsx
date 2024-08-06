@@ -87,7 +87,7 @@ export default function AttendanceEligibilityManage() {
 
     return (
         <div className='container'>
-            <NavebarSA />
+           
             <div className='py-4'>
                 <div className="h2 mt-lg-5">Attendance</div>
                 <div className='my-2' style={{ float: "right" }}>

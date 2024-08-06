@@ -14,6 +14,10 @@ export default function AddCAMarksByLec() {
     const [currentStudentIndex, setCurrentStudentIndex] = useState(0);
     const [selectedCriteria, setSelectedCriteria] = useState({});
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+    const [submitButtonErrorMSG, setSubmitButtonErrorMSG] = useState('');
+    const [dataCAMarksAll, setDataCAMarksAll] = useState([]);
+    const [uniqueAssigmentName, setUniqueAssigmentName] = useState([]);
+    
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -50,11 +54,28 @@ export default function AddCAMarksByLec() {
                 console.log("All related students:", allRelatedStudents);
                 setRegStudent(allRelatedStudents);
 
+                // Fetch all data of CA Marks
+                const allDataOfCAMarksRes = await LecturerService.getAllDataOfCAMarks(course_id);
+                // console.log("All data of CA Marks:", allDataOfCAMarksRes);
+                const allData = allDataOfCAMarksRes;
+                // console.log(allData)
+                setDataCAMarksAll(allData);
+
+                // Assuming allData is already fetched and stored in state
+                const uniqueAssignmentNames = Array.from(new Set(allData.map(item => item.assignment_name)));
+                setUniqueAssigmentName(uniqueAssignmentNames);
+                
+                const academicYearDetails = await LecturerService.getAcademicYearDetails();
+                const setCurrentAcY = (academicYearDetails[0].current_academic_year);
+                    
+                
+
+
                 // Create initial CA marks entries
                 const initialCaMarks = allRelatedStudents.map(student => ({
                     student_id: student, // Adjust based on actual student ID property
                     course_id: course_id,
-                    academic_year: '2023-2024',
+                    academic_year: setCurrentAcY,
                     level: levelChar,
                     semester: semesterChar,
                     assignment_name: '',
@@ -74,9 +95,38 @@ export default function AddCAMarksByLec() {
     useEffect(() => {
         const isLastStudent = currentStudentIndex >= regStudent.length - 1;
         const isLastStudentScoreFilled = caMarks[currentStudentIndex]?.assignment_score !== '';
+        setSubmitButtonErrorMSG(isLastStudent && isLastStudentScoreFilled ? '' : 'All students marks are not filled');
         setIsSubmitDisabled(!(isLastStudent && isLastStudentScoreFilled));
     }, [currentStudentIndex, regStudent.length, caMarks]);
 
+
+    useEffect(() => {
+        // Assuming evaluationCriteria is already populated with objects that have an assignment_name property
+        // And uniqueAssigmentName is populated with strings
+    
+        // Sort uniqueAssigmentName array
+        const sortedUniqueAssignmentNames = [...uniqueAssigmentName].sort();
+    
+        // Sort evaluationCriteria array based on assignment_name property
+        const sortedEvaluationCriteria = [...evaluationCriteria].sort((a, b) => a.assignment_name.localeCompare(b.assignment_name));
+    
+        // Check if lengths are the same
+        const isSameLength = sortedUniqueAssignmentNames.length === sortedEvaluationCriteria.length;
+    
+        let arraysAreSame = false;
+    
+        if (isSameLength) {
+            // Compare contents
+            arraysAreSame = sortedUniqueAssignmentNames.every((name, index) => 
+                name === sortedEvaluationCriteria[index].assignment_name
+            );
+        }
+    
+        console.log("Arrays are the same:", arraysAreSame);
+        // Here you can set your state or variable based on arraysAreSame value
+    }, [uniqueAssigmentName, evaluationCriteria]);
+
+    
     const handleMarksChange = (e) => {
         console.log("Handling marks change for student:", regStudent[currentStudentIndex]);
         const updatedCaMarks = caMarks.map((mark, index) =>
@@ -85,7 +135,7 @@ export default function AddCAMarksByLec() {
                       ...mark,
                       assignment_score: e.target.value,
                       assignment_name: selectedCriteria.assignment_name,
-                      evaluation_criteria_id: selectedCriteria.id
+                      evaluation_criteria_id: selectedCriteria.evaluationcriteria_id
                   }
                 : mark
         );
@@ -113,7 +163,7 @@ export default function AddCAMarksByLec() {
     const handleSubmit = async () => {
         try {
             console.log("Submitting CA Marks:", caMarks);
-            await LecturerService.submitCAMarks(caMarks);
+            await LecturerService.insertCAMarks(caMarks);
             console.log("CA Marks submitted successfully!");
             // Optionally, add more logic here, such as redirecting or showing a success message
         } catch (error) {
@@ -134,50 +184,133 @@ export default function AddCAMarksByLec() {
                 <h4>reversedata: {reversedata}</h4> */}
             </div>
 
-            <select className="form-select" aria-label="Default select example" style={{ width: "200px" }} onChange={handleCriteriaChange}>
-                {
-                    evaluationCriteria.map((criteria, index) => (
-                        <option key={index}>{criteria.assignment_name}</option>
-                    ))
-                }
-            </select>
+        <div className=' row' >
+            <div className=' col-6 p-4 shadow-lg' style={{marginRight:"20px"}}>
+                <div>
+                    <label className=' form-label'>Select Assessment Type:</label>
+                    <select className="form-select" aria-label="Default select example" style={{ width: "200px" }} onChange={handleCriteriaChange}>
+                        {
+                            evaluationCriteria.map((criteria, index) => (
+                                <option key={index}>{criteria.assignment_name}</option>
+                            ))
+                        }
+                    </select>
+                </div>
+            
+            
 
-            <div style={{ marginTop: '20px' }}>
+            
+            <div style={{ marginTop: '70px',display:"flex"}}>
                 {regStudent.length > 0 && (
                     <>
                         {console.log(regStudent[currentStudentIndex].id)}
                         <label>
-                            Student ID: {caMarks[currentStudentIndex].student_id}
+                            Student ID : <span style={{ color: "maroon" }}> <b>{caMarks[currentStudentIndex]?.student_id}</b> </span>
                         </label>
-                        <input
+
+
+                        <div style={{display:"flex"}}>
+                        <label className=' form-label' style={{marginRight:"10px",paddingLeft:"40px"}}>
+                            Marks :
+                        </label>
+                        <input className='form-control' style={{ width: '200px' }}
                             type="number"
                             value={caMarks[currentStudentIndex]?.assignment_score || ''}
                             onChange={handleMarksChange}
                         />
+                        </div>
                     </>
                 )}
             </div>
 
             <div style={{ marginTop: '20px' }}>
-                <button className='btn btn-dark' onClick={handlePrevClick} disabled={currentStudentIndex === 0}>
-                    Previous
+                <button className='btn btn-outline-dark btn-sm'  style={{width:"100px"}} onClick={handlePrevClick} disabled={currentStudentIndex === 0}>
+                     Previous
                 </button>
-                <button className='btn btn-dark' onClick={handleNextClick} disabled={currentStudentIndex >= regStudent.length - 1} style={{ marginLeft: '10px' }}>
+                <button className='btn btn-outline-dark btn-sm'  onClick={handleNextClick} disabled={currentStudentIndex >= regStudent.length - 1} style={{ marginLeft: '10px' ,width:"100px"}}>
                     Next
                 </button>
-            </div>
-
-            <div style={{ marginTop: '20px' }}>
-                <button className='btn btn-success' onClick={handleSubmit} disabled={isSubmitDisabled}>
-                    Submit
-                </button>
-            </div>
-
-            <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: '20px' }}>
                 {currentStudentIndex === regStudent.length - 1 && (
-                    <p>All students' marks entered!</p>
+                    <p style={{color:"red"}}>Last Student ID...</p>
                 )}
             </div>
+            </div>
+            </div>
+            <div className=' col-5 shadow-lg' >
+                <div style={{ marginTop: '20px' }}>
+                    <label className=' form-label text-danger'  >{submitButtonErrorMSG}</label>
+                    <br />
+                    <button className='btn btn-outline-success btn-sm' style={{width:"100px"}} onClick={handleSubmit} disabled={isSubmitDisabled}>
+                        Submit
+                    </button>
+                </div>
+                <table className=' table mx-1'>
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Marks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            caMarks.map((mark, index) => (
+                                <tr key={index}>
+                                    <td>{mark.student_id}</td>
+                                    <td>{mark.assignment_score}</td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+            
+
+            <div className=' row mt-5' >
+                <h3>
+                    All Students 
+                </h3>
+                <div className=' '>
+                    <table className=' table mx-1'>
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                {
+                                    uniqueAssigmentName.map((name, index) => (
+                                        <th key={index}>{name}</th>
+                                    ))
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                regStudent.map((student, index) => (
+                                    <tr key={index}>
+                                        <td>{student}</td>
+                                        {
+                                            uniqueAssigmentName.map((name, index) => (
+                                                <td key={index}>
+                                                    {
+                                                        dataCAMarksAll
+                                                            .filter(item => item.student_id === student && item.assignment_name === name)
+                                                            .map((item, index) => (
+                                                                <span key={index}>{item.assignment_score}</span>
+                                                            ))
+                                                    }
+                                                </td>
+                                            ))
+                                        }
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            
         </div>
     );
 }

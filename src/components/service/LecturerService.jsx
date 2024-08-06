@@ -38,6 +38,26 @@ class LecturerService {
         }
     }
 
+    static async getAllDataOfCAMarks(course_id) {
+        try {
+            const response = await axios.get(`${LecturerService.BASE_URL}/api/StudentAssessment/getEnteredCAMarks/${course_id}`);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async getAcademicYearDetails(course_id) {
+        try {
+            const response = await axios.get(`${LecturerService.BASE_URL}/api/AssistantRegistrar/getAcademicYearDetails`);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    
+
 }
 
 export default LecturerService;
