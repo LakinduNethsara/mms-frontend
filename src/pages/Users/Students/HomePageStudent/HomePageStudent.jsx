@@ -9,8 +9,7 @@ import './homePageStudent.css';
 
 export default function HomePageStudent() {
 
-  const [user, setUser] = useState({});
-  const storedData = localStorage.getItem('user');
+  
 
 
   const history = useHistory();
@@ -80,12 +79,20 @@ export default function HomePageStudent() {
   }
 
 
+  const [user, setUser] = useState({});   //Use state to store user data
+  const storedData = localStorage.getItem('user');    //Get user data from local storage
+
+
   useEffect(() => {
-    if(storedData){
-      setUser(JSON.parse(storedData));
+    if(storedData){   //Check if user is logged in
+      setUser(JSON.parse(storedData));      //Set user data
       
-    }else{
-      setUser(null);
+      if(JSON.parse(storedData).role != "student"){     //Check if user is not a valid type one
+        localStorage.removeItem('user');        //Remove user data and re direct to login page
+      }
+      
+    }else{                          //If user is not logged in
+      history.push('/login');       //Redirect to login page
     }
 
     if(user != null){
@@ -95,12 +102,16 @@ export default function HomePageStudent() {
   }, [studentEmail,studentDepartmentId,studentLevel,studentSemester])
 
 
+  
+  
+
+
 
 
 
   return (
     
-    <div className='student-home-page-main-div'>
+    <div className='student-home-page-main-div' style={{marginTop:"20px",maxWidth:"100%"}}>
 
       <div className='student-home-page-main-body' style={{boxShadow:"0 0 10px 0 rgba(0, 0, 0, 0.2)",marginTop: "20px",paddingRight: "2%",paddingLeft: "2%",paddingTop: "10px",marginLeft: "auto",marginRight: "auto",height: "100%",minWidth: "500px",minHeight: "200px",width: "auto",maxWidth: "100%"}}>
 

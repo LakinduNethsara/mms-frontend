@@ -79,7 +79,7 @@ export default function StudentWithHeldSubjects() {
     
   return (
     <div >
-        <div className='student-with-held-view-main-div'>
+        <div className='student-with-held-view-main-div' style={{marginTop:"10px",minWidth:"100%",marginInline:"2%",paddingLeft:"2%",height:"100%"}}>
 
             <table className="table table-striped">
 

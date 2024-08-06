@@ -84,7 +84,7 @@ export default function StudentViewCourseDetails() {
 
   return (
     <div>
-      <div className='view-course-details-main-div'>
+      <div className='view-course-details-main-div' style={{marginTop:"10px",minWidth:"100%",paddingRight:"2%",paddingLeft:"2%",height:"100%"}}>
         
         <table className="table table-striped">
           

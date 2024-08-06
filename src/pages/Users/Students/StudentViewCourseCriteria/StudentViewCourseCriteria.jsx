@@ -36,7 +36,7 @@ export default function StudentViewCourseCriteria() {
 
 
   return (
-    <div className='student-view-course-criteria-main-div'>
+    <div className='student-view-course-criteria-main-div' style={{marginTop:"10px",minWidth:"100%",paddingRight:"2%",paddingLeft:"2%",height:"100%"}}>
 
         <div className='view-criteria-main-body-div'>
 

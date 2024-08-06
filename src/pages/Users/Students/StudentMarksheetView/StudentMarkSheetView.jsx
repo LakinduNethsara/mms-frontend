@@ -43,8 +43,23 @@ export default function StudentMarkSheetView() {
         }
     }
 
+    const [user, setUser] = useState({});   //Use state to store user data
+    const storedData = localStorage.getItem('user');    //Get user data from local storage
+  
 
     useEffect(() => {
+        if(storedData){   //Check if user is logged in
+            setUser(JSON.parse(storedData));      //Set user data
+            
+            if(JSON.parse(storedData).role != "student"){     //Check if user is not a valid type one
+              localStorage.removeItem('user');        //Remove user data and re direct to login page
+            }
+            
+          }else{                          //If user is not logged in
+            history.push('/login');       //Redirect to login page
+          }
+
+          
         getStudentGrade();
     }, [])
 
@@ -52,7 +67,7 @@ export default function StudentMarkSheetView() {
     
 
   return (
-    <div className='marksheet-view-main-div'>
+    <div className='marksheet-view-main-div' style={{marginTop:"15px",minWidth:"100%",paddingRight:"50px",paddingLeft:"50px",height:'100%'}}>
         <h5 style={{color:"blue",textAlign:"center"}}>
             University of Ruhuna - Faculty of Technology
         </h5>

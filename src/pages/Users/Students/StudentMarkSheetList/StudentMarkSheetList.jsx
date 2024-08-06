@@ -26,7 +26,22 @@ export default function StudentMarkSheetList() {
         }
     }
 
+
+    const [user, setUser] = useState({});   //Use state to store user data
+  const storedData = localStorage.getItem('user');    //Get user data from local storage
+
     useEffect(() => {
+      if(storedData){   //Check if user is logged in
+        setUser(JSON.parse(storedData));      //Set user data
+        
+        if(JSON.parse(storedData).role != "student"){     //Check if user is not a valid type one
+          localStorage.removeItem('user');        //Remove user data and re direct to login page
+        }
+        
+      }else{                          //If user is not logged in
+        history.push('/login');       //Redirect to login page
+      }
+      
         getPublishedMarkSheets();
       }, [])
 
@@ -37,7 +52,7 @@ export default function StudentMarkSheetList() {
   return (
 
 
-    <div className='student-published-marksheet-list-main-div'>
+    <div className='student-published-marksheet-list-main-div' style={{marginTop:"10px",maxWidth:"100%"}}>
 
       <div className='row published-mark-sheet-list-main-row'>
 
