@@ -100,7 +100,7 @@ export default function StudentViewEligibility() {
 
             <table className="table table-striped">
 
-                <thead className='student-eligibility-table-head'>
+                <thead className='student-eligibility-table-head' style={{backgroundColor:"#ffffff",position:"sticky",top:"0px",zIndex:"1"}}>
 
                     <tr>
                         <th colSpan={4} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>

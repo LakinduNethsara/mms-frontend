@@ -95,7 +95,7 @@ export default function StudentViewCourseDetails() {
         
         <table className="table table-striped">
           
-        <thead className='student-course-table-head'>
+        <thead className='student-course-table-head' style={{backgroundColor:"#ffffff",position:"sticky",top:"0px",zIndex:"1"}}>
           <tr>
             <th colSpan={7} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
               <h5>View Course Details</h5> 

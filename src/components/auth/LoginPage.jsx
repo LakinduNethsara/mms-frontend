@@ -1,6 +1,8 @@
 import axios from 'axios'
 import React, { useState, useEffect, useRef } from 'react'
 import Typed from 'typed.js';
+import { ToastContainer, toast } from 'react-toastify';
+
 function LoginPage(){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -52,9 +54,11 @@ function LoginPage(){
                 window.location.href = "/lec_profile";
             }
             else{
+                
                 window.location.href = "/";
             }
         }catch(error){
+            toast.error("Invalid User Credentials");
             console.log(error);
         }
         
@@ -99,6 +103,7 @@ function LoginPage(){
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     )
 

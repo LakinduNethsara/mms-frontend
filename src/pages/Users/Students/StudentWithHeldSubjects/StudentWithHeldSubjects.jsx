@@ -91,7 +91,7 @@ export default function StudentWithHeldSubjects() {
 
             <table className="table table-striped">
 
-                <thead className='student-WH-table-head'>
+                <thead className='student-WH-table-head' style={{backgroundColor:"#ffffff",position:"sticky",top:"0px",zIndex:"1"}}>
                     <tr>
                         <th colSpan={3} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
                             <h5>With-held Subjects</h5> 

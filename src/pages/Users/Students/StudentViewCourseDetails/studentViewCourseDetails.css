@@ -13,9 +13,3 @@
     }
   }
 
-  .student-course-table-head {
-    background-color: #ffffff;
-    position: sticky;
-    top: 65px;
-    z-index: 1;
-  }

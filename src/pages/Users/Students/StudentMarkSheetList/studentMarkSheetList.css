@@ -9,12 +9,7 @@
     }
   }
 
-  .marks-sheet-list-table-head {
-    background-color: #ffffff;
-    position: sticky;
-    top: 10px;
-    z-index: 1;
-  }
+
 
   .published-mark-sheet-list-main-row {
     padding-left: 20px;
