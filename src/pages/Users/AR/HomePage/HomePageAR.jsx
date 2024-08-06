@@ -36,7 +36,7 @@ const handleChange = (link) => {
   return (
     <div>
       {/* horizontall cards*/ }
-      <div className="container functionCardContainer"  >
+      <div className="container functionCardContainer"style={{width:"950px"}}>
 
         <div className="row">
 
@@ -106,6 +106,15 @@ const handleChange = (link) => {
               <div className="card-body">
                 <br/><h5 className="card-title">Certify Marks Sheets</h5><br/>
                 <a href="/arCertifyMarks" className="btn btn-primary home-page-class-button">Certify</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="col mb-4"> 
+            <div className="card text-center functionCard">
+              <div className="card-body">
+                <br/><h5 className="card-title">Published Marks Sheets</h5><br/>
+                <a href="/arPublishedMarkSheets" className="btn btn-primary home-page-class-button">View</a>
               </div>
             </div>
           </div>
