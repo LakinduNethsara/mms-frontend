@@ -111,6 +111,12 @@ function Navbar() {
                                                 Certify Marks
                                                 </a>
                                             </li>
+
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
+                                                <a className="nav-link active" href="/arPublishedMarkSheets">                  {/*Link to the certify marks*/}
+                                                Published Marks Sheets
+                                                </a>
+                                            </li>
     
                                         </ul>
                                         

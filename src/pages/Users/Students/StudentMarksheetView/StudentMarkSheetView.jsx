@@ -55,7 +55,7 @@ export default function StudentMarkSheetView() {
         if(storedData){   //Check if user is logged in
             setUser(JSON.parse(storedData));      //Set user data
             
-            if(JSON.parse(storedData).role != "student"){     //Check if user is not a valid type one
+            if (!(JSON.parse(storedData).role == "student" || JSON.parse(storedData).role =='ar')){     //Check if user is not a valid type one
               localStorage.removeItem('user');        //Remove user data and re direct to login page
             }
             
