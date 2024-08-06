@@ -8,8 +8,7 @@ import BackButton from '../../../../components/Users/AR/BackButton/BackButton';
 
 export default function StudentViewCourseDetails() {
   
-  const [user, setUser] = useState({});
-  const storedData = localStorage.getItem('user');
+
 
 
   const history = useHistory();
@@ -60,20 +59,28 @@ export default function StudentViewCourseDetails() {
 
   }
 
+  const [user, setUser] = useState({});   //Use state to store user data
+  const storedData = localStorage.getItem('user');    //Get user data from local storage
 
 
 
   useEffect(() => {
-    
-    if(storedData){
-      setUser(JSON.parse(storedData));
-    }else{
-      setUser(null);
+
+    if(storedData){   //Check if user is logged in
+      setUser(JSON.parse(storedData));      //Set user data
+      
+      if(JSON.parse(storedData).role != "student"){     //Check if user is not a valid type one
+        localStorage.removeItem('user');        //Remove user data and re direct to login page
+      }
+      
+    }else{                          //If user is not logged in
+      history.push('/login');       //Redirect to login page
     }
 
-    if(user != null){
-      setStudentEmail(user.email);
-    }
+
+  
+    setStudentEmail(user.email);
+
 
 
     loadStudentDetails();

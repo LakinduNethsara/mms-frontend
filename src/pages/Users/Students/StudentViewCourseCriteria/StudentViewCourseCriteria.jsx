@@ -4,10 +4,13 @@ import { useState } from 'react';
 import './studentViewCourseCriteria.css';
 import axios from 'axios';
 import BackButton from '../../../../components/Users/AR/BackButton/BackButton';
+import { useHistory } from 'react-router-dom';
 
 
 
 export default function StudentViewCourseCriteria() {
+
+  const history = useHistory(); //Use history to redirect
 
     const location = useLocation(); //Get the location details from the URL
     
@@ -26,8 +29,25 @@ export default function StudentViewCourseCriteria() {
       }
     }
 
+    const [user, setUser] = useState({});   //Use state to store user data
+    const storedData = localStorage.getItem('user');    //Get user data from local storage
+  
+
 
     useEffect(() => {
+
+      if(storedData){   //Check if user is logged in
+        setUser(JSON.parse(storedData));      //Set user data
+        
+        if(JSON.parse(storedData).role != "student"){     //Check if user is not a valid type one
+          localStorage.removeItem('user');        //Remove user data and re direct to login page
+        }
+        
+      }else{                          //If user is not logged in
+        history.push('/login');       //Redirect to login page
+      }
+
+      
       loadCourseCriteriaList();
     },[])
 

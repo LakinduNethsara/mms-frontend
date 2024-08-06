@@ -4,7 +4,11 @@ import { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
 import BackButton from '../../../../components/Users/AR/BackButton/BackButton';
+import { useHistory } from 'react-router-dom';
+
 export default function StudentmedicalView() {
+
+    const history = useHistory();        //Use history to redirect
 
 
     const [studentId, setStudentId] = useState(null);  
