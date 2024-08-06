@@ -55,7 +55,7 @@ export default function AddFAMarksByLec() {
                 setRegStudent(allRelatedStudents);
 
                 // Fetch all data of CA Marks
-                const allDataOfCAMarksRes = await LecturerService.getAllDataOfCAMarks(course_id);
+                const allDataOfCAMarksRes = await LecturerService.getAllDataOfFAMarks(course_id);
                 // console.log("All data of CA Marks:", allDataOfCAMarksRes);
                 const allData = allDataOfCAMarksRes;
                 // console.log(allData)
@@ -185,7 +185,7 @@ export default function AddFAMarksByLec() {
     return (
         <div className='container'>
             <div className='container' style={{ marginTop: "50px" }}>
-                <h4>CA Marks Entry: <span style={{ color: "maroon" }}>{course_name} - {course_id}</span></h4>
+                <h4>FA Marks Entry: <span style={{ color: "maroon" }}>{course_name} - {course_id}</span></h4>
                 <br />
                 {/* <h4>Level: {level}</h4>
                 <h4>Semester: {semester}</h4>
@@ -315,7 +315,7 @@ export default function AddFAMarksByLec() {
                             }
                         </tbody>
                     </table>
-                    <button className=' btn btn-outline-dark btn-sm' onClick={handleCACalculation}>Calculate CA Eligibility</button>
+                    {/* <button className=' btn btn-outline-dark btn-sm' onClick={handleCACalculation}>Calculate CA Eligibility</button> */}
                 </div>
             </div>
 
