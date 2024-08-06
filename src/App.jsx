@@ -125,8 +125,12 @@ function App() {
               </Route>
 
               <Route path="/arFinalMarkSheet/:level/:semester/:dept">   {/* Link to view marks remaining to certify page */}
-              <DeanFinalMarkSheet approved_level={"RB"}/>
-            </Route>
+                <DeanFinalMarkSheet approved_level={"RB"}/>
+              </Route>
+
+              <Route path="/arPublishedMarkSheets">   {/* Link to view published marks seets list */}
+                <StudentMarkSheetList/>
+              </Route>
             
             {/* AR navigations ends here ---------------------------------------------*/}
 
