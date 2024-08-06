@@ -47,6 +47,15 @@ class LecturerService {
         }
     }
 
+    static async getAllDataOfFAMarks(course_id) {
+        try {
+            const response = await axios.get(`${LecturerService.BASE_URL}/api/StudentAssessment/getEnteredFAMarks/${course_id}`);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     static async getAcademicYearDetails(course_id) {
         try {
             const response = await axios.get(`${LecturerService.BASE_URL}/api/AssistantRegistrar/getAcademicYearDetails`);
@@ -74,6 +83,14 @@ class LecturerService {
         }
     }
 
+    static async getEvaluationCriteriaFA(course_id) {
+        try {
+            const response = await axios.get(`${LecturerService.BASE_URL}/api/evaluationCriteriaName/getAssessmentType/${course_id}/End`);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
     
 
 }
