@@ -53,8 +53,11 @@ export default function HODProfile() {
     const department = user?.department_id;
 
     useEffect(() => {
-        getresultBoard();
+        if (department) { // Ensure department is defined before fetching
+            getresultBoard();
+        }
     }, [department]);
+    
 
     const getresultBoard = async () => {
         try {
@@ -85,27 +88,33 @@ export default function HODProfile() {
 
                 <h2>Results Board</h2>
                 <div className="row">
-                    {resultBoard.map((board) => (
-                        <div className="col-md-4 mb-4" key={board.id}>
-                            <div className="card text-center functionCard">
-                                <div className="card-body">
-                                  {console.log(board.department,board.level,board.semester,board.conducted_date_time)}
-                                    <h5>{`Department: ${board.department}`}</h5>
-                                    <p>{`Level: ${board.level}`}</p>
-                                    <p>{`Semester: ${board.semester}`}</p>
-                                    <p>{`Status: ${board.status}`}</p>
-                                    {board.conducted_date_time && (
-                                        <p>{`Conducted: ${new Date(board.conducted_date_time).toLocaleString()}`}</p>
-                                    )}
-                                    {
-                                      board.status=="Started"?<a href={`/FinalMarkSheet/${board.level}/${board.semester}/${board.department}`} className="btn btn-primary">View </a>:null
-                                    }
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+    {resultBoard.length > 0 ? (
+        resultBoard.map((board) => (
+            <div className="col-md-4 mb-4" key={board.id}>
+                <div className="card text-center functionCard">
+                    <div className="card-body">
+                        {/* Removed console.log for clarity */}
+                        <h5>{`Department: ${board.department}`}</h5>
+                        <p>{`Level: ${board.level}`}</p>
+                        <p>{`Semester: ${board.semester}`}</p>
+                        <p>{`Status: ${board.status}`}</p>
+                        {board.conducted_date_time && (
+                            <p>{`Conducted: ${new Date(board.conducted_date_time).toLocaleString()}`}</p>
+                        )}
+                        {board.status === "Started" ? (
+                            <a href={`/FinalMarkSheet/${board.level}/${board.semester}/${board.department}`} className="btn btn-primary">View</a>
+                        ) : null}
+                    </div>
                 </div>
+            </div>
+        ))
+    ) : (
+        <div className="col-md-12">
+            <h5>No results available.</h5>
+        </div>
+    )}
+</div>
+
             </div>
         </>
     );

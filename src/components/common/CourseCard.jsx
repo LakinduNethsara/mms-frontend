@@ -131,7 +131,7 @@ export default function CourseCard(props) {
                ) : (
                 <div className=' container' style={{ marginTop: '150px' }}>
                 <div className="alert alert-primary" role="alert">
-                  {errorMsg}
+                  <h4>No Marks Return Sheet for Approval</h4>
                 </div>
                 </div>
                )

@@ -44,12 +44,14 @@ import CreateResultBoard from './pages/Users/AR/CreateResultBoard/CreateResultBo
 import ResultBoardMarksSheetAssign from './pages/Users/AR/ResultBoardMarksSheetAssign/ResultBoardMarksSheetAssign';
 import ARJoinResultBoard from './pages/Users/AR/ARJoinResultBoard/ARJoinResultBoard';
 import CertifyMarksPage from './pages/Users/AR/CertifyMarksPage/CertifyMarksPage';
+import CCResultsBoard from './pages/Users/CC/CCResultsBoard';
 import LecturersManagement from './pages/Users/System_Analyst/UsersManagement/LecturersManagement';
 import AttendanceEligibilityManage from './pages/Users/System_Analyst/Attendance/AttendanceEligibilityManage';
 import MedicalsEligibiltyManage from './pages/Users/System_Analyst/Medical/MedicalsEligibiltyManage';
 import ManageCourseModule from './pages/Users/System_Analyst/CourseModule/ManageCourseModule';
 import AssignLecturerCourse from './pages/Users/System_Analyst/AssignLecturer/AssignLecturerCourse';
 import StudentRegCourses from './pages/Users/System_Analyst/StudentCourseReg/StudentRegCourses';
+
 
 
 
@@ -160,6 +162,9 @@ function App() {
             <Route exact path="/ccMarksReturnSheet/:course_id/:course_name/:department" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"finalized"} />} 
             />
+            <Route exact path="/RBMarksReturnSheet/:course_id/:course_name/:department" 
+              render={(props) => <HODMarksReturnSheet {...props}  approved_level={"AssignedRB"} />} 
+            />
             <Route exact path="/lMarksReturnSheet/:course_id/:course_name/:department" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"course_coordinator"} />} 
             />
@@ -214,6 +219,11 @@ function App() {
               <CourseCriteriaByCC />
             </Route>
 
+
+            <Route path="/ccresultsboard">
+              <CCResultsBoard />
+            </Route>
+
             {/* System analyst */}
             <Route path="/managestaff">
               <LecturersManagement />
@@ -237,6 +247,7 @@ function App() {
 
             <Route path="/screg">
               <StudentRegCourses />
+
             </Route>
 
             {/* Catch-all route */}

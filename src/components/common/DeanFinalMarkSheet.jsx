@@ -418,7 +418,7 @@ const alternateRowStyle = {
                   {Allcourses.map((id, index) => (
                     <React.Fragment key={index}>
                       <th className=' table-secondary'>{id.course_id}</th>
-                      {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" ?<th className=' table-primary'>Grade</th>:null}
+                      {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" || approved_level=="HOD" ?<th className=' table-primary'>Grade</th>:null}
                     </React.Fragment>
                   ))}
                   <th scope="col" className=' table-warning'>SGPA</th>
@@ -433,7 +433,7 @@ const alternateRowStyle = {
                       const courseData = student.courses.find((c) => c.course_id == id.course_id);
                       return (
                         <React.Fragment key={index}>
-                          {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" ?<td>{courseData ? courseData.overall_score : "-"}</td>:null}
+                          {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" || approved_level=="HOD" ?<td>{courseData ? courseData.overall_score : "-"}</td>:null}
                           <td>{courseData ? courseData.grade : "-"}</td>
                         </React.Fragment>
                       );
@@ -534,8 +534,7 @@ const alternateRowStyle = {
           </div>:null}
           
           
-
-          <form onSubmit={handleSubmit}>
+          {approved_level!="HOD"?  <form onSubmit={handleSubmit}>
             <input
               to={``}
               type="submit"
@@ -548,7 +547,8 @@ const alternateRowStyle = {
               }} />
             <br />
             <br />
-          </form>
+          </form>:null}
+         
           
         </>
       ) : (
