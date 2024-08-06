@@ -47,6 +47,10 @@ export default function StudentViewCourseCriteria() {
         history.push('/login');       //Redirect to login page
       }
 
+      if(course==null){
+        history.push('/studentViewCourseDetails')
+      }
+
       
       loadCourseCriteriaList();
     },[])
@@ -59,6 +63,10 @@ export default function StudentViewCourseCriteria() {
     <div className='student-view-course-criteria-main-div' style={{marginTop:"10px",minWidth:"100%",paddingRight:"2%",paddingLeft:"2%",height:"100%"}}>
 
         <div className='view-criteria-main-body-div'>
+
+          { course==null? (
+            history.push('/studentViewCourseDetails')
+          ):(null)}
 
             <div className='row' style={{textAlign:"center",paddingBottom:"15px"}}><h5>{course.course_name}</h5></div>
             

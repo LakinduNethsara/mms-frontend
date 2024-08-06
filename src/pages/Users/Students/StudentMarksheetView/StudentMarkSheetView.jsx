@@ -5,9 +5,12 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import BackButton from '../../../../components/Users/AR/BackButton/BackButton';
+import { useHistory } from 'react-router-dom';
 
 
 export default function StudentMarkSheetView() {
+    const history = useHistory(); //Use history to redirect
+
     const location = useLocation(); //Get the location details from the URL
 
     const selectedMarkSheet = location.state;
@@ -19,6 +22,7 @@ export default function StudentMarkSheetView() {
     const [courseDetails, setCourseDetails] = React.useState([]);      // state to store the course details
 
     const getStudentGrade = async ()=>{
+
         try{
             const gradeResponse =await axios.get(`http://localhost:9090/api/Student/getGradesForPublishedMarksSheet/${selectedMarkSheet.level}/${selectedMarkSheet.semester}/${selectedMarkSheet.department}/${selectedMarkSheet.academic_year}`);
             
@@ -59,6 +63,7 @@ export default function StudentMarkSheetView() {
             history.push('/login');       //Redirect to login page
           }
 
+            
           
         getStudentGrade();
     }, [])
@@ -68,6 +73,13 @@ export default function StudentMarkSheetView() {
 
   return (
     <div className='marksheet-view-main-div' style={{marginTop:"15px",minWidth:"100%",paddingRight:"50px",paddingLeft:"50px",height:'100%'}}>
+        
+        {
+            selectedMarkSheet == null  ? (
+                history.push('/StudentViewMarkSheetList')
+            ):(null)
+        }
+        
         <h5 style={{color:"blue",textAlign:"center"}}>
             University of Ruhuna - Faculty of Technology
         </h5>
