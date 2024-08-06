@@ -39,22 +39,6 @@ export default function ResultBoardMarksSheetAssign() {
 
 
 
-    // const selectedResultBoard = {                //Object to store the object that is passed with the URL to this page
-    //     id: location.state.id,
-    //     department: location.state.department,
-    //     level: location.state.level,
-    //     semester: location.state.semester,
-    //     academic_year: location.state.academic_year,
-    //     status: location.state.status,
-    //     created_date_time: location.state.created_date_time,
-    //     conducted_date_time: location.state.conducted_date_time
-    // }    
-
-    /* 
-        Above object is replaces with following useState. If you need to revete this, Just un comment 
-        above "selectedResultBoard" object and comment below useState
-    */
-
     const [selectedResultBoard, setSelectedResultBoard] = useState({
         id: location.state.id,
         department: location.state.department,
@@ -355,12 +339,31 @@ export default function ResultBoardMarksSheetAssign() {
 
 
 
+    const [user, setUser] = useState({});   //Use state to store user data
+    const storedData = localStorage.getItem('user');    //Get user data from local storage
+  
     
 
 
 
 
     useEffect(() => {
+
+        if(storedData){   //Check if user is logged in
+            setUser(JSON.parse(storedData));      //Set user data
+            
+            if(JSON.parse(storedData).role != "ar"){     //Check if user is not a valid type one
+              localStorage.removeItem('user');        //Remove user data and re direct to login page
+            }
+            
+          }else{                          //If user is not logged in
+            history.push('/login');       //Redirect to login page
+          }
+
+        if(location.state ==null){     //Check if the location state is undefined
+          history.push('/createResultsBoard')
+        }
+          
 
         setAssignButtonClicked(false); //Set the assign button clicked status to false
 
