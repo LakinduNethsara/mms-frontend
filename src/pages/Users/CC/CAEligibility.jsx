@@ -30,7 +30,7 @@ export default function CAEligibility() {
     <div>
         <div className=' container mt-5' >
             <div style={{marginTop:"90px"}}>
-                    <div className=' h2 mx-2' >Students CA Eligibile of <span className=' text-primary'>{course_name}</span></div>
+                    <div className=' h2 mx-2' >Students CA Eligibile of <span style={{color:"maroon"}}>{course_name}</span></div>
                     <div className=' mt-5' style={{overflow:"auto", width:"100%", height:"600px"}}>
                             <table className=' table'>
                                     <thead>

@@ -24,12 +24,19 @@ export default function CourseCriteriaByCC() {
     const [endSequence, setEndSequence] = useState(1); // Initialize endSequence in state
     const storedData = localStorage.getItem('user');
     const [email,setEmail] =useState();
-    const [userData, setUserData] = useState({});
-    console.log(userData);
+    const [userData, setUserData] = useState([]);
+
+    const [noOfConducted, setNoOfConducted] = useState('');
+    const [noOfTaken, setNoOfTaken] = useState('');
+    const [disableInputs, setDisableInputs] = useState(false);
+
+    console.log(userData.email);
+
     useEffect(() => {
         if(storedData){
 
           setUserData(JSON.parse(storedData));
+          fetchData(JSON.parse(storedData).email);
         }else{
 
           setUserData(null);
@@ -38,29 +45,46 @@ export default function CourseCriteriaByCC() {
     }, []);
 
 
-    const fetchData = async ()=>{
+    const fetchData = async (email)=>{
+      
         try{
             const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`)
           // console.log(result1.data.content);
             setAssessmentTypesData(result1.data.content);
-    
-            const result2  = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${userData.email}`);
+
+            console.log(" hello",userData.email);
+
+            const result2  = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${email}`);
           // console.log(result2.data.content);
             setCidsData(result2.data.content);
         }catch(error){
             console.log(error);
         }
-        
         }
 
         useEffect(() => {
-            fetchData();
+            
         }, [showButton,reloadButton])
         
           // Function to handle Assessment Type selection
-            const handleAssessmentTypeChange = (event) => {
-            setSelectedAssessmentType(event.target.value);
-            };
+          const handleAssessmentTypeChange = (event) => {
+            const selectedValue = event.target.value;
+            setSelectedAssessmentType(selectedValue);
+          
+            // Check if the selected value is "Final Assessment"
+            if (selectedValue === 'End') {
+              // Set the values to '1' and disable the inputs
+              setNoOfConducted('1');
+              setNoOfTaken('1');
+              setDisableInputs(true);
+            } else {
+              // Reset the values and enable the inputs
+              setNoOfConducted('');
+              setNoOfTaken('');
+              setDisableInputs(false);
+            }
+          };
+          
       
             // Function to handle form submission
         const handleSubmit = (event) => {
@@ -217,8 +241,26 @@ export default function CourseCriteriaByCC() {
                 </div>
                 <div className=' col-5' style={{display:"flex",width:"auto"}}>
                   
-                  <input name="no_of_conducted" type={"number"} className='form-control m-2' placeholder='Select No of Conduct' required/>
-                  <input name="no_of_taken" type={"number"} className='form-control m-2' placeholder='Select No of Take' required/>
+                <input
+                  name="no_of_conducted"
+                  type="number"
+                  className='form-control m-2'
+                  placeholder='Select No of Conduct'
+                  required
+                  value={noOfConducted}
+                  onChange={(e) => setNoOfConducted(e.target.value)}
+                  disabled={disableInputs}
+                />
+                  <input
+                    name="no_of_taken"
+                    type="number"
+                    className='form-control m-2'
+                    placeholder='Select No of Take'
+                    required
+                    value={noOfTaken}
+                    onChange={(e) => setNoOfTaken(e.target.value)}
+                    disabled={disableInputs}
+                  />
                   
                 </div>
                 <div className=' col-5' style={{display:"flex",width:"auto"}}>

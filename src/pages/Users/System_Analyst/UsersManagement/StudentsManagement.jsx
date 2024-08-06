@@ -13,7 +13,7 @@ export default function StudentsManagement() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
 
-    const expectedKeys = ["student_id", "full_name", "name_with_initials", "user_name", "email", "password", "registered_year", "department_id"];
+    const expectedKeys = ["user_id", "full_name", "name_with_initials", "email","password","registered_year","role","department_id","is_deleted"];
 
 
     useEffect(() => {
@@ -22,7 +22,7 @@ export default function StudentsManagement() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get("http://localhost:9090/api/studentdetails/getallstudentsdetails");
+            const response = await axios.get("http://localhost:9090/api/lecreg/get/alllecturersdetails");
             setStudentsData(response.data.content);
         } catch (error) {
             console.error("Error fetching data from API:", error);
@@ -30,7 +30,7 @@ export default function StudentsManagement() {
     };
 
     const deleteUser = async (id) => {
-        await axios.delete(`http://localhost:9090/api/studentdetails/delastudent/${id}`);
+        await axios.delete(`http://localhost:9090/api/lecreg/delete/deleteById/${id}`);
         toast.success("Student deleted successfully!");
         fetchData();
     };
@@ -74,7 +74,7 @@ export default function StudentsManagement() {
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:9090/api/attendanceEligibility/insertbulkattendance", data);
+            await axios.post("http://localhost:9090/api/lecreg/insertbulkusersdetails", data);
             alert("Data submitted successfully!");
             window.location.reload();
         } catch (error) {
@@ -88,8 +88,8 @@ export default function StudentsManagement() {
         const wb = XLSX.utils.book_new();
         // Create a new worksheet with the specified column headers
         const ws = XLSX.utils.json_to_sheet([
-            { student_id: "", full_name: "", name_with_initials: "", user_name: "", email: "", password: "", registered_year: "", department_id: "" }
-        ], { header: ["student_id", "full_name", "name_with_initials", "user_name","email","password","registered_year","department_id"], skipHeader: false });
+            { user_id: "", full_name: "", name_with_initials: "", email: "", password: "", registered_year: "",role:"", department_id: "",is_deleted:"" }
+        ], { header: ["user_id", "full_name", "name_with_initials", "email","password","registered_year","role","department_id","is_deleted"], skipHeader: false });
         // Add the worksheet to the workbook
         XLSX.utils.book_append_sheet(wb, ws, "Students Register Template");
         // Write the workbook to a file and download it
@@ -108,13 +108,13 @@ export default function StudentsManagement() {
 
     const handleEditSubmit = async (updatedUser) => {
 
-        await axios.put(`http://localhost:9090/api/studentdetails/updateastudent`, updatedUser);
+        await axios.put(`http://localhost:9090/api/lecreg/savelecdetails`, updatedUser);
         fetchData();
 };
     return (
         <div className='container'>
             <div className='py-4'>
-                <div className="h2 mt-lg-5">Students Registraion</div>
+                <div className="h2 ">Students Registraion</div>
                 <div className=' my-2' style={{float:"right"}}>
                     <button onClick={downloadTemplate} className='btn btn-success mt-3'>Download Template</button>
                 </div>
@@ -154,7 +154,6 @@ export default function StudentsManagement() {
                             <th scope="col">Student ID</th>
                             <th scope="col">Full Name</th>
                             <th scope="col">Name with initials</th>
-                            <th scope="col">Username</th>
                             <th scope="col">Email</th>
                             <th scope="col">Registered Year</th>
                             <th scope="col">Department </th>
@@ -165,16 +164,15 @@ export default function StudentsManagement() {
                         {studentsData?.map((row, index) => (
                         <tr key={index} >
                             <th scope="row">{index + 1}</th>
-                            <td>{row.student_id}</td>
+                            <td>{row.user_id}</td>
                             <td>{row.full_name}</td>
                             <td>{row.name_with_initials}</td>
-                            <td>{row.user_name}</td>
                             <td>{row.email}</td>
                             <td>{row.registered_year}</td>
                             <td>{row.department_id}</td>
                             <td>
-                                <button className='btn btn-outline-primary btn-sm mx-1' onClick={()=>openEditModal(row)}>Edit</button>
-                                <button className='btn btn-outline-danger btn-sm mx-1' onClick={()=>deleteUser(row.id)}>Delete</button>
+                                <button style={{width:"100px"}} className='btn btn-outline-dark btn-sm' onClick={()=>openEditModal(row)}>Edit</button>
+                                <button style={{width:"100px"}} className='btn btn-outline-danger btn-sm mt-2' onClick={()=>deleteUser(row.id)}>Delete</button>
                             </td>
                         </tr>
                         ))}

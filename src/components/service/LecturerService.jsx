@@ -56,6 +56,24 @@ class LecturerService {
         }
     }
 
+    static async getCA(course_id) {
+        try {
+            const response = await axios.get(`${LecturerService.BASE_URL}/api/evaluationCriteria/getCA/${course_id}`); 
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async getMarksForCA(course_id,academic_year) {
+        try {
+            const response = await axios.get(`${LecturerService.BASE_URL}/api/StudentAssessment/getMarksForCA/${course_id},${academic_year}`);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     
 
 }
