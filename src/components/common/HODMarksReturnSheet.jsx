@@ -360,7 +360,7 @@ useEffect(() => {
                  
                 setTimeout(() => {
                     history.goBack();
-                }, 1000);
+                }, 3000);
             } else {
                 console.error("Failed to update approval level");
                 toast.error('Error Returning Marks Sheet');
@@ -401,7 +401,7 @@ useEffect(() => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const result = await axios.get('http://localhost:9090/api/lecreg/get/alllecturersdetails');
+            const result = await axios.get(`http://localhost:9090/api/lecreg/get/alllecturersdetails/${department}`);
             setData(result.data.content);
             console.log(result.data.content)
             setFilteredData(result.data.content); // Initially, all data is considered as filtered
