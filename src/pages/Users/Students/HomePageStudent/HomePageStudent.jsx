@@ -69,8 +69,11 @@ export default function HomePageStudent() {
     
     try{
         const latestGPAResponse = await axios.get(`http://localhost:9090/api/Student/getLatestGPA/${StuID}`)        //Call Api to get latest GPA
-        setStudentSGPA(parseFloat(latestGPAResponse.data.sgpa).toFixed(2));
-        setStudentCGPA(parseFloat(latestGPAResponse.data.cgpa).toFixed(2));
+        
+        // setStudentSGPA(parseFloat(latestGPAResponse.data.sgpa).toFixed(2));
+        // setStudentCGPA(parseFloat(latestGPAResponse.data.cgpa).toFixed(2));
+        setStudentSGPA(latestGPAResponse.data.sgpa);
+        setStudentCGPA(latestGPAResponse.data.cgpa);
 
     }catch(error){
       console.error(`Error - ${error}`);
