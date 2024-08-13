@@ -194,9 +194,9 @@ console.log(ele.end)
       <h2 style={{marginLeft:"30px"}}>{student_id} {ele.student_name}</h2>
       <h3 style={{marginLeft:"30px"}}>{course_id} {course_name}</h3>
       
-        <div class="container bg-transparent">
-          <div class="row">
-            <div class="col text-center">
+        <div className="container bg-transparent">
+          <div className="row">
+            <div className="col text-center">
               <table className="table shadow  table-hover" style={{ marginTop: "50px" }}>
                 <tbody>
                   <tr>
@@ -248,7 +248,7 @@ console.log(ele.end)
             </div>
 
             
-            <div class="col" style={{ marginTop: "50px" }}>
+            <div className="col" style={{ marginTop: "50px" }}>
               <div className='shadow px-4 py-4'>
                 <table className=' pt-4'>
                   <tr>
@@ -290,7 +290,7 @@ console.log(ele.end)
                 </table>
               </div>
               <div>
-                <div className="py-4 px-5" class="col shadow mt-4 p-4">
+                <div className="py-4 px-5">
                   <label> <b>Final Marks</b> </label>
                   <input type='text' size="10" className=' mx-3' value={ele.total_rounded_marks} disabled />
                   <label> <b>Grade</b> </label>
@@ -300,10 +300,10 @@ console.log(ele.end)
               {
                                 approval_level === "course_coordinator" ||
                                 approval_level === "lecturer" ? (
-                                  <div class="col mt-4 shadow p-4">
+                                  <div className="col mt-4 shadow p-4">
                                   <form onSubmit={handleSubmit}>
                                     <div>
-                                      <label for="exampleFormControlTextarea1" class="form-label"> <b>Notification</b> </label>
+                                      <label for="exampleFormControlTextarea1" className="form-label"> <b>Notification</b> </label>
                                       <textarea
                                         value={text}
                                         className='form-control w-100 '
