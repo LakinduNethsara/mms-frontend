@@ -21,6 +21,8 @@ export default function AddCAMarksByLec() {
     const [getValAssessmentType, setGetValAssessmentType] = useState('');
     const [eligbilityBtnDisable, setEligbilityBtnDisable] = useState();
     const [submitted, setSubmitted] = useState(false);
+    // const [markArray, setMarkArray] = useState([]);
+
 
     // console.log(getValAssessmentType)
     
@@ -203,17 +205,91 @@ export default function AddCAMarksByLec() {
         const stMarksCA = await LecturerService.getMarksForCA(course_id,currentAcademicYear);
         console.log(stMarksCA);
 
-        caMarks.map((mark, index) => {
-            cirtiriaName.map((name, index) => {
-                stMarksCA.map((stMark, index) => {
-                    if(mark.student_id === stMark.student_id && name.assessment_type === stMark[11]){
-                        mark.assignment_score = stMark.assignment_score;
+        caMarks.map((mark, index) => {                                              //maping student ID
+            const student_id = mark.student_id;
+            console.log(student_id);
+
+            var CAFinalMarks = 0;
+            var CAFinalMarksMargin = 0;
+            var CAFinalMarksTotal = 0;
+            var TotalCalculatedCAPresentageArr = [];
+            var percentageMarginArr = [];
+
+
+            cirtiriaName.map((name, index) => {                                                 //maping criteria names
+
+                const no_of_conducted = name.no_of_conducted;
+                const no_of_taken = name.no_of_taken;
+                const percentage = name.percentage;
+                const assessment_type = name.assessment_type;
+
+                var markArray = [];
+
+                percentageMarginArr.push(percentage);
+                
+                stMarksCA.map((stMark, index) => {                                                          //maping student marks
+
+                    if(mark.student_id === stMark[1] && name.assessment_type === stMark[11]){       //checking assessment typem with student marks
+                        markArray.push(stMark[5]);
                     }
                 })
+
+                var sumOfCAMarks = 0;
+                var calculatedCAMark_as_Precentage = 0;
+                
+                if(assessment_type === 'Mid theory exam' ||  assessment_type === 'Mid practical exam' ){
+                    if(markArray[0] === 'AB'){
+                        sumOfCAMarks = 'AB';
+                    }else{
+                        sumOfCAMarks = markArray[0];
+                    }
+                }else if(assessment_type !== 'Mid theory exam' ||  assessment_type !== 'Mid practical exam'){
+                    for (let i = 0; i < markArray.length; i++) {
+                        if (markArray[i] === 'AB') {
+                            markArray[i] = 0;
+                        }
+                    }
+                    const sortedCAMarks = [...markArray].sort((a, b) => b - a).slice(0, no_of_taken);
+
+                    for (let i = 0; i < sortedCAMarks.length; i++) {
+                        if (sortedCAMarks[i] !== 'AB') {
+                            
+                            sumOfCAMarks += (parseFloat(sortedCAMarks[i]))/no_of_taken;
+                        }
+                    }
+                }
+
+                if (sumOfCAMarks === 'AB') {
+                    calculatedCAMark_as_Precentage = 'WH';
+                }
+                else{
+                    calculatedCAMark_as_Precentage = (parseFloat(sumOfCAMarks/100)*percentage).toFixed(3);
+                }
+                TotalCalculatedCAPresentageArr.push(calculatedCAMark_as_Precentage);
+                
+                for (let i = 0; i < percentageMarginArr.length; i++) {
+                    CAFinalMarksMargin += parseFloat(percentageMarginArr[i]);
+                }
+
+            })
+
+            CAFinalMarksMargin = parseFloat((CAFinalMarksMargin/2)-0.5).toFixed(3);
+
+            for (let i = 0; i < TotalCalculatedCAPresentageArr.length; i++) {
+                if (TotalCalculatedCAPresentageArr[i] === 'WH') {
+                    CAFinalMarks = 'WH';
+                }else{
+                    CAFinalMarksTotal += parseFloat(TotalCalculatedCAPresentageArr[i]);
+                }
             }
-            )
+
+            if(CAFinalMarksTotal>=CAFinalMarksMargin){
+                CAFinalMarks=CAFinalMarksTotal;
+            }
+            console.log(CAFinalMarks);
+
+
         });
-       
         
     };
 
