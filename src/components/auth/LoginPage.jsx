@@ -49,9 +49,9 @@ function LoginPage(){
             }else if(response.data.content.role === "vc"){
                 window.location.href = "/vc_profile";
             }else if(response.data.content.role === "student"){
-                // toast.warning("Students are not authorized to login here");
-                // window.href ="/";
-                window.location.href = "/st_profile";
+                toast.warning("Students are not authorized to login here");
+                window.href ="/";
+                // window.location.href = "/st_profile";
             }else if(response.data.content.role === "lecturer"){
                 window.location.href = "/lec_profile";
             }
