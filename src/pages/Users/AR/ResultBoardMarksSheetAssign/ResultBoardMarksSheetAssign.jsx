@@ -178,7 +178,7 @@ export default function ResultBoardMarksSheetAssign() {
              
 
             const currentDateAndTime = new Date();  //Get the current date and time
-            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + currentDateAndTime.getMonth() + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
+            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + (currentDateAndTime.getMonth()+1) + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
             assignmentObject.assigned_date_time = formattedDateTime; //Set the formatted date and time to the assignment object
 
             try{
@@ -240,7 +240,7 @@ export default function ResultBoardMarksSheetAssign() {
         if(selectedResultBoard.status.toLowerCase() === "Not started".toLowerCase()){ //Check if the result board is not started
 
             const currentDateAndTime = new Date();  //Get the current date and time
-            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + currentDateAndTime.getMonth() + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
+            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + (currentDateAndTime.getMonth()+1) + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
         
             selectedResultBoard.status = "Started"; //Set the status of the result board to started
             selectedResultBoard.conducted_date_time = formattedDateTime; //Set the conducted date and time
