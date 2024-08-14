@@ -18,21 +18,26 @@ export default function AddCAMarksByLec() {
     const [dataCAMarksAll, setDataCAMarksAll] = useState([]);
     const [uniqueAssigmentName, setUniqueAssigmentName] = useState([]);
     const [currentAcademicYear, setCurrentAcademicYear] = useState('');
+    const [getValAssessmentType, setGetValAssessmentType] = useState('');
+    const [eligbilityBtnDisable, setEligbilityBtnDisable] = useState();
+    const [submitted, setSubmitted] = useState(false);
+
+    // console.log(getValAssessmentType)
     
 
     useEffect(() => {
         const fetchAllData = async () => {
             try {
-                console.log("Fetching all data...");
+                // console.log("Fetching all data...");
                 // Reverse the courseId string
                 const reversedString = course_id.split("").reverse().join("");
-                console.log("Reversed string:", reversedString);
+                // console.log("Reversed string:", reversedString);
 
                 // Extract characters at position 4 and 3 (considering 0-based index)
                 const levelChar = reversedString.charAt(3); // Position 4
                 const semesterChar = reversedString.charAt(2); // Position 3
-                console.log("Level character:", levelChar);
-                console.log("Semester character:", semesterChar);
+                // console.log("Level character:", levelChar);
+                // console.log("Semester character:", semesterChar);
 
                 setReversedata(reversedString);
                 setLevel(levelChar);
@@ -40,19 +45,19 @@ export default function AddCAMarksByLec() {
 
                 // Fetch Evaluation Criteria CA
                 const evaluationCriteriaRes = await LecturerService.getEvaluationCriteriaCA(course_id);
-                console.log("Evaluation Criteria:", evaluationCriteriaRes.content);
+                // console.log("Evaluation Criteria:", evaluationCriteriaRes.content);
                 setEvaluationCriteria(evaluationCriteriaRes.content);
                 setSelectedCriteria(evaluationCriteriaRes.content[0]); // Set initial selected criteria
 
                 // Fetch Students with no marks
                 const notAddedStudentsRes = await LecturerService.getNotAddStudentsID(course_id);
-                console.log("Students with no marks:", notAddedStudentsRes.content);
+                // console.log("Students with no marks:", notAddedStudentsRes.content);
                 setStudents(notAddedStudentsRes.content);
 
                 // Fetch all related students
                 const allRelatedStudentsRes = await LecturerService.getAllRelatedStudentID(course_id);
                 const allRelatedStudents = allRelatedStudentsRes.content;
-                console.log("All related students:", allRelatedStudents);
+                // console.log("All related students:", allRelatedStudents);
                 setRegStudent(allRelatedStudents);
 
                 // Fetch all data of CA Marks
@@ -83,22 +88,26 @@ export default function AddCAMarksByLec() {
                     assignment_score: '',
                     evaluation_criteria_id: ''
                 }));
-                console.log("Initial CA Marks:", initialCaMarks);
+                // console.log("Initial CA Marks:", initialCaMarks);
                 setCaMarks(initialCaMarks);
             } catch (error) {
-                console.error("Error fetching data:", error);
+                // console.error("Error fetching data:", error);
             }
         };
 
         fetchAllData();
-    }, [course_id]);
+    }, [course_id,submitted]);
 
     useEffect(() => {
         const isLastStudent = currentStudentIndex >= regStudent.length - 1;
         const isLastStudentScoreFilled = caMarks[currentStudentIndex]?.assignment_score !== '';
         setSubmitButtonErrorMSG(isLastStudent && isLastStudentScoreFilled ? '' : 'All students marks are not filled');
         setIsSubmitDisabled(!(isLastStudent && isLastStudentScoreFilled));
-    }, [currentStudentIndex, regStudent.length, caMarks]);
+
+        // Disable button if no assignment name is selected
+        setEligbilityBtnDisable(evaluationCriteria.length == 0 ? false : true);
+
+    }, [currentStudentIndex, regStudent.length, caMarks,selectedCriteria]);
 
 
     useEffect(() => {
@@ -123,13 +132,13 @@ export default function AddCAMarksByLec() {
             );
         }
     
-        console.log("Arrays are the same:", arraysAreSame);
+        // console.log("Arrays are the same:", arraysAreSame);
         // Here you can set your state or variable based on arraysAreSame value
     }, [uniqueAssigmentName, evaluationCriteria]);
 
 
     const handleMarksChange = (e) => {
-        console.log("Handling marks change for student:", regStudent[currentStudentIndex]);
+        // console.log("Handling marks change for student:", regStudent[currentStudentIndex]);
         const updatedCaMarks = caMarks.map((mark, index) =>
             index === currentStudentIndex
                 ? {
@@ -140,48 +149,72 @@ export default function AddCAMarksByLec() {
                   }
                 : mark
         );
-        console.log("Updated CA Marks:", updatedCaMarks);
+        // console.log("Updated CA Marks:", updatedCaMarks);
         setCaMarks(updatedCaMarks);
     };
 
     const handleNextClick = () => {
-        console.log("Current student index:", currentStudentIndex);
+        // console.log("Current student index:", currentStudentIndex);
         setCurrentStudentIndex((prevIndex) => prevIndex + 1);
         
     };
 
     const handlePrevClick = () => {
-        console.log("Current student index:", currentStudentIndex);
+        // console.log("Current student index:", currentStudentIndex);
         setCurrentStudentIndex((prevIndex) => prevIndex - 1);
         
     };
 
     const handleCriteriaChange = (e) => {
         const selectedAssignmentName = e.target.value;
+
         const criteria = evaluationCriteria.find(c => c.assignment_name === selectedAssignmentName);
         setSelectedCriteria(criteria);
-        console.log("Selected criteria:", criteria);
+        // console.log("Selected criteria:", criteria);
+
+        console.log(e.target.value);
+        // setGetValAssessmentType(e.target.value);
+
+        // console.log(selectedAssignmentName);
+
     };
 
     const handleSubmit = async () => {
         try {
-            console.log("Submitting CA Marks:", caMarks);
+            // console.log("Submitting CA Marks:", caMarks);
             await LecturerService.insertCAMarks(caMarks);
-            console.log("CA Marks submitted successfully!");
-            // Optionally, add more logic here, such as redirecting or showing a success message
+            // console.log("CA Marks submitted successfully!");
+            
         } catch (error) {
-            console.error("Error submitting CA Marks:", error);
+            // console.error("Error submitting CA Marks:", error);
         }
+
+        setSubmitted(true);
     };
 
-    console.log(caMarks[currentStudentIndex]?.student_id);
-    console.log(caMarks);
+    // console.log(caMarks[currentStudentIndex]?.student_id);
+    // console.log(caMarks);
 
 
     const handleCACalculation = async () => {
         const cirtiriaName =  await LecturerService.getCA(course_id);
-        const stMarksCA = await LecturerService.getMarksForCA(course_id,currentAcademicYear);
         console.log(cirtiriaName);
+
+        const stMarksCA = await LecturerService.getMarksForCA(course_id,currentAcademicYear);
+        console.log(stMarksCA);
+
+        caMarks.map((mark, index) => {
+            cirtiriaName.map((name, index) => {
+                stMarksCA.map((stMark, index) => {
+                    if(mark.student_id === stMark.student_id && name.assessment_type === stMark[11]){
+                        mark.assignment_score = stMark.assignment_score;
+                    }
+                })
+            }
+            )
+        });
+       
+        
     };
 
     const handleAbsent = async () => {
@@ -197,7 +230,7 @@ export default function AddCAMarksByLec() {
                   }
                 : mark
         );
-        console.log("Updated CA Marks:", updatedCaMarks);
+        // console.log("Updated CA Marks:", updatedCaMarks);
         setCaMarks(updatedCaMarks);
     }
 
@@ -216,10 +249,12 @@ export default function AddCAMarksByLec() {
             <div className=' col-8 p-4 shadow-lg' style={{marginRight:"20px"}}>
                 <div>
                     <label className=' form-label'>Select Assessment Type:</label>
-                    <select className="form-select" aria-label="Default select example" style={{ width: "200px" }} onChange={handleCriteriaChange}>
+                    <select className="form-select" aria-label="Default select example" style={{ width: "350px" }} onChange={handleCriteriaChange}>
+                        <option disabled selected>Select Continuous Assessment Type</option>
+                        
                         {
                             evaluationCriteria.map((criteria, index) => (
-                                <option key={index}>{criteria.assignment_name}</option>
+                                <option key={index} >{criteria.assignment_name}</option>
                             ))
                         }
                     </select>
@@ -231,7 +266,7 @@ export default function AddCAMarksByLec() {
             <div style={{ marginTop: '70px'}}>
                 {regStudent.length > 0 && (
                     <>
-                        {console.log(regStudent[currentStudentIndex].id)}
+                        {/* {console.log(regStudent[currentStudentIndex].id)} */}
                         <label>
                             Student ID : <span style={{ color: "maroon" }}> <b>{caMarks[currentStudentIndex]?.student_id}</b> </span>
                         </label>
@@ -343,7 +378,8 @@ export default function AddCAMarksByLec() {
                             }
                         </tbody>
                     </table>
-                    <button className=' btn btn-outline-dark btn-sm' onClick={handleCACalculation}>Calculate CA Eligibility</button>
+                    <button className=' btn btn-dark btn-sm' disabled={eligbilityBtnDisable} onClick={handleCACalculation}>Calculate CA Eligibility</button>
+                            
                 </div>
             </div>
 
