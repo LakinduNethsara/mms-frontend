@@ -178,7 +178,7 @@ export default function ResultBoardMarksSheetAssign() {
              
 
             const currentDateAndTime = new Date();  //Get the current date and time
-            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + currentDateAndTime.getMonth() + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
+            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + (currentDateAndTime.getMonth()+1) + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
             assignmentObject.assigned_date_time = formattedDateTime; //Set the formatted date and time to the assignment object
 
             try{
@@ -240,7 +240,7 @@ export default function ResultBoardMarksSheetAssign() {
         if(selectedResultBoard.status.toLowerCase() === "Not started".toLowerCase()){ //Check if the result board is not started
 
             const currentDateAndTime = new Date();  //Get the current date and time
-            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + currentDateAndTime.getMonth() + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
+            const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + (currentDateAndTime.getMonth()+1) + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
         
             selectedResultBoard.status = "Started"; //Set the status of the result board to started
             selectedResultBoard.conducted_date_time = formattedDateTime; //Set the conducted date and time
@@ -410,7 +410,20 @@ export default function ResultBoardMarksSheetAssign() {
 
                             <div className="row justify-content-between">      {/*Row for examiner and course selection*/}
 
-                                <div className='col selection-box-col' >            {/*Scolumn for examiner selection*/}
+                            <div className='col selection-box-col' >        {/*Column for course selection*/}
+
+                                <select className='marksheet-select' style={{width:"100%",height:"30px",borderRadius:"5px",fontSize:"15px",lineHeight:"50px",marginTop:"20px"}} value={selectedCourse} onChange={handleCourseSelection}>
+                                    <option value='0' disabled> Select a marksheet</option>
+                                    {
+                                        availableCourseList.map((course, index) => (
+                                            <option key={index} value={course.course_id}>{course.course_id} - {course.course_name}</option>
+                                        ))
+                                    }
+                                </select>
+
+                                </div>
+
+                                <div className='col selection-box-col' >            {/*Column for examiner selection*/}
 
                                     <select className='examiner-select' style={{width:"100%",height:"30px",borderRadius:"5px",fontSize:"15px",lineHeight:"50px",marginTop:"20px"}} value={selectedExaminer} onChange={handleExaminerSelection}>
                                         <option value='0' disabled> Select an examiner</option>
@@ -423,18 +436,6 @@ export default function ResultBoardMarksSheetAssign() {
 
                                 </div>
 
-                                <div className='col selection-box-col' >        {/*Column for course selection*/}
-
-                                    <select className='marksheet-select' style={{width:"100%",height:"30px",borderRadius:"5px",fontSize:"15px",lineHeight:"50px",marginTop:"20px"}} value={selectedCourse} onChange={handleCourseSelection}>
-                                        <option value='0' disabled> Select a marksheet</option>
-                                        {
-                                            availableCourseList.map((course, index) => (
-                                                <option key={index} value={course.course_id}>{course.course_id} - {course.course_name}</option>
-                                            ))
-                                        }
-                                    </select>
-
-                                </div>
 
 
                             </div>
