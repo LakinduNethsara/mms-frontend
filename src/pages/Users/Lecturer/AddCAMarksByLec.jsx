@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import LecturerService from '../../../components/service/LecturerService';
+import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../components/common/AcademicYearManagerSingleton';
 
 export default function AddCAMarksByLec() {
     const { course_id, course_name } = useParams();
@@ -20,12 +21,28 @@ export default function AddCAMarksByLec() {
     const [currentAcademicYear, setCurrentAcademicYear] = useState('');
     const [getValAssessmentType, setGetValAssessmentType] = useState('');
     const [eligbilityBtnDisable, setEligbilityBtnDisable] = useState();
+    const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const [submitted, setSubmitted] = useState(false);
+
+    // console.log(academicDetails.current_academic_year);
     // const [markArray, setMarkArray] = useState([]);
 
-
-    // console.log(getValAssessmentType)
+    // console.log(currentAcademicYear);
     
+
+    useEffect(() => {
+        const fetchAndSaveYear = async () => {
+            const details = await fetchAcademicYear();
+            if (details) {
+                saveAcademicYearToLocal(details);
+                setAcademicDetails(details);
+            }
+        };
+
+        fetchAndSaveYear();
+    }, []);
+
+
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -56,8 +73,17 @@ export default function AddCAMarksByLec() {
                 // console.log("Students with no marks:", notAddedStudentsRes.content);
                 setStudents(notAddedStudentsRes.content);
 
+                var asInsideCurrentAcedemicYear ;
+
+                const details = await fetchAcademicYear();
+                if (details) {
+                    saveAcademicYearToLocal(details);
+                    setAcademicDetails(details);
+                    asInsideCurrentAcedemicYear = details.current_academic_year;
+                }
+
                 // Fetch all related students
-                const allRelatedStudentsRes = await LecturerService.getAllRelatedStudentID(course_id);
+                const allRelatedStudentsRes = await LecturerService.getAllRelatedStudentID(course_id,asInsideCurrentAcedemicYear);
                 const allRelatedStudents = allRelatedStudentsRes.content;
                 // console.log("All related students:", allRelatedStudents);
                 setRegStudent(allRelatedStudents);
@@ -73,9 +99,9 @@ export default function AddCAMarksByLec() {
                 const uniqueAssignmentNames = Array.from(new Set(allData.map(item => item.assignment_name)));
                 setUniqueAssigmentName(uniqueAssignmentNames);
                 
-                const academicYearDetails = await LecturerService.getAcademicYearDetails();
-                const setCurrentAcY = (academicYearDetails[0].current_academic_year);
-                setCurrentAcademicYear(setCurrentAcY);
+                // const academicYearDetails = await LecturerService.getAcademicYearDetails();
+                // const setCurrentAcY = (academicYearDetails[0].current_academic_year);
+                setCurrentAcademicYear(academicDetails.current_academic_year);
                 
 
 
@@ -200,12 +226,10 @@ export default function AddCAMarksByLec() {
 
     const handleCACalculation = async () => {
         const cirtiriaName =  await LecturerService.getCA(course_id);
-        console.log(cirtiriaName);
 
         const stMarksCA = await LecturerService.getMarksForCA(course_id,currentAcademicYear);
-        console.log(stMarksCA);
 
-        caMarks.map((mark, index) => {                                              //maping student ID
+        caMarks.map((mark, index) => {           //maping student ID
             const student_id = mark.student_id;
             console.log(student_id);
 
@@ -216,7 +240,8 @@ export default function AddCAMarksByLec() {
             var percentageMarginArr = [];
 
 
-            cirtiriaName.map((name, index) => {                                                 //maping criteria names
+            cirtiriaName.map((name, index) => {   //maping criteria names
+
 
                 const no_of_conducted = name.no_of_conducted;
                 const no_of_taken = name.no_of_taken;
@@ -227,12 +252,15 @@ export default function AddCAMarksByLec() {
 
                 percentageMarginArr.push(percentage);
                 
-                stMarksCA.map((stMark, index) => {                                                          //maping student marks
+                stMarksCA.map((stMark, index) => {   //maping student marks
 
-                    if(mark.student_id === stMark[1] && name.assessment_type === stMark[11]){       //checking assessment typem with student marks
+                        
+                    if(mark.student_id === stMark[1] && name.assessment_type === stMark[11]){    //checking assessment type with student marks
                         markArray.push(stMark[5]);
                     }
                 })
+
+
 
                 var sumOfCAMarks = 0;
                 var calculatedCAMark_as_Precentage = 0;
@@ -252,28 +280,34 @@ export default function AddCAMarksByLec() {
                     const sortedCAMarks = [...markArray].sort((a, b) => b - a).slice(0, no_of_taken);
 
                     for (let i = 0; i < sortedCAMarks.length; i++) {
-                        if (sortedCAMarks[i] !== 'AB') {
+                        
                             
-                            sumOfCAMarks += (parseFloat(sortedCAMarks[i]))/no_of_taken;
-                        }
+                            sumOfCAMarks += parseFloat(sortedCAMarks[i]);
+                        
                     }
+                    sumOfCAMarks = (parseFloat(sumOfCAMarks)/no_of_taken).toFixed(3);
                 }
+
 
                 if (sumOfCAMarks === 'AB') {
                     calculatedCAMark_as_Precentage = 'WH';
                 }
                 else{
-                    calculatedCAMark_as_Precentage = (parseFloat(sumOfCAMarks/100)*percentage).toFixed(3);
+                    calculatedCAMark_as_Precentage = ((parseFloat(sumOfCAMarks)/100)*percentage).toFixed(3);
                 }
                 TotalCalculatedCAPresentageArr.push(calculatedCAMark_as_Precentage);
                 
-                for (let i = 0; i < percentageMarginArr.length; i++) {
-                    CAFinalMarksMargin += parseFloat(percentageMarginArr[i]);
-                }
 
             })
 
-            CAFinalMarksMargin = parseFloat((CAFinalMarksMargin/2)-0.5).toFixed(3);
+
+            for (let i = 0; i < percentageMarginArr.length; i++) {
+                CAFinalMarksMargin += parseFloat(percentageMarginArr[i]);
+            }
+
+
+            CAFinalMarksMargin = ((parseFloat(CAFinalMarksMargin)/2)-0.5).toFixed(3);
+
 
             for (let i = 0; i < TotalCalculatedCAPresentageArr.length; i++) {
                 if (TotalCalculatedCAPresentageArr[i] === 'WH') {
@@ -283,9 +317,17 @@ export default function AddCAMarksByLec() {
                 }
             }
 
-            if(CAFinalMarksTotal>=CAFinalMarksMargin){
-                CAFinalMarks=CAFinalMarksTotal;
+
+            if(CAFinalMarks === 'WH'){
+                CAFinalMarks='WH';
+            }else{
+                if(CAFinalMarksTotal>=CAFinalMarksMargin){
+                    CAFinalMarks='Eligible';
+                }else{
+                    CAFinalMarks='Not eligible';
+                }
             }
+             
             console.log(CAFinalMarks);
 
 

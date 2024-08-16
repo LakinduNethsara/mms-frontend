@@ -11,6 +11,7 @@ export default function LecRelatedCourses() {
     const history = useHistory();
 
 
+
     useEffect(() => {
         if(storedData){
             
@@ -21,9 +22,13 @@ export default function LecRelatedCourses() {
         }
         fetchCourses();
     }, [email])
+    // console.log(email);
+
 
 
     const fetchCourses = async () => {
+        if
+        (!email) return;
         const res = await axios.get(`http://localhost:9090/api/courses/getccregcourses/${email}`)
         setCourses(res.data.content);
     }
@@ -37,7 +42,7 @@ export default function LecRelatedCourses() {
                         <div className="card-body">
                             <h5 className="card-title py-2">{course.course_id}</h5> 
                             <h6 className='card-title py-1'>{course.course_name}</h6> 
-                            {console.log(course.course_id,course.course_name)} 
+                            {/* {console.log(course.course_id,course.course_name)}  */}
                             <a className="btn btn-primary btn-sm mt-2" onClick={ ()=> history.push(`/ca_addby_lec/${course.course_id}/${course.course_name}`)}>To CA Eligibility</a>
                         </div>
                     </div>
