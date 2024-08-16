@@ -431,11 +431,7 @@ useEffect(() => {
 
 
 
-
-
-
-
-  newSignature ? console.log("Signature is present") : console.log("Signature is not present");
+      console.log(approval_level,approved_level,nextApprovedlevel)
 
     return (
         <>
@@ -718,7 +714,7 @@ useEffect(() => {
                                     </>:null
                                     }                                 
                                     {
-                                        nextApprovedlevel == "RB" || nextApprovedlevel == "AR"  ? 
+                                        approved_level=="AssignedRB" || nextApprovedlevel == "RB" || nextApprovedlevel == "AR"  ? 
                                         <>
                                         <tr>
                                                 <td>Coordinator/ Examinar :</td>
