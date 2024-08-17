@@ -22,7 +22,7 @@ export default function StudentsManagement() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get("http://localhost:9090/api/lecreg/get/alllecturersdetails");
+            const response = await axios.get("http://localhost:9090/api/studentdetails/getallstudentsdetails");
             setStudentsData(response.data.content);
         } catch (error) {
             console.error("Error fetching data from API:", error);

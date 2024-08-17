@@ -10,8 +10,11 @@ export default function CourseCriteriaByCC() {
     const [criteriaData, setCriteriaData] = useState([]); // State to hold the criteria data
     const [criteria_name, setCriteria_name] = useState(''); // State to hold the evaluation criteria name
     const asmntTypeRef = useRef(null); // Create a ref for the assessment type select element
+
+    const [selectedTypeofAssessment, setSelectedTypeofAssessment] = useState('');
     const [newAssessmentType, setNewAssessmentType] = useState({
         assessment_type_name: '',
+        ca_mid_end: '',
     }); // State to hold the new assessment type
 
     const [showButton, setShowButton] = useState(false);
@@ -31,7 +34,9 @@ export default function CourseCriteriaByCC() {
     const [disableInputs, setDisableInputs] = useState(false);
     const [selectedMainAssessmentValue, setSelectedMainAssessmentValue] = useState('');
 
-    console.log(userData.email);
+    // console.log(newAssessmentType);
+
+    // console.log("Assessment Type : ",selectedAssessmentType);
 
     useEffect(() => {
         if(storedData){
@@ -49,7 +54,7 @@ export default function CourseCriteriaByCC() {
     const fetchData = async (email)=>{
       
         try{
-            const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`)
+            const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`);
           // console.log(result1.data.content);
             setAssessmentTypesData(result1.data.content);
 
@@ -61,6 +66,7 @@ export default function CourseCriteriaByCC() {
         }catch(error){
             console.log(error);
         }
+
         }
 
         useEffect(() => {
@@ -186,8 +192,11 @@ export default function CourseCriteriaByCC() {
       
         const onSave = async (newValue) => {
           try {
-            setNewAssessmentType({ assessment_type_name: newValue });
-            await axios.post("http://localhost:9090/api/astylist/savenewasty", { assessment_type_name: newValue } );
+            setNewAssessmentType({ assessment_type_name: newValue.popupInputValue});
+            console.log("New Assessment Type : " + newValue.popupInputValue);
+            console.log("New Assessment Type : " + newValue.selectedType);
+
+            await axios.post("http://localhost:9090/api/astylist/savenewasty", { assessment_type_name: newValue.popupInputValue,ca_mid_end: newValue.selectedType} );
             toast.success("New assessment type saved successfully!");
             setReloadButton(prevState =>!prevState);
             setSelectedAssessmentType(newValue);
@@ -200,6 +209,11 @@ export default function CourseCriteriaByCC() {
             // Handle error, e.g., show error message
           }
         }
+
+        const onSelected = (selectedType) => {
+          setSelectedTypeofAssessment(selectedType);
+        }
+
   return (
     <div>
         <div className=' container'>
@@ -248,7 +262,7 @@ export default function CourseCriteriaByCC() {
                     isVisible={isPopupVisible}
                     onClose={() => setIsPopupVisible(false)}
                     onSave={onSave}
-
+                    // onSelected={onSelected}
                     
                   />
                   

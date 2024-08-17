@@ -26,8 +26,6 @@ export default function AddCAMarksByLec() {
 
     // console.log(academicDetails.current_academic_year);
     // const [markArray, setMarkArray] = useState([]);
-
-    // console.log(currentAcademicYear);
     
 
     useEffect(() => {
@@ -69,9 +67,9 @@ export default function AddCAMarksByLec() {
                 setSelectedCriteria(evaluationCriteriaRes.content[0]); // Set initial selected criteria
 
                 // Fetch Students with no marks
-                const notAddedStudentsRes = await LecturerService.getNotAddStudentsID(course_id);
+                // const notAddedStudentsRes = await LecturerService.getNotAddStudentsID(course_id);
                 // console.log("Students with no marks:", notAddedStudentsRes.content);
-                setStudents(notAddedStudentsRes.content);
+                // setStudents(notAddedStudentsRes.content);
 
                 var asInsideCurrentAcedemicYear ;
 
@@ -87,6 +85,8 @@ export default function AddCAMarksByLec() {
                 const allRelatedStudents = allRelatedStudentsRes.content;
                 // console.log("All related students:", allRelatedStudents);
                 setRegStudent(allRelatedStudents);
+                console.log(allRelatedStudents);
+                // console.log(allRelatedStudents);
 
                 // Fetch all data of CA Marks
                 const allDataOfCAMarksRes = await LecturerService.getAllDataOfCAMarks(course_id);
@@ -101,7 +101,7 @@ export default function AddCAMarksByLec() {
                 
                 // const academicYearDetails = await LecturerService.getAcademicYearDetails();
                 // const setCurrentAcY = (academicYearDetails[0].current_academic_year);
-                setCurrentAcademicYear(academicDetails.current_academic_year);
+                setCurrentAcademicYear(asInsideCurrentAcedemicYear);
                 
 
 
@@ -109,7 +109,7 @@ export default function AddCAMarksByLec() {
                 const initialCaMarks = allRelatedStudents.map(student => ({
                     student_id: student, // Adjust based on actual student ID property
                     course_id: course_id,
-                    academic_year: setCurrentAcY,
+                    academic_year: asInsideCurrentAcedemicYear,
                     level: levelChar,
                     semester: semesterChar,
                     assignment_name: '',
@@ -226,109 +226,143 @@ export default function AddCAMarksByLec() {
 
     const handleCACalculation = async () => {
         const cirtiriaName =  await LecturerService.getCA(course_id);
+        console.log(cirtiriaName);
 
         const stMarksCA = await LecturerService.getMarksForCA(course_id,currentAcademicYear);
 
         caMarks.map((mark, index) => {           //maping student ID
-            const student_id = mark.student_id;
+            const student_id = mark.student_id;         //get student ID
             console.log(student_id);
 
-            var CAFinalMarks = 0;
-            var CAFinalMarksMargin = 0;
-            var CAFinalMarksTotal = 0;
-            var TotalCalculatedCAPresentageArr = [];
-            var percentageMarginArr = [];
+            var CAFinalMarks = 0;               //Final CA marks
+            var CAFinalMarksMargin = 0;         //Final CA marks margin
+            var CAFinalMarksTotal = 0;          //Final CA marks total
+            var TotalCalculatedCAPresentageArr = [];            //Total calculated CA marks as percentage
+            var percentageMarginArr = [];               // Standerd percentage margin array
+
+            var midMarks = [];      //mid marks array
+            var midPercentage = 0;  //mid percentage
+            var sumOfMidMarks = 0;  //sum of mid marks
+            var calculatedMidMarksPercentage = 0;  //calculated mid marks percentage
 
 
             cirtiriaName.map((name, index) => {   //maping criteria names
 
 
-                const no_of_conducted = name.no_of_conducted;
-                const no_of_taken = name.no_of_taken;
-                const percentage = name.percentage;
-                const assessment_type = name.assessment_type;
+                const no_of_conducted = name[5];                //store no of conducted
+                const no_of_taken = name[6];                    //store no of taken
+                const percentage = name[7];                     //store percentage taken
+                const assessment_type = name[4];                //store assessment type (Quiz,Assignment,Mid theory exam, Mid practical exam etc...)
+                const selected_type_ofassessment = name[11];        //Joined table column name  (CA,Mid,Final)
 
-                var markArray = [];
+                var markArray = [];             //array to store marks of a particular assessment type (Quiz,Assignment etc...)
 
-                percentageMarginArr.push(percentage);
+                
                 
                 stMarksCA.map((stMark, index) => {   //maping student marks
 
                         
-                    if(mark.student_id === stMark[1] && name.assessment_type === stMark[11]){    //checking assessment type with student marks
-                        markArray.push(stMark[5]);
+                    if(mark.student_id === stMark[1] && assessment_type === stMark[11]){    //checking assessment type with student marks
+                        markArray.push(stMark[5]);          //push marks to an array
                     }
                 })
 
 
 
-                var sumOfCAMarks = 0;
-                var calculatedCAMark_as_Precentage = 0;
+                var sumOfCAMarks = 0;                   //sum of marks of a particular assessment type (Quiz,Assignment etc...)
+                var calculatedCAMark_as_Precentage = 0;             //calculated marks as percentage of a particular assessment type (Quiz,Assignment etc...)
                 
-                if(assessment_type === 'Mid theory exam' ||  assessment_type === 'Mid practical exam' ){
-                    if(markArray[0] === 'AB'){
-                        sumOfCAMarks = 'AB';
-                    }else{
-                        sumOfCAMarks = markArray[0];
-                    }
-                }else if(assessment_type !== 'Mid theory exam' ||  assessment_type !== 'Mid practical exam'){
-                    for (let i = 0; i < markArray.length; i++) {
+                if(selected_type_ofassessment === 'Mid'){           //checking assessment type is Mid
+
+                    midMarks.push(markArray[0]);            //push mid marks to an array
+                    midPercentage = percentage;             //store standeed mid percentage
+
+                }else if(selected_type_ofassessment !== 'Mid'){             //checking assessment type is not Mid
+
+                    percentageMarginArr.push(percentage);       //push standerd percentage to an array
+
+                    for (let i = 0; i < markArray.length; i++) {        //Loop to check AB marks and replace as 0
                         if (markArray[i] === 'AB') {
                             markArray[i] = 0;
                         }
                     }
-                    const sortedCAMarks = [...markArray].sort((a, b) => b - a).slice(0, no_of_taken);
+
+                    const sortedCAMarks = [...markArray].sort((a, b) => b - a).slice(0, no_of_taken);       //Sort marks and get maximum marks according to number of taken
 
                     for (let i = 0; i < sortedCAMarks.length; i++) {
                         
                             
-                            sumOfCAMarks += parseFloat(sortedCAMarks[i]);
+                            sumOfCAMarks += parseFloat(sortedCAMarks[i]);           //get sum of marks of a particular assessment type (Quiz,Assignment etc...)
                         
                     }
-                    sumOfCAMarks = (parseFloat(sumOfCAMarks)/no_of_taken).toFixed(3);
-                }
+                    sumOfCAMarks = (parseFloat(sumOfCAMarks)/no_of_taken).toFixed(3);  //get average of marks of a particular assessment type (Quiz,Assignment etc...)
+                    
+                    calculatedCAMark_as_Precentage = ((parseFloat(sumOfCAMarks)/100)*percentage).toFixed(3);        //get calculated marks as percentage of a particular assessment type (Quiz,Assignment etc...)
+                    
+                    TotalCalculatedCAPresentageArr.push(calculatedCAMark_as_Precentage);        //push calculated marks as percentage of a particular assessment type (Quiz,Assignment etc...) to an array
 
-
-                if (sumOfCAMarks === 'AB') {
-                    calculatedCAMark_as_Precentage = 'WH';
                 }
-                else{
-                    calculatedCAMark_as_Precentage = ((parseFloat(sumOfCAMarks)/100)*percentage).toFixed(3);
-                }
-                TotalCalculatedCAPresentageArr.push(calculatedCAMark_as_Precentage);
-                
+                 
 
             })
 
 
-            for (let i = 0; i < percentageMarginArr.length; i++) {
+            if(midMarks.length>0){              //checking mid marks array is not empty
+
+                percentageMarginArr.push(midPercentage);       //push standerd percentage to an array
+
+                for (let i = 0; i < midMarks.length; i++) {         //Loop to check AB marks for mid exams
+                    if(midMarks[i] === 'AB'){               //checking AB marks
+                        CAFinalMarks = 'WH';                //With held the final CA marks
+                    }
+                }
+
+                if(CAFinalMarks !== 'WH'){                  //checking final CA marks is not with held
+                    for (let i = 0; i < midMarks.length; i++) {         //Loop to get sum of mid marks (theory , practical, both)
+                        sumOfMidMarks += parseFloat(midMarks[i]);           //get sum of mid marks (theory , practical, both)
+                    }
+
+                    sumOfMidMarks = (parseFloat(sumOfMidMarks)/midMarks.length).toFixed(3);     //get average of mid marks (theory , practical, both)
+                    calculatedMidMarksPercentage = ((parseFloat(sumOfMidMarks)/100)*midPercentage).toFixed(3);     //get calculated mid marks percentage
+                    TotalCalculatedCAPresentageArr.push(calculatedMidMarksPercentage);              //push calculated mid marks percentage to an array
+                }
+
+            }
+
+
+            for (let i = 0; i < percentageMarginArr.length; i++) {                  //Loop to get sum of standerd percentage
                 CAFinalMarksMargin += parseFloat(percentageMarginArr[i]);
             }
 
 
-            CAFinalMarksMargin = ((parseFloat(CAFinalMarksMargin)/2)-0.5).toFixed(3);
+            CAFinalMarksMargin = ((parseFloat(CAFinalMarksMargin)/2)-0.5).toFixed(3);               //get minimum percentage to pass the CA - margin
 
 
-            for (let i = 0; i < TotalCalculatedCAPresentageArr.length; i++) {
-                if (TotalCalculatedCAPresentageArr[i] === 'WH') {
-                    CAFinalMarks = 'WH';
+            for (let i = 0; i < TotalCalculatedCAPresentageArr.length; i++) {        //Loop to get sum of calculated marks as percentage of a particular assessment type (Quiz,Assignment etc...)
+                
+                if (TotalCalculatedCAPresentageArr[i] === 'AB') {           //checking AB marks
+                    CAFinalMarks = 'WH';                                //With held the final CA marks
                 }else{
-                    CAFinalMarksTotal += parseFloat(TotalCalculatedCAPresentageArr[i]);
+                    CAFinalMarksTotal += parseFloat(TotalCalculatedCAPresentageArr[i]);      //get sum of calculated marks percentages the student has got
                 }
             }
 
 
-            if(CAFinalMarks === 'WH'){
-                CAFinalMarks='WH';
-            }else{
-                if(CAFinalMarksTotal>=CAFinalMarksMargin){
-                    CAFinalMarks='Eligible';
+            if(CAFinalMarks === 'WH'){          //checking final CA marks is with held
+
+                CAFinalMarks='WH';              //With held the final CA marks
+
+            }else{                    //checking final CA marks is not with held
+
+                if(CAFinalMarksTotal>=CAFinalMarksMargin){          //checking student has got more than or equal to minimum percentage to pass the CA
+                    CAFinalMarks='Eligible';        //Eligible for the final exam
                 }else{
-                    CAFinalMarks='Not eligible';
+                    CAFinalMarks='Not eligible';        //Not eligible for the final exam
                 }
             }
-             
-            console.log(CAFinalMarks);
+            console.log("pass margin : "+CAFinalMarksMargin);
+            console.log("Student total CA marks : "+CAFinalMarksTotal);
+            console.log("eligibility : "+CAFinalMarks);
 
 
         });
@@ -387,6 +421,7 @@ export default function AddCAMarksByLec() {
                         {/* {console.log(regStudent[currentStudentIndex].id)} */}
                         <label>
                             Student ID : <span style={{ color: "maroon" }}> <b>{caMarks[currentStudentIndex]?.student_id}</b> </span>
+                            {console.log(caMarks)}
                         </label>
 
 
