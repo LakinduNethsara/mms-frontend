@@ -18,12 +18,16 @@ export default function StudentViewCourseCriteria() {
 
     const [courseCriteriaList, setCourseCriteriaList] = useState([]);         //Use state to store course criteria list
     const [errorMessage, setErrorMessage] = useState(null);                   //Use state to store error message
+    const [courseCreditList, setCourseCreditList] = useState([]);             //Use state to store course credit list
 
     
     const loadCourseCriteriaList = async () => {
       try{
         const courseCriteriaResponse = await axios.get(`http://localhost:9090/api/Student/getEvaluationCriteriaByCourseId/${course.course_id}`)
         setCourseCriteriaList(courseCriteriaResponse.data);
+        const creditResponse = await axios.get(`http://localhost:9090/api/Student/get_course_credits/${course.course_id}`)
+        console.log(creditResponse.data);
+        setCourseCreditList(creditResponse.data);
       }catch(err){
           console.log(err);
       }
@@ -78,9 +82,29 @@ export default function StudentViewCourseCriteria() {
 
             <div className='row course-row-1'> */}
                 <div className='col course-col-1'><label>Lecture Hours - {course.hours}</label></div>
-                <div className='col course-col-1'><label>Course Credit - {course.credit}</label></div>
                 <div className='col course-col-1'><label>Course Type - {course.type}</label></div>
+                <div className='col course-col-1'><label>Course Credit <br></br>
+                  
+                  {
+                    courseCreditList.length>0? (
+                      <>
+                        {
+                          courseCreditList.map((credit,index) => (
+                            <>
+                            <label key={index}>{credit.department_id} - {credit.credit}</label>
+                            <br/>
+                            </>
+                          ))
+                        }
+                      </>
+                    ):(null)
+                  }
+
+                </label></div>
+
             </div>
+
+          
 
             <hr/>
 

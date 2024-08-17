@@ -21,9 +21,9 @@ class LecturerService {
         }
     }
 
-    static async getAllRelatedStudentID(course_id) {
+    static async getAllRelatedStudentID(course_id,academic_year) {
         try {
-            const response = await axios.get(`${LecturerService.BASE_URL}/api/studentRegCourses/getallregstudents/${course_id}`);
+            const response = await axios.get(`${LecturerService.BASE_URL}/api/studentRegCourses/getallregstudents/${course_id},${academic_year}`);
             return response.data;
         } catch (err) {
             throw err;
@@ -56,7 +56,7 @@ class LecturerService {
         }
     }
 
-    static async getAcademicYearDetails(course_id) {
+    static async getAcademicYearDetails() {
         try {
             const response = await axios.get(`${LecturerService.BASE_URL}/api/AssistantRegistrar/getAcademicYearDetails`);
             return response.data;

@@ -55,7 +55,7 @@ export default function AssignLecturerCourse() {
         }
 
         try {
-            const result = await axios.get('http://localhost:9090/api/lecreg/allLecids');
+            const result = await axios.get('http://localhost:9090/api/lecreg/get/alllecturersdetails');
             if (Array.isArray(result.data.content)) {
                 setCCoordinatorids(result.data.content);
                 console.log(result.data.content);

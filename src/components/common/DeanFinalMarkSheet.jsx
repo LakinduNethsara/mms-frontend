@@ -454,7 +454,11 @@ const alternateRowStyle = {
             </table>
           </div>
 
-          <div>
+          <div className=' row mt-5' style={{display:"flex"}}>
+
+          
+
+          <div className=' col-4 '>
             {console.log(nextApprovedlevel)}
             
               <br />
@@ -527,13 +531,18 @@ const alternateRowStyle = {
                   : null}
 
             
+            </div>
+            
+            <div className=' col-7'>
+              
+              {approved_level!="HOD"?<div >
+              <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
+              </div>:null}
+
+            </div>
+          
           </div>
 
-          {approved_level!="HOD"?<div style={{float:"right",marginTop:"50px"}}>
-          <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
-          </div>:null}
-          
-          
           {approved_level!="HOD"?  <form onSubmit={handleSubmit}>
             <input
               to={``}

@@ -65,7 +65,7 @@ export default function CourseSelection(props) {
             <tbody>
               {
                 courseData.map((course, index) => (
-                  <tr className="clickable-row" key={index} onClick={()=>{history.push(`/viewMarks/${course.course_id}/${course.course_name}`)}}>
+                  <tr className="clickable-row" key={index} onClick={()=>{history.push(`/viewMarks/${course.course_id}/${course.course_name}/${department_id}`)}}>
                     <th scope="row" key={index}>{index+1}</th>
                     <td>{course.course_id}</td>
                     <td>{course.course_name}</td>

@@ -28,7 +28,7 @@ export default function LecturersManagement() {
     }, [refreshKey]);
 
     const loadUsers = async () => {
-        const result = await axios.get("http://localhost:9090/api/lecreg/get/alllecturersdetails");
+        const result = await axios.get("http://localhost:9090/api/lecreg/get/allusersdetails");
         setUser(result.data.content);
         console.log(result.data.content);
     };

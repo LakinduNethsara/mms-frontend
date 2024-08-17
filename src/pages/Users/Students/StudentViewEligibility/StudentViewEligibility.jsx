@@ -126,8 +126,8 @@ export default function StudentViewEligibility() {
                                     <td>{course[2]}</td>
                                     <td>{course[4]}</td>
                                     <td>{
-                                        course[9] != null ? (
-                                            course[9]
+                                        course[8] != null ? (
+                                            course[8]
                                         ):(
                                             "Still not available"
                                         )
