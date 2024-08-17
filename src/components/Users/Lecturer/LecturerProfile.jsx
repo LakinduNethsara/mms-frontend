@@ -1,6 +1,12 @@
 import React from 'react'
+import Role_Authentication from '../../service/Role_Authentication'
 
 export default function LecturerProfile() {
+    const role = Role_Authentication.isLecturer();
+    console.log(role)
+    if(!role){ 
+        window.location.href = '/login'
+    }
   
   return (
     
