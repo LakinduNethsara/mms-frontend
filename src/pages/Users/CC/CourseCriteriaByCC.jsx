@@ -33,10 +33,9 @@ export default function CourseCriteriaByCC() {
     const [noOfTaken, setNoOfTaken] = useState('');
     const [disableInputs, setDisableInputs] = useState(false);
     const [selectedMainAssessmentValue, setSelectedMainAssessmentValue] = useState('');
+    const [selectedMidVal, setSelectedMidVal] = useState('');
 
-    // console.log(newAssessmentType);
-
-    // console.log("Assessment Type : ",selectedAssessmentType);
+    console.log(" miv val ",selectedMidVal);
 
     useEffect(() => {
         if(storedData){
@@ -50,6 +49,14 @@ export default function CourseCriteriaByCC() {
         
     }, []);
 
+    const CheckingSelectedAssementType = (e)=>{
+      var midVal ='';
+      if(e.target.value === 'Mid exam'){
+        
+      }
+      setSelectedMidVal(midVal);
+      console.log("prev selected Mid Value : ",midVal);
+    }
 
     const fetchData = async (email)=>{
       
@@ -57,9 +64,6 @@ export default function CourseCriteriaByCC() {
             const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`);
           // console.log(result1.data.content);
             setAssessmentTypesData(result1.data.content);
-
-            console.log(" hello",userData.email);
-
             const result2  = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${email}`);
           // console.log(result2.data.content);
             setCidsData(result2.data.content);
@@ -77,7 +81,7 @@ export default function CourseCriteriaByCC() {
           const handleAssessmentTypeChange = (event) => {
             const selectedValue = event.target.value;
             setSelectedAssessmentType(selectedValue);
-
+            CheckingSelectedAssementType(event);
             }
 
             const selectedMainAssessment = (event) => {
@@ -124,7 +128,6 @@ export default function CourseCriteriaByCC() {
             evaluationcriteria_id += endSequence;
             }
       
-          // For demonstration, we'll just add it to our local state 
             const newCriterion = {
             type: asmntTypeRef.current.value,
             assessment_type: selectedAssessmentType, // Use the ref to access the value
@@ -214,11 +217,14 @@ export default function CourseCriteriaByCC() {
           setSelectedTypeofAssessment(selectedType);
         }
 
+        
+
+
   return (
     <div>
-        <div className=' container'>
+        <div className=' container' >
           <div className='h3' style={{marginTop:"70px",color:'maroon'}}>Evaluation Criteria Creation</div>
-          <div className=' row'>
+          <div className=' row ' style={{marginLeft:"auto",marginRight:"auto"}}>
             <div className=' col-9 mt-3 shadow p-5' >
               <form onSubmit={handleSubmit} >
                 <label htmlFor="" className=' form-label'>Select a Course Code for Create Evaluation Criteria</label>
@@ -245,9 +251,11 @@ export default function CourseCriteriaByCC() {
                     <label htmlFor="" className=' form-label small' style={{color:"red"}}>If's There a New Assessment Type Please Choose 'Add-New' Option</label>
                     <select className=' form-select m-2' style={{width:"350px"}} value={selectedAssessmentType} onChange={(e) => {
                         handleAssessmentTypeChange(e);
+                        CheckingSelectedAssementType(e);
                         if (e.target.value === 'Option') {
                           setIsPopupVisible(true);
                         }
+                        
                       }} required>
                       <option selected disabled>Select Assessment Type</option>
                       {
@@ -267,9 +275,6 @@ export default function CourseCriteriaByCC() {
                   />
                   
                 </div>
-                {
-                  selectedMainAssessmentValue === 'CA'?
-                  
                     <div className=' col-10 mt-4' style={{display:"flex"}}>
                         
                       <div style={{marginRight:"80px"}}>
@@ -301,19 +306,18 @@ export default function CourseCriteriaByCC() {
                             style={{width:"350px"}}
                           />
                       </div>
-                  
                     </div>
-                    :selectedMainAssessmentValue === 'End'?
-                    < >
-                    </>
-                    :null
-
-                    }
                 
                 <div className=' col-10 mt-4' style={{display:"flex"}}>
                   <div style={{marginRight:"80px"}}>
                     <label htmlFor="" className=' form-label'>Enter Percentage (%) Get to CA Calculation</label>
-                    <input name="percentage" style={{width:"350px",marginRight:"80px"}} type={"number"} className='form-control m-2' placeholder='Enter percentage (%)' required/>
+                    <input 
+                    name="percentage" 
+                    style={{width:"350px",marginRight:"80px"}} 
+                    type={"number"} 
+                    className='form-control m-2' 
+                    placeholder='Enter percentage (%)' 
+                    required/>
                     
                   </div>
                   <div>

@@ -83,10 +83,16 @@ export default function AddCAMarksByLec() {
                 // Fetch all related students
                 const allRelatedStudentsRes = await LecturerService.getAllRelatedStudentID(course_id,asInsideCurrentAcedemicYear);
                 const allRelatedStudents = allRelatedStudentsRes.content;
-                // console.log("All related students:", allRelatedStudents);
-                setRegStudent(allRelatedStudents);
-                console.log(allRelatedStudents);
-                // console.log(allRelatedStudents);
+
+                var studentArray = [];
+                allRelatedStudents.map((student, index) => {
+                    studentArray.push(student.student_id);
+                }
+                )
+                console.log(studentArray);
+                
+                setRegStudent(studentArray);
+                
 
                 // Fetch all data of CA Marks
                 const allDataOfCAMarksRes = await LecturerService.getAllDataOfCAMarks(course_id);
@@ -106,7 +112,7 @@ export default function AddCAMarksByLec() {
 
 
                 // Create initial CA marks entries
-                const initialCaMarks = allRelatedStudents.map(student => ({
+                const initialCaMarks = studentArray.map(student => ({
                     student_id: student, // Adjust based on actual student ID property
                     course_id: course_id,
                     academic_year: asInsideCurrentAcedemicYear,
@@ -232,6 +238,7 @@ export default function AddCAMarksByLec() {
 
         caMarks.map((mark, index) => {           //maping student ID
             const student_id = mark.student_id;         //get student ID
+            console.log(mark);
             console.log(student_id);
 
             var CAFinalMarks = 0;               //Final CA marks
@@ -267,6 +274,7 @@ export default function AddCAMarksByLec() {
                     }
                 })
 
+                
 
 
                 var sumOfCAMarks = 0;                   //sum of marks of a particular assessment type (Quiz,Assignment etc...)
@@ -297,7 +305,7 @@ export default function AddCAMarksByLec() {
                     }
                     sumOfCAMarks = (parseFloat(sumOfCAMarks)/no_of_taken).toFixed(3);  //get average of marks of a particular assessment type (Quiz,Assignment etc...)
                     
-                    calculatedCAMark_as_Precentage = ((parseFloat(sumOfCAMarks)/100)*percentage).toFixed(3);        //get calculated marks as percentage of a particular assessment type (Quiz,Assignment etc...)
+                    calculatedCAMark_as_Precentage = (((sumOfCAMarks)/100)*percentage).toFixed(3);        //get calculated marks as percentage of a particular assessment type (Quiz,Assignment etc...)
                     
                     TotalCalculatedCAPresentageArr.push(calculatedCAMark_as_Precentage);        //push calculated marks as percentage of a particular assessment type (Quiz,Assignment etc...) to an array
 
@@ -343,7 +351,7 @@ export default function AddCAMarksByLec() {
                 if (TotalCalculatedCAPresentageArr[i] === 'AB') {           //checking AB marks
                     CAFinalMarks = 'WH';                                //With held the final CA marks
                 }else{
-                    CAFinalMarksTotal += parseFloat(TotalCalculatedCAPresentageArr[i]);      //get sum of calculated marks percentages the student has got
+                    CAFinalMarksTotal += +TotalCalculatedCAPresentageArr[i];      //get sum of calculated marks percentages the student has got
                 }
             }
 
@@ -360,10 +368,6 @@ export default function AddCAMarksByLec() {
                     CAFinalMarks='Not eligible';        //Not eligible for the final exam
                 }
             }
-            console.log("pass margin : "+CAFinalMarksMargin);
-            console.log("Student total CA marks : "+CAFinalMarksTotal);
-            console.log("eligibility : "+CAFinalMarks);
-
 
         });
         
