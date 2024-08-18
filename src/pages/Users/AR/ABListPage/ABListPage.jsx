@@ -103,7 +103,8 @@ export default function ABListPage() {
                 {courseList.map((element,index) => (
                   <tr className="clickable-row" key={index} onClick={()=>
                       {
-                        history.push(`/viewABUpdate/updateAB/${element[2]}/${element[3]}/${element[4]}/${element[5]}/${element[6]}/${element[8]}`)
+                        // history.push(`/viewABUpdate/updateAB${element[2]}/${element[3]}/${element[4]}/${element[5]}/${element[6]}/${element[8]}`)
+                        history.push({pathname:'/viewABUpdate/updateAB',state:element})
                       
                       }}
                   >

@@ -10,7 +10,7 @@ const BackButton = () => {
   return (
     <div style={{display:"inline"}}>
       {/* Your component content here */}
-      <button className="btn btn-outline-dark btn-sm" onClick={handleGoBack}>Go Back </button>
+      <button className="btn btn-outline-danger btn-sm" style={{width:100}} onClick={handleGoBack}>Go Back &gt; </button>
     </div>
   );
 }

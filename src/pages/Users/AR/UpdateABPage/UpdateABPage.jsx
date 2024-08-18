@@ -7,16 +7,20 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import BackButton from '../../../../components/Users/AR/BackButton/BackButton';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 export default function UpdateABPage() {
     const history = useHistory();
+    const location = useLocation();
+
+    const ABDetails = location.state;     //Get the AB details from the location state
 
   
 
     
 
-    const studentDetails = useParams();     //Get the student details from the URL
+    // const studentDetails = useParams();     //Get the student details from the URL
     const [newScore,setNewScore]=useState('');    //Use state to store the new score
     const [newGrade,setNewGrade]=useState('');    //Use state to store the new grade
     const [medicalListUploaded,setMedicalListUploaded]=useState(false);     //Use state to store whether the medical list is uploaded or not
@@ -46,11 +50,11 @@ export default function UpdateABPage() {
     }
 
     let updateDataOject = {     //Object to store the updated marks data
-        course_id: studentDetails.course_id,                        //Set the course id ininially
-        student_id: studentDetails.student_id,                      //Set the student id initially
+        course_id: ABDetails[2],                        //Set the course id ininially
+        student_id: ABDetails[4],                      //Set the student id initially
         new_score: newScore,                                        //Set the new score initially
-        exam_type: studentDetails.exam_type,                        //Set the exam type initially  
-        academic_year: studentDetails.academic_year,                //Set the academic year initially
+        exam_type: ABDetails[6],                        //Set the exam type initially  
+        academic_year: ABDetails[8],                //Set the academic year initially
 
     };
 
@@ -65,14 +69,14 @@ export default function UpdateABPage() {
 
     const loadAllMedicalSubmissions = async() => {   //Function to load the medical submission details from the backend
 
-        const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${studentDetails.academic_year}`);   //Get all the medical submission details from the backend
+        const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${updateDataOject.academic_year}`);   //Get all the medical submission details from the backend
         
         if(result.data.length>0){    //condition to check if the medical list is uploaded
            
             setMedicalListUploaded(true);   //Set the medicalListUploaded state to true if the medical list is uploaded
            
             
-            const selectedStudentMedicalDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentMedicalDetails/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/${studentDetails.exam_type}`);   //Get the selected student medical details from the backend
+            const selectedStudentMedicalDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentMedicalDetails/${updateDataOject.student_id}/${updateDataOject.course_id}/${updateDataOject.academic_year}/${updateDataOject.exam_type}`);   //Get the selected student medical details from the backend
             if(selectedStudentMedicalDetails.data.length>0){    //condition to check whether the selected student has submitted a medical or not
 
                 await selectedStudentMedicalDetails.data.map((element)=>{       //Map the selected student medical details
@@ -107,11 +111,11 @@ export default function UpdateABPage() {
 
     const updateGrade = async()=>{              //Function to update the student grade
 
-        updateDataOject.course_id = studentDetails.course_id;           //Set the course id update in marks
-        updateDataOject.student_id = studentDetails.student_id;         //Set the student id update in marks
+        updateDataOject.course_id = updateDataOject.course_id;           //Set the course id update in marks
+        updateDataOject.student_id = updateDataOject.student_id;         //Set the student id update in marks
         updateDataOject.new_score = newScore;                           //Set the new score update in marks
-        updateDataOject.exam_type = studentDetails.exam_type;           //Set the exam type update in marks
-        updateDataOject.academic_year = studentDetails.academic_year;   //Set the academic year update in marks
+        updateDataOject.exam_type = updateDataOject.exam_type;           //Set the exam type update in marks
+        updateDataOject.academic_year = updateDataOject.academic_year;   //Set the academic year update in marks
 
         
 
@@ -130,7 +134,7 @@ export default function UpdateABPage() {
         }
 
 
-        const selectedStudentGrade = await axios.get(`http://localhost:9090/api/AssistantRegistrar/findSelectedStudentGrade/${studentDetails.course_id}/${studentDetails.student_id}`);   //Get the selected student grade from the backend
+        const selectedStudentGrade = await axios.get(`http://localhost:9090/api/AssistantRegistrar/findSelectedStudentGrade/${updateDataOject.course_id}/${updateDataOject.student_id}`);   //Get the selected student grade from the backend
             
             if(selectedStudentGrade.data.length>0){    //condition to check whether the selected student has a grade or not (Grade should be there )
                 existingGrade.id=selectedStudentGrade.data[0].id;                                            //Set existing id in the grade table
@@ -168,14 +172,14 @@ export default function UpdateABPage() {
 
 
         try{
-            const marksList =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/${studentDetails.exam_type}`);   //Get the selected student marks by selected course in previous academic year (to check whether the student is a propper student or not)
+            const marksList =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${updateDataOject.student_id}/${updateDataOject.course_id}/${academicYearDetails.previous_academic_year}/${updateDataOject.exam_type}`);   //Get the selected student marks by selected course in previous academic year (to check whether the student is a propper student or not)
             
             if(marksList.data.length==0){    //condition to check whether the selected student dont have marks in previous academic year (meanse the student is a propper student)
 
             
                 /*---------------------------------------------------------------------Scenario for a propper student---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
                     
-                if (studentDetails.exam_type.toLowerCase()=="Mid theory exam".toLowerCase() || studentDetails.exam_type.toLowerCase()=="Mid practical exam".toLowerCase()){                   //Condition to check whether the exam is a mid exam
+                if (updateDataOject.exam_type.toLowerCase()=="Mid theory exam".toLowerCase() || updateDataOject.exam_type.toLowerCase()=="Mid practical exam".toLowerCase()){                   //Condition to check whether the exam is a mid exam
                         
                     if(newScore.toLowerCase()==="F".toLowerCase()){             //condition to check whether the new grade is F
                             existingGrade.ca_eligibility="Not eligible";     //Set the ca eligibility to not eligible
@@ -200,11 +204,11 @@ export default function UpdateABPage() {
                     }
 
                     
-                } else if(studentDetails.exam_type.toLowerCase()=="End theory exam".toLowerCase() || studentDetails.exam_type.toLowerCase()=="End practical exam".toLowerCase()){           //Condition to check whether the exam is a end exam
+                } else if(updateDataOject.exam_type.toLowerCase()=="End theory exam".toLowerCase() || updateDataOject.exam_type.toLowerCase()=="End practical exam".toLowerCase()){           //Condition to check whether the exam is a end exam
                     
-                    if(studentDetails.exam_type.toLowerCase()=="End theory exam".toLowerCase()){            //Condition to check whether the exam is a theory exam
+                    if(updateDataOject.exam_type.toLowerCase()=="End theory exam".toLowerCase()){            //Condition to check whether the exam is a theory exam
                         
-                        const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.current_academic_year}/Mid theory exam`);   //Get the mid therory exam results of the student in the current academic year
+                        const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${updateDataOject.student_id}/${updateDataOject.course_id}/${academicYearDetails.current_academic_year}/Mid theory exam`);   //Get the mid therory exam results of the student in the current academic year
                         
                         if (((!midExamMarksList.data.length>0) ||midExamMarksList.data[0].assignment_score.toLowerCase() !="F".toLowerCase()) && updateDataOject.new_score.toLowerCase()==="MC".toLowerCase()){      //Condition to check whether the student has passed the mid exam and have MC for end exam
                             
@@ -213,9 +217,9 @@ export default function UpdateABPage() {
                             //Grade will be existing grade (possinle grade)
                         }
                         
-                    } else if(studentDetails.exam_type.toLowerCase()=="End practical exam".toLowerCase()){      //Condition to check whether the exam is a practical exam
+                    } else if(updateDataOject.exam_type.toLowerCase()=="End practical exam".toLowerCase()){      //Condition to check whether the exam is a practical exam
 
-                        const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.current_academic_year}/Mid practical exam`);   //Get the mid practical exam results of the student in the current academic year
+                        const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${updateDataOject.student_id}/${updateDataOject.course_id}/${academicYearDetails.current_academic_year}/Mid practical exam`);   //Get the mid practical exam results of the student in the current academic year
                         
                         if (((!midExamMarksList.data.length>0) ||midExamMarksList.data[0].assignment_score.toLowerCase() !="F".toLowerCase()) && updateDataOject.new_score.toLowerCase()==="MC".toLowerCase()){              //Condition to check whether the student has passed the mid exam and have MC for end exam
                             existingGrade.grade="WH"                   //Set the grade to WH   
@@ -241,10 +245,10 @@ export default function UpdateABPage() {
 
 
 
-            if((studentDetails.exam_type.toLowerCase()=="Mid theory exam".toLowerCase() || studentDetails.exam_type.toLowerCase()=="End theory exam".toLowerCase())){           //Condtition to ensure the exam is a theory exam
+            if((updateDataOject.exam_type.toLowerCase()=="Mid theory exam".toLowerCase() || updateDataOject.exam_type.toLowerCase()=="End theory exam".toLowerCase())){           //Condtition to ensure the exam is a theory exam
                 
 
-                const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/Mid theory exam`);   //Get the selected student previous mid exam marks in theory exam 
+                const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${updateDataOject.student_id}/${updateDataOject.course_id}/${academicYearDetails.previous_academic_year}/Mid theory exam`);   //Get the selected student previous mid exam marks in theory exam 
                 
                 if(((!previousMidExamResult.data.length>0) || previousMidExamResult.data[0].assignment_score=="MC") && existingGrade.grade=="WH" && newScore=="F"){       //Condition to check whether the student has a WH grade and the new grade is F
                     existingGrade.grade="F";        //Set the grade to F
@@ -260,9 +264,9 @@ export default function UpdateABPage() {
                     }
                 }
 
-            } else if((studentDetails.exam_type.toLowerCase()=="Mid practical exam".toLowerCase() || studentDetails.exam_type.toLowerCase()=="End practical exam".toLowerCase())){           //Condtition to ensure the exam is a practical exam
+            } else if((updateDataOject.exam_type.toLowerCase()=="Mid practical exam".toLowerCase() || updateDataOject.exam_type.toLowerCase()=="End practical exam".toLowerCase())){           //Condtition to ensure the exam is a practical exam
                 
-                const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/Mid practical exam`);   //Get the selected student previous mid exam marks in practical exam
+                const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${updateDataOject.student_id}/${updateDataOject.course_id}/${academicYearDetails.previous_academic_year}/Mid practical exam`);   //Get the selected student previous mid exam marks in practical exam
                 
                 if(((!previousMidExamResult.data.length>0) || previousMidExamResult.data[0].assignment_score=="MC") && existingGrade.grade=="WH" && newScore=="F"){       //Condition to check whether the student has a WH grade and the new grade is F
                     existingGrade.grade="F";        //Set the grade to F
@@ -335,27 +339,27 @@ export default function UpdateABPage() {
                             <tbody>
                                 <tr>
                                     <td style={{paddingBottom:"10px"}}><label className="labelkey" style={{fontWeight:"bold"}}>Student ID: </label></td>
-                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{studentDetails.student_id}</label> </td>
+                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{updateDataOject.student_id}</label> </td>
                                 </tr>
                                 <tr>
                                     <td style={{paddingBottom:"10px"}}><label className="labelkey"style={{fontWeight:"bold"}}>Course ID: </label></td>
-                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{studentDetails.course_id}</label> </td>
+                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{updateDataOject.course_id}</label> </td>
                                 </tr>
                                 <tr>
                                     <td style={{paddingBottom:"10px"}}><label className="labelkey" style={{fontWeight:"bold"}}>Course name: </label></td>
-                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{studentDetails.course_name}</label> </td>
+                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{ABDetails[3]}</label> </td>
                                 </tr>
                                 <tr>
                                     <td style={{paddingBottom:"10px"}}><label className="labelkey" style={{fontWeight:"bold"}}>Exam type: </label></td>
-                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{studentDetails.exam_type}</label> </td>
+                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{updateDataOject.exam_type}</label> </td>
                                 </tr>
                                 <tr>
                                     <td style={{paddingBottom:"10px"}}><label className="labelkey" style={{fontWeight:"bold"}}>Academic year: </label></td>
-                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{studentDetails.academic_year}</label> </td>
+                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{updateDataOject.academic_year}</label> </td>
                                 </tr>
                                 <tr>
                                     <td style={{paddingBottom:"10px"}}><label className="labelkey" style={{fontWeight:"bold"}}>Current score: </label></td>
-                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{studentDetails.grade}</label> </td>
+                                    <td style={{paddingBottom:"10px"}}> <label className='labelValue' style={{width:"100%",marginLeft:"auto",marginRight:"auto",paddingLeft:"10px",paddingTop:"2px",paddingBottom:"2px",backgroundColor:"#ffffff",borderRadius:"10px",border:"1px solid #a1a1a138",boxShadow:"0 0 10px rgba(0, 0, 0, 0.1)"}}>{ABDetails[5]}</label> </td>
                                 </tr>
                                 <tr>
                                     <td style={{paddingBottom:"10px"}}><label className="labelkey" style={{fontWeight:"bold"}}>New score: </label></td>
