@@ -6,7 +6,7 @@ import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal }
 export default function AddCAMarksByLec() {
     const { course_id, course_name } = useParams();
     const [evaluationCriteria, setEvaluationCriteria] = useState([]);
-    const [students, setStudents] = useState([]);
+    // const [students, setStudents] = useState([]);
     const [regStudent, setRegStudent] = useState([]);
     const [level, setLevel] = useState('');
     const [semester, setSemester] = useState('');
@@ -19,7 +19,7 @@ export default function AddCAMarksByLec() {
     const [dataCAMarksAll, setDataCAMarksAll] = useState([]);
     const [uniqueAssigmentName, setUniqueAssigmentName] = useState([]);
     const [currentAcademicYear, setCurrentAcademicYear] = useState('');
-    const [getValAssessmentType, setGetValAssessmentType] = useState('');
+    // const [getValAssessmentType, setGetValAssessmentType] = useState('');
     const [eligbilityBtnDisable, setEligbilityBtnDisable] = useState();
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const [submitted, setSubmitted] = useState(false);

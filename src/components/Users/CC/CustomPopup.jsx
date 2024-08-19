@@ -4,7 +4,7 @@ export default function CustomPopup({ isVisible, onClose, onSave }) {
     const [popupInputValue, setPopupInputValue] = useState('');
     const [selectedType, setSelectedType] = useState('');
 
-    console.log("selectedType : "+ selectedType);
+    // console.log("selectedType : "+ selectedType);
 
     const handleSave = () => {
         if (!popupInputValue.trim() || !selectedType) {

@@ -3,12 +3,13 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CustomPopup from '../../../components/Users/CC/CustomPopup';
+import MidTypePopup from '../../../components/Users/CC/MidTypePopup';
 
 export default function CourseCriteriaByCC() {
     
     const [selectedAssessmentType, setSelectedAssessmentType] = useState('');
     const [criteriaData, setCriteriaData] = useState([]); // State to hold the criteria data
-    const [criteria_name, setCriteria_name] = useState(''); // State to hold the evaluation criteria name
+    const [criteria_name, setCriteria_name] = useState([]); // State to hold the evaluation criteria name
     const asmntTypeRef = useRef(null); // Create a ref for the assessment type select element
 
     const [selectedTypeofAssessment, setSelectedTypeofAssessment] = useState('');
@@ -23,6 +24,7 @@ export default function CourseCriteriaByCC() {
     const [assessmentTypesData, setAssessmentTypesData] = useState([]);
     const [cidsData, setCidsData] = useState([]);
     const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const [isMidPopupVisible, setIsMidPopupVisible] = useState(false);
     const [sequence, setSequence] = useState(1); // Initialize sequence in state
     const [endSequence, setEndSequence] = useState(1); // Initialize endSequence in state
     const storedData = localStorage.getItem('user');
@@ -32,10 +34,11 @@ export default function CourseCriteriaByCC() {
     const [noOfConducted, setNoOfConducted] = useState('');
     const [noOfTaken, setNoOfTaken] = useState('');
     const [disableInputs, setDisableInputs] = useState(false);
+    const [isMidSelected, setIsMidSelected] = useState(false);
+    const [userSelectedMidType, setUserSelectedMidType] = useState('');
     const [selectedMainAssessmentValue, setSelectedMainAssessmentValue] = useState('');
-    const [selectedMidVal, setSelectedMidVal] = useState('');
 
-    console.log(" miv val ",selectedMidVal);
+    
 
     useEffect(() => {
         if(storedData){
@@ -48,15 +51,6 @@ export default function CourseCriteriaByCC() {
         }
         
     }, []);
-
-    const CheckingSelectedAssementType = (e)=>{
-      var midVal ='';
-      if(e.target.value === 'Mid exam'){
-        
-      }
-      setSelectedMidVal(midVal);
-      console.log("prev selected Mid Value : ",midVal);
-    }
 
     const fetchData = async (email)=>{
       
@@ -76,12 +70,16 @@ export default function CourseCriteriaByCC() {
         useEffect(() => {
             
         }, [showButton,reloadButton])
+
+        // useEffect(() => {
+        //   if (userSelectedMidType) {}
+        // }, [userSelectedMidType]);
         
           // Function to handle Assessment Type selection
           const handleAssessmentTypeChange = (event) => {
             const selectedValue = event.target.value;
             setSelectedAssessmentType(selectedValue);
-            CheckingSelectedAssementType(event);
+            // CheckingSelectedAssementType(event);
             }
 
             const selectedMainAssessment = (event) => {
@@ -121,6 +119,7 @@ export default function CourseCriteriaByCC() {
             setSequence(prevSequence => prevSequence + 1);
             evaluationcriteria_id += 'CA';
             evaluationcriteria_id += sequence;
+            console.log("evaluationcriteria_id : " + evaluationcriteria_id);            
             }
             if (asmntTypeRef.current.value === 'End') {
             setEndSequence(prevEndSequence => prevEndSequence + 1);
@@ -143,8 +142,59 @@ export default function CourseCriteriaByCC() {
           // Add the evaluation criteria name to the criteria_name state
           if (typeof no_of_conducted === "number") {
             if (no_of_conducted!== 1) {
-              for (let i = 1; i <= no_of_conducted; i++) {
-                const assignment_name = `${selectedAssessmentType}${i}`; // Corrected string concatenation
+
+              
+                if(userSelectedMidType === 'both'){
+                  const newCriterion_name1 = {
+                    evaluationcriteria_id,
+                    assignment_name: 'Mid practical exam',
+                    course_id,
+                  };
+                  const newCriterion_name2 = {
+                    evaluationcriteria_id,
+                    assignment_name: 'Mid theory exam',
+                    course_id,
+                  };
+                  setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name1, newCriterion_name2]);
+                }
+                else{
+                  
+                for (let i = 1; i <= no_of_conducted; i++) {
+                  const assignment_name = `${selectedAssessmentType}${i}`; // Corrected string concatenation
+                  const newCriterion_name = {
+                    evaluationcriteria_id,
+                    assignment_name,
+                    course_id,
+                  };
+                  setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
+
+                }
+              }
+            } else if (no_of_conducted === 1) {
+
+              if(userSelectedMidType === 'Mid practical exam'){
+                console.log("userSelectedMidType : " + userSelectedMidType);
+                const assignment_name = userSelectedMidType; // Corrected string concatenation
+                const  newCriterion_name = {
+                  evaluationcriteria_id,
+                  assignment_name,
+                  course_id,
+                };
+                setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
+
+              }
+              else if (userSelectedMidType === 'Mid theory exam'){
+                console.log("userSelectedMidType : " + userSelectedMidType);
+                const assignment_name = userSelectedMidType; // Corrected string concatenation
+                const  newCriterion_name = {
+                  evaluationcriteria_id,
+                  assignment_name,
+                  course_id,
+                };
+                setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
+              }
+               else{
+                const assignment_name = `${selectedAssessmentType}`;
                 const newCriterion_name = {
                   evaluationcriteria_id,
                   assignment_name,
@@ -152,17 +202,9 @@ export default function CourseCriteriaByCC() {
                 };
                 setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
               }
-            } else if (no_of_conducted === 1) {
-              const assignment_name = `${selectedAssessmentType}`;
-              const newCriterion_name = {
-                evaluationcriteria_id,
-                assignment_name,
-                course_id,
-              };
-              setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
+
             }
           }
-      
           // Clear the form after submission
           document.querySelectorAll('input').forEach(input => input.value = '');
         };
@@ -196,8 +238,8 @@ export default function CourseCriteriaByCC() {
         const onSave = async (newValue) => {
           try {
             setNewAssessmentType({ assessment_type_name: newValue.popupInputValue});
-            console.log("New Assessment Type : " + newValue.popupInputValue);
-            console.log("New Assessment Type : " + newValue.selectedType);
+            // console.log("New Assessment Type : " + newValue.popupInputValue);
+            // console.log("New Assessment Type : " + newValue.selectedType);
 
             await axios.post("http://localhost:9090/api/astylist/savenewasty", { assessment_type_name: newValue.popupInputValue,ca_mid_end: newValue.selectedType} );
             toast.success("New assessment type saved successfully!");
@@ -213,12 +255,37 @@ export default function CourseCriteriaByCC() {
           }
         }
 
-        const onSelected = (selectedType) => {
-          setSelectedTypeofAssessment(selectedType);
-        }
 
+        const handleMidTypeSelection = (selectedOption) => {
+          console.log(selectedOption);
+          setIsMidPopupVisible(false);
+          setIsMidSelected(true);
+          setUserSelectedMidType(selectedOption);
+
+
+          let conductValue = '';
+          let takeValue = '';
+          
+          
+          switch(selectedOption) {
+            case 'Mid theory exam':
+            case 'Mid practical exam':
+              conductValue = '1';
+              takeValue = '1';
+              break;
+            case 'both':
+              conductValue = '2';
+              takeValue = '2';
+              break;
+            default:
+              return; // Do nothing if the option doesn't match
+          }
         
+          setNoOfConducted(conductValue);
+          setNoOfTaken(takeValue);
+          setDisableInputs(true); // Disable inputs based on condition
 
+        };
 
   return (
     <div>
@@ -251,9 +318,13 @@ export default function CourseCriteriaByCC() {
                     <label htmlFor="" className=' form-label small' style={{color:"red"}}>If's There a New Assessment Type Please Choose 'Add-New' Option</label>
                     <select className=' form-select m-2' style={{width:"350px"}} value={selectedAssessmentType} onChange={(e) => {
                         handleAssessmentTypeChange(e);
-                        CheckingSelectedAssementType(e);
+                        // CheckingSelectedAssementType(e);
                         if (e.target.value === 'Option') {
                           setIsPopupVisible(true);
+                        }
+
+                        if (e.target.value === 'Mid exam') {
+                          setIsMidPopupVisible(true);
                         }
                         
                       }} required>
@@ -270,8 +341,12 @@ export default function CourseCriteriaByCC() {
                     isVisible={isPopupVisible}
                     onClose={() => setIsPopupVisible(false)}
                     onSave={onSave}
-                    // onSelected={onSelected}
                     
+                  />
+                  <MidTypePopup
+                    isVisible={isMidPopupVisible}
+                    onClose={() => setIsMidPopupVisible(false)}
+                    onSave={handleMidTypeSelection}
                   />
                   
                 </div>
@@ -298,7 +373,7 @@ export default function CourseCriteriaByCC() {
                             name="no_of_taken"
                             type="number"
                             className='form-control m-2'
-                            placeholder='Select No of Take'
+                            placeholder='No of Take'
                             
                             value={noOfTaken}
                             onChange={(e) => setNoOfTaken(e.target.value)}
