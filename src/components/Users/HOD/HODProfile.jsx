@@ -114,7 +114,20 @@ export default function HODProfile() {
         </div>
     )}
 </div>
-
+            <h2>Grading</h2>
+            <div className="row">
+                   
+                        <div className="col-md-3 mb-4" >
+                            <div className="card text-center functionCard">
+                                <div className="card-body">
+                                    <a href={`/changesGradeMargin`} className="btn btn-primary home-page-class-button">
+                                        Grading
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                   
+                </div>
             </div>
         </>
     );

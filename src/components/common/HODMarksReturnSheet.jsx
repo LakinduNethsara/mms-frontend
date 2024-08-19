@@ -14,18 +14,16 @@ import toastr from 'toastr';
 
 export default function HODMarksReturnSheet(props) {
     const [noData, setNoData] = useState(false); // State to indicate if there is no data to display
-    const { course_id, course_name,department } = useParams();
+    const { course_id, course_name,department,academicYear } = useParams();
     const {approved_level}=props;
     const history = useHistory();
     // const [url,setUrl] = useState()
     const[newSignature, setNewSignature] = useState();
     const[loading,setLoading]=useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
-    const[academicYear,setAcademicYear]=useState("")
     const[current_semester,setCurrent_semester]=useState("")
     const[approval_level,setApprovalLevel]=useState(approved_level);
-    const[marksSheet,setMarksSheet]=useState([])
-    console.log(marksSheet)
+    const[marksSheet,setMarksSheet]=useState([]);
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const[selectedlec,setSelectedEmail]=useState('')
@@ -34,36 +32,14 @@ export default function HODMarksReturnSheet(props) {
         date: new Date(),
       });
 
-      useEffect(() => {
-        const fetchAndSaveYear = async () => {
-            const details = await fetchAcademicYear();
-            if (details) {
-                saveAcademicYearToLocal(details);
-                setAcademicDetails(details);
-            }
-        };
 
-        fetchAndSaveYear();
-    }, []);
-
-    useEffect(() => {
-        if (academicDetails) { // Check if academicDetails is not null or undefined
-            setAcademicYear(academicDetails.current_academic_year);
-            setCurrent_semester(academicDetails.current_semester);
-        }
-    }, [academicDetails]); // Depend on academicDetails to trigger this effect
-    
-      console.log(academicYear)
-     console.log(date.format());
 
     const seenKeys = new Set();
     const seenKeysFA = new Set();
     const seenKeysForTHFA = new Set();
     const seenKeysForTHCA = new Set();
 
-    console.log(newSignature);
 
-    console.log(course_id,course_name)
     
     let forCA = 0;
     let forFA = 0;
@@ -125,18 +101,13 @@ export default function HODMarksReturnSheet(props) {
     // const { oktaAuth, authState } = useOktaAuth();
      const userNameAuth = user?.full_name;
 
-     console.log(userNameAuth)
-
-    
+     
     
     const saveDigitalSignature = (url) => {
-        setNewSignature(url);    
-        console.log(url);
-        console.log(setNewSignature)
+        setNewSignature(url); 
     };
     
-   
-  console.log(date)
+
 
     let CAAvailable = false;
     let ca_percentage=0;
@@ -207,9 +178,6 @@ useEffect(() => {
 
             const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}`);
             setMarksSheet(response.data);
-            console.log(marksSheet)
-
-
             setLoading(false); // Set loading to false after all data is fetched
         } catch (error) {
             setNoData(true); // Set noData to true if there is an error
@@ -299,41 +267,32 @@ useEffect(() => {
     };
   }, [newSignature]);
 
-    console.log(isCClevel.signature)
-
-
-  
-
+ 
     const handleSubmit = async (e) => {
         
         if(newSignature==null|| newSignature==""){
             e.preventDefault();
-            console.log("Empty signature")
+      
             toast.error("Empty Signature");
         }
         if(searchTerm==null || searchTerm=="" && nextApprovedlevel==="course_coordinator" ){
             e.preventDefault();
-            console.log("Empty signature")
+         
             toast.error("Empty Signature");
         }
         else{
            
         try {
             e.preventDefault();
-            console.log(approval.date_time)
             const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
             if(approval_level==="finalized"){
                 const lecturerAssign = await axios.post(`http://localhost:9090/api/approvalLevel/assignCertifyLecturer`,lecturerCertifyAssign);
             }
             if (response.status === 200) {
-                console.log("Approval level updated successfully");
+              
                 setApprovalLevel(nextApprovedlevel)
                 toast.success('Marks Sheet Sent successfully');
                 history.goBack();
-                console.log(approval_level)
-                
-               
-               
             } else {
                 console.error("Failed to update approval level");
             }
@@ -351,11 +310,8 @@ useEffect(() => {
 
         
         try {
-            console.log(Returnapproval)
             const response = await axios.post(`http://localhost:9090/api/approvalLevel/return`,Returnapproval);
             if (response.status === 200) {
-                console.log("Marks Sheet Return successfully");
-                
                 toast.success("Result sheet approved successfully");
                  
                 setTimeout(() => {
@@ -377,7 +333,6 @@ useEffect(() => {
     marksSheet.map((ele, index) => (
         ele.ca.map((caScore, idx) => {
             if (!seenKeysForTHCA.has(caScore.key)) {
-                console.log(caScore.key);
                 forCA++
                 seenKeysForTHCA.add(caScore.key); // Mark this key as seen
             }
@@ -390,7 +345,6 @@ useEffect(() => {
     marksSheet.map((ele, index) => (
         ele.end.map((endScore, idx) => {
             if (!seenKeysForTHFA.has(endScore.key)) {
-                console.log(endScore.key);
                 forFA++
                 seenKeysForTHFA.add(endScore.key); // Mark this key as seen
             }
@@ -403,10 +357,8 @@ useEffect(() => {
           try {
             const result = await axios.get(`http://localhost:9090/api/lecreg/get/alllecturersdetails/${department}`);
             setData(result.data.content);
-            console.log(result.data.content)
             setFilteredData(result.data.content); // Initially, all data is considered as filtered
           } catch (error) {
-            console.error("Error fetching data:", error);
           }
         };
     
@@ -428,10 +380,6 @@ useEffect(() => {
         setSelectedEmail(email);
       }
 
-
-
-
-      console.log(approval_level,approved_level,nextApprovedlevel)
 
     return (
         <>
@@ -508,14 +456,11 @@ useEffect(() => {
                                
                                     if (!seenKeys.has(caScore.key)) {
                                
-                                    console.log(caScore.key);
-
                                     seenKeys.add(caScore.key);
                                     
                                     if(caScore.description=="percentage")
                                         {
                                             let percentage=parseInt(caScore.key.slice(0, 2))
-                                            console.log(percentage)
                                             ca_percentage=ca_percentage+percentage;
                                         }
                                    
@@ -539,10 +484,7 @@ useEffect(() => {
                                     ele.end.map((endScore, idx) => {
                                       
                                         if (!seenKeysFA.has(endScore.key)) {
-                                   
-                                        console.log(endScore.key);
-
-                                 
+                                
                                         seenKeysFA.add(endScore.key);
 
                                         return <th key={`end-${idx}`} className=' table-primary'>{endScore.key} </th>
@@ -600,7 +542,6 @@ useEffect(() => {
                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
                                 state: { ele }
                             }}>View</Link></td>
-                            {console.log(ele.student_id,ele.total_ca_mark,ele.total_final_mark,ele.total_rounded_mark,ele.grade,ele.gpv,ele.ca_eligibility)}
                         </tr>))}
                         </tbody>
 
@@ -611,7 +552,6 @@ useEffect(() => {
                 <div className=' col-5' style={{float:"left",marginTop:"50px",marginLeft:'20px'}}>
                             
                     <div>
-                        {console.log(nextApprovedlevel)}
                         <table>
                             
                                 
@@ -744,7 +684,7 @@ useEffect(() => {
                                                                     <td>Head of the Department : </td>
                                                                     <td></td>
                                                                     <td>Sign:</td>
-                                                                    <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> 
+                                                                    <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> 
                                                                     <td>Date:</td>
                                                                     <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>: 
                                                                     

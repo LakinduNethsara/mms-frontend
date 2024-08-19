@@ -54,6 +54,7 @@ import StudentRegCourses from './pages/Users/System_Analyst/StudentCourseReg/Stu
 import StudentsManagement from './pages/Users/System_Analyst/UsersManagement/StudentsManagement';
 import AddFAMarksByLec from './pages/Users/Lecturer/AddFAMarksByLec';
 import LecRelatedCoursesFA from './components/Users/Lecturer/LecRelatedCoursesFA';
+import GradeMargingChange from './pages/Users/HOD/GradeMargingChange';
 
 
 
@@ -104,7 +105,7 @@ function App() {
                 <ViewMarksTableValidations/>
               </Route>
 
-              <Route path="/ARMarksReturnSheet/:course_id/:course_name/:department">    {/* Link to view ar Marks certify sheet*/}
+              <Route path="/ARMarksReturnSheet/:course_id/:course_name/:department/:academic_year">    {/* Link to view ar Marks certify sheet*/}
                 <HODMarksReturnSheet approved_level={"HOD"}/>
               </Route>
 
@@ -163,16 +164,16 @@ function App() {
             <Route exact path="/CourseCard/:level/:semester/:department" 
               render={(props) => <CourseCard {...props} approved_level={"lecturer"} />} 
             />
-            <Route exact path="/HODMarksReturnSheet/:course_id/:course_name/:department" 
+            <Route exact path="/HODMarksReturnSheet/:course_id/:course_name/:department/:academicYear" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"lecturer"} />} 
             />
-            <Route exact path="/ccMarksReturnSheet/:course_id/:course_name/:department" 
+            <Route exact path="/ccMarksReturnSheet/:course_id/:course_name/:department/:academicYear" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"finalized"} />} 
             />
-            <Route exact path="/RBMarksReturnSheet/:course_id/:course_name/:department" 
+            <Route exact path="/RBMarksReturnSheet/:course_id/:course_name/:department/:academicYear" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"AssignedRB"} />} 
             />
-            <Route exact path="/lMarksReturnSheet/:course_id/:course_name/:department" 
+            <Route exact path="/lMarksReturnSheet/:course_id/:course_name/:department/:academicYear" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"course_coordinator"} />} 
             />
 
@@ -200,6 +201,10 @@ function App() {
             <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level" 
               render={() => <MarksCheckingForm/>} 
             />
+
+            <Route exact path="/changesGradeMargin">
+              <GradeMargingChange/>
+            </Route>
            
 
 
