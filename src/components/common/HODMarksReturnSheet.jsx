@@ -24,6 +24,7 @@ export default function HODMarksReturnSheet(props) {
     const[current_semester,setCurrent_semester]=useState("")
     const[approval_level,setApprovalLevel]=useState(approved_level);
     const[marksSheet,setMarksSheet]=useState([]);
+    const[repeatMarksSheet,setRepeatMarksSheet]=useState([]);
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const[selectedlec,setSelectedEmail]=useState('')
@@ -156,7 +157,7 @@ export default function HODMarksReturnSheet(props) {
     const Returnapproval={
         "course_id": course_id,
         "approved_user_id":userNameAuth,
-        "approval_level":prevApprovedlevel,
+        "approval_level":"finalized",
         "academic_year":academicYear,
         "date_time": date.format(),
         "department_id":department,
@@ -176,8 +177,10 @@ useEffect(() => {
         
         try {
 
-            const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}`);
+            const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/0`);
+            const Repeatresponse = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/1`);
             setMarksSheet(response.data);
+            setRepeatMarksSheet(Repeatresponse.data);
             setLoading(false); // Set loading to false after all data is fetched
         } catch (error) {
             setNoData(true); // Set noData to true if there is an error
@@ -420,133 +423,258 @@ useEffect(() => {
                                             <td class=""><h2>Mark Return Sheet:</h2></td>
                                             
                                         </tr> */}
-                                        <tr>
-                                            <td><h5><b>Marks Obtained by the Candidate for:</b></h5></td>
-                                        </tr>
+                                             <tr>
+                                                <td><h5><b>Marks Obtained by the Candidate for:</b></h5></td>
+                                             </tr>
                                     </table>
-                                        <div style={{display:"flex"}}>
+                                    <div style={{display:"flex"}}>
                                             <h6>Academic Year: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{academicYear}&nbsp;&nbsp;</span></h6>
-                                            <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h6>
-                                            <h6 className=' rounded-pill bg-success text-white'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination</h6>  
-                                        </div>
-                                        
-                                    
-                    <h4>Course code and Title : <span className='rounded-pill bg-primary text-white'> &nbsp;&nbsp;{course_name} - {course_id}&nbsp;&nbsp; </span> </h4>
-                    </div>
+                                                <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h6>
+                                                    <h6 className=' rounded-pill bg-success text-white'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination</h6>  
+                                    </div>
+                                                                            
+                                                                        
+                                    <h4>Course code and Title : <span className='rounded-pill bg-primary text-white'> &nbsp;&nbsp;{course_name} - {course_id}&nbsp;&nbsp; </span> </h4>
+                            </div>
 
-
-                    <div className=''>
-                        {/*  style={{overflow:"auto",width:"100%",height:"500px"}} */}
-                    <table className="table shadow table-bordered table-hover" style={{ marginTop: "30px", width: '80%' }}>
-
-                    <thead>
-                        
-                            <tr>
-                            
-                                <th rowSpan='2' className=' table-info'>Student_ID</th>
-                                <th colSpan={forCA} className=' table-warning ' style={{textAlign:"center"}}>Continuous Assessment</th>
-                                <th colSpan={forFA} className=' table-primary ' style={{textAlign:"center"}}>Semester End Exam</th>
-                                <th colSpan='4' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
-                                <th rowSpan='2' className=' table-danger'>CA Eligibility</th>
-                                <th rowSpan='2' className='table-secondary' style={{textAlign:"center"}}>View</th>
-                            </tr>
-                            <tr>
-                            {marksSheet.map((ele, index) =>
-                                ele.ca.map((caScore, idx) => {
-                               
-                                    if (!seenKeys.has(caScore.key)) {
-                               
-                                    seenKeys.add(caScore.key);
-                                    
-                                    if(caScore.description=="percentage")
-                                        {
-                                            let percentage=parseInt(caScore.key.slice(0, 2))
-                                            ca_percentage=ca_percentage+percentage;
-                                        }
-                                   
-                                    return <th key={`ca-${idx}`} className='table-warning'>{caScore.key}</th>;
-                                    }
-
-                                    return null;
-                                })
-                                
-                                )
-                                }
-
-                                
-                                <th className='table-warning'> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
-                                
-
-
-
-                                
-                                {marksSheet.map((ele, index) => (
-                                    ele.end.map((endScore, idx) => {
-                                      
-                                        if (!seenKeysFA.has(endScore.key)) {
-                                
-                                        seenKeysFA.add(endScore.key);
-
-                                        return <th key={`end-${idx}`} className=' table-primary'>{endScore.key} </th>
-                                        }
-                                    })
-                                ))}
+                         {marksSheet.length > 0 ? (
+                        <div className=''>
+                         {/*  style={{overflow:"auto",width:"100%",height:"500px"}} */}
+                        <table className="table shadow table-bordered table-hover" style={{ marginTop: "30px", width: '80%' }}>
+ 
+                             <thead>
+                         
+                             <tr>
                              
-                                <th className=' table-success'>Total Final Marks</th>
-                                <th className=' table-success'>Total Rounded Marks</th>
-                                <th className=' table-success'>Results/Grades</th>
-                                <th className=' table-success'>GPV</th>
+                                 <th rowSpan='2' className=' table-info'>Student_ID</th>
+                                 <th colSpan={forCA} className=' table-warning ' style={{textAlign:"center"}}>Continuous Assessment</th>
+                                 <th colSpan={forFA} className=' table-primary ' style={{textAlign:"center"}}>Semester End Exam</th>
+                                 <th colSpan='4' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
+                                 <th rowSpan='2' className=' table-danger'>CA Eligibility</th>
+                                 <th rowSpan='2' className='table-secondary' style={{textAlign:"center"}}>View</th>
+                             </tr>
+                             <tr>
+                             {marksSheet.map((ele, index) =>
+                                 ele.ca.map((caScore, idx) => {
                                 
-                           
-                               
-                            </tr>
-                    </thead>
-                    
-
-                      <tbody>
-                      {marksSheet.map((ele, index) => (
-                        <tr key={index}>
-                            <td>{ele.student_id}</td>
-
-
-                            {
-                               Array.from(seenKeysForTHCA).map((c, idx) => {
-                                    let caValue = ele.ca.find(ca => ca.key === c);
-                                    return <td key={`ca-${idx}`}>{caValue!=null ? caValue.value : ''}</td>;
-                                }
-                                )
-                            }
-
-                            <td>{ele.total_ca_mark}</td>
+                                     if (!seenKeys.has(caScore.key)) {
                                 
-                            {
-                                Array.from(seenKeysForTHFA).map((c, idx) => {
-                                    let endValue = ele.end.find(end => end.key === c);
-                                    return <td key={`end-${idx}`}>{endValue!=null ? endValue.value : ''}</td>;
-                                }
-                                )
-                            }
+                                     seenKeys.add(caScore.key);
+                                     
+                                     if(caScore.description=="percentage")
+                                         {
+                                             let percentage=parseInt(caScore.key.slice(0, 2))
+                                             ca_percentage=ca_percentage+percentage;
+                                         }
+                                    
+                                     return <th key={`ca-${idx}`} className='table-warning'>{caScore.key}</th>;
+                                     }
+ 
+                                     return null;
+                                 })
+                                 
+                                 )
+                                 }
+ 
+                                 
+                                 <th className='table-warning'> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
+                                 
+ 
+ 
+ 
+                                 
+                                 {marksSheet.map((ele, index) => (
+                                     ele.end.map((endScore, idx) => {
+                                       
+                                         if (!seenKeysFA.has(endScore.key)) {
+                                 
+                                         seenKeysFA.add(endScore.key);
+ 
+                                         return <th key={`end-${idx}`} className=' table-primary'>{endScore.key} </th>
+                                         }
+                                     })
+                                 ))}
+                              
+                                 <th className=' table-success'>Total Final Marks</th>
+                                 <th className=' table-success'>Total Rounded Marks</th>
+                                 <th className=' table-success'>Results/Grades</th>
+                                 <th className=' table-success'>GPV</th>
+                                 
                             
-                           
+                                
+                             </tr>
+                     </thead>
+                     
+ 
+                       <tbody>
+                       {marksSheet.map((ele, index) => (
+                         <tr key={index}>
+                             <td>{ele.student_id}</td>
+ 
+ 
+                             {
+                                Array.from(seenKeysForTHCA).map((c, idx) => {
+                                     let caValue = ele.ca.find(ca => ca.key === c);
+                                     return <td key={`ca-${idx}`}>{caValue!=null ? caValue.value : ''}</td>;
+                                 }
+                                 )
+                             }
+ 
+                             <td>{ele.total_ca_mark}</td>
+                                 
+                             {
+                                 Array.from(seenKeysForTHFA).map((c, idx) => {
+                                     let endValue = ele.end.find(end => end.key === c);
+                                     return <td key={`end-${idx}`}>{endValue!=null ? endValue.value : ''}</td>;
+                                 }
+                                 )
+                             }
+                             
                             
-                            <td>{ele.total_final_marks}</td>
-                            <td>{ele.total_rounded_marks}</td>
-                            <td>{ele.grade}</td>
-                            <td>{ele.gpv}</td>
-                            <td>{ele.ca_eligibility}</td>
-                            {
+                             
+                             <td>{ele.total_final_marks}</td>
+                             <td>{ele.total_rounded_marks}</td>
+                             <td>{ele.grade}</td>
+                             <td>{ele.gpv}</td>
+                             <td>{ele.ca_eligibility}</td>
+                             {
+ 
+                             }
+ 
+                             <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
+                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
+                                 state: { ele }
+                             }}>View</Link></td>
+                         </tr>))}
+                         </tbody>
+ 
+                     </table>
+                 </div>
+                    ) : null
+                    }
 
-                            }
 
-                            <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
-                                pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
-                                state: { ele }
-                            }}>View</Link></td>
-                        </tr>))}
-                        </tbody>
+                {repeatMarksSheet.length > 0 ? (
+                         <div className=''>
+                         {/*  style={{overflow:"auto",width:"100%",height:"500px"}} */}
+                    <h4>Repeaters</h4>
+                     <table className="table shadow table-bordered table-hover" style={{ marginTop: "30px", width: '80%' }}>
+ 
+                     <thead>
+                         
+                             <tr>
+                             
+                                 <th rowSpan='2' className=' table-info'>Student_ID</th>
+                                 <th colSpan={forCA} className=' table-warning ' style={{textAlign:"center"}}>Continuous Assessment</th>
+                                 <th colSpan={forFA} className=' table-primary ' style={{textAlign:"center"}}>Semester End Exam</th>
+                                 <th colSpan='4' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
+                                 <th rowSpan='2' className=' table-danger'>CA Eligibility</th>
+                                 <th rowSpan='2' className='table-secondary' style={{textAlign:"center"}}>View</th>
+                             </tr>
+                             <tr>
+                             {repeatMarksSheet.map((ele, index) =>
+                                 ele.ca.map((caScore, idx) => {
+                                
+                                     if (!seenKeys.has(caScore.key)) {
+                                
+                                     seenKeys.add(caScore.key);
+                                     
+                                     if(caScore.description=="percentage")
+                                         {
+                                             let percentage=parseInt(caScore.key.slice(0, 2))
+                                             ca_percentage=ca_percentage+percentage;
+                                         }
+                                    
+                                     return <th key={`ca-${idx}`} className='table-warning'>{caScore.key}</th>;
+                                     }
+ 
+                                     return null;
+                                 })
+                                 
+                                 )
+                                 }
+ 
+                                 
+                                 <th className='table-warning'> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
+                                 
+ 
+ 
+ 
+                                 
+                                 {repeatMarksSheet.map((ele, index) => (
+                                     ele.end.map((endScore, idx) => {
+                                       
+                                         if (!seenKeysFA.has(endScore.key)) {
+                                 
+                                         seenKeysFA.add(endScore.key);
+ 
+                                         return <th key={`end-${idx}`} className=' table-primary'>{endScore.key} </th>
+                                         }
+                                     })
+                                 ))}
+                              
+                                 <th className=' table-success'>Total Final Marks</th>
+                                 <th className=' table-success'>Total Rounded Marks</th>
+                                 <th className=' table-success'>Results/Grades</th>
+                                 <th className=' table-success'>GPV</th>
+                                 
+                            
+                                
+                             </tr>
+                     </thead>
+                     
+ 
+                       <tbody>
+                       {repeatMarksSheet.map((ele, index) => (
+                         <tr key={index}>
+                             <td>{ele.student_id}</td>
+ 
+ 
+                             {
+                                Array.from(seenKeysForTHCA).map((c, idx) => {
+                                     let caValue = ele.ca.find(ca => ca.key === c);
+                                     return <td key={`ca-${idx}`}>{caValue!=null ? caValue.value : ''}</td>;
+                                 }
+                                 )
+                             }
+ 
+                             <td>{ele.total_ca_mark}</td>
+                                 
+                             {
+                                 Array.from(seenKeysForTHFA).map((c, idx) => {
+                                     let endValue = ele.end.find(end => end.key === c);
+                                     return <td key={`end-${idx}`}>{endValue!=null ? endValue.value : ''}</td>;
+                                 }
+                                 )
+                             }
+                             
+                            
+                             
+                             <td>{ele.total_final_marks}</td>
+                             <td>{ele.total_rounded_marks}</td>
+                             <td>{ele.grade}</td>
+                             <td>{ele.gpv}</td>
+                             <td>{ele.ca_eligibility}</td>
+                             {
+ 
+                             }
+ 
+                             <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
+                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
+                                 state: { ele }
+                             }}>View</Link></td>
+                         </tr>))}
+                         </tbody>
+ 
+                     </table>
+                 </div>
+                    ) : null
+                    }
+                   
 
-                    </table>
-                </div>
+
+
+                
                 <div className=' m-5'></div>
             <div className=' row shadow-lg' style={{width:"1500px",height:'320px', padding:'10px'}}>
                 <div className=' col-5' style={{float:"left",marginTop:"50px",marginLeft:'20px'}}>
@@ -601,12 +729,7 @@ useEffect(() => {
                                     </>
                                     :null
                                     }
-                                    
-                                
-                                
-                            
-                            
-                                
+
                                 
                                     {
                                     nextApprovedlevel == "HOD" &&
