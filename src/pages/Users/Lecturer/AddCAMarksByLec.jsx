@@ -254,7 +254,6 @@ export default function AddCAMarksByLec() {
             var percentageMarginArr = [];               // Standerd percentage margin array
 
 
-
             cirtiriaName.map((name, index) => {                                 //maping criteria names
                 // console.log(name);
                 
@@ -281,8 +280,6 @@ export default function AddCAMarksByLec() {
                 // console.log("Before sort",markArray);
 
                 
-
-
                 var sumOfCAMarks = 0;                   //sum of marks of a particular assessment type (Quiz,Assignment etc...)
                 var calculatedCAMark_as_Precentage = 0;             //calculated marks as percentage of a particular assessment type (Quiz,Assignment etc...)
 
