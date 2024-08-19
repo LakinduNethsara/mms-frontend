@@ -253,43 +253,30 @@ export default function AddCAMarksByLec() {
             var TotalCalculatedCAPresentageArr = [];            //Total calculated CA marks as percentage
             var percentageMarginArr = [];               // Standerd percentage margin array
 
-            var midMarks = [];      //mid marks array
-            var midPercentage = 0;  //mid percentage
-            var sumOfMidMarks = 0;  //sum of mid marks
-            var calculatedMidMarksPercentage = 0;  //calculated mid marks percentage
 
 
-            cirtiriaName.map((name, index) => {   //maping criteria names
-
-            
+            cirtiriaName.map((name, index) => {                                 //maping criteria names
                 // console.log(name);
                 
-
                 const no_of_conducted = name[5];                //store no of conducted
                 const no_of_taken = +name[6];                    //store no of taken
                 const percentage = +name[7];                     //store percentage taken
                 const assessment_type = name[4];                //store assessment type (Quiz,Assignment,Mid theory exam, Mid practical exam etc...)
                 const selected_type_ofassessment = name[11];        //Joined table column name  (CA,Mid,Final)
-
-                console.log(assessment_type);
-
                 var markArray = [];             //array to store marks of a particular assessment type (Quiz,Assignment etc...)
 
                 
                 
-                stMarksCA.map((stMark, index) => {   //maping student marks
-
+                stMarksCA.map((stMark, index) => {                              //maping student marks
                     // console.log(stMark);
-                        
+                    
                     if(student_id === stMark[1] && assessment_type === stMark[11]){    //checking assessment type with student marks
-
-                        if (selected_type_ofassessment === 'Mid' && stMark[5]==='AB') {            //checking assessment type is Mid
-                            
+                        if (selected_type_ofassessment === 'Mid' && stMark[5]==='AB') {            //checking assessment type is Mid    
                                 CAFinalMarks = 'WH';            //With held the final CA marks
-                                
                         }
                         markArray.push(stMark[5]);          //push marks to an array
                     }
+                    
                 })
                 // console.log("Before sort",markArray);
 
