@@ -243,8 +243,9 @@ export default function AddCAMarksByLec() {
 
         caMarks.map((mark, index) => {           //maping student ID
 
+            
             const student_id = mark.student_id;         //get student ID
-            // console.log(mark);
+            console.log(mark);
             console.log(student_id);
 
             var CAFinalMarks = 0;               //Final CA marks
@@ -253,6 +254,7 @@ export default function AddCAMarksByLec() {
             var TotalCalculatedCAPresentageArr = [];            //Total calculated CA marks as percentage
             var percentageMarginArr = [];               // Standerd percentage margin array
 
+            
 
             cirtiriaName.map((name, index) => {                                 //maping criteria names
                 // console.log(name);
@@ -264,10 +266,15 @@ export default function AddCAMarksByLec() {
                 const selected_type_ofassessment = name[11];        //Joined table column name  (CA,Mid,Final)
                 var markArray = [];             //array to store marks of a particular assessment type (Quiz,Assignment etc...)
 
+
                 
                 
                 stMarksCA.map((stMark, index) => {                              //maping student marks
                     // console.log(stMark);
+
+                    if (stMark[20] == 0) { //checking student has repeated the module
+                        
+                    }
                     
                     if(student_id === stMark[1] && assessment_type === stMark[11]){    //checking assessment type with student marks
                         if (selected_type_ofassessment === 'Mid' && stMark[5]==='AB') {            //checking assessment type is Mid    
