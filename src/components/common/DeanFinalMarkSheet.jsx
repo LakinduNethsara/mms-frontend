@@ -8,10 +8,14 @@ import DateObject from 'react-date-object';
 
 export default function DeanFinalMarkSheet(props) {
   const [finalResults, setFinalResults] = useState([]);
+  const [repeatersfinalResults, setRepeatersFinalResults] = useState([]);
   const [courses, setCourses] = useState([]);
   const [students, setStudents] = useState([]);
+  const [repeatercourses, setrepeatersCourses] = useState([]);
+  const [repeatstudents, setrepeatStudents] = useState([]);
   const { level, semester, dept } = useParams();
   const [studentGPA, setStudentGPA] = useState([{}]);
+  const [repeat_studentGPA, setRepeatStudentGPA] = useState([{}]);
   const history = useHistory();
   const [error, setError] = useState("");
   const { approved_level } = props;
@@ -110,17 +114,65 @@ export default function DeanFinalMarkSheet(props) {
         setNextApprovedlevel("VC");
       }
       console.log(approved_level, nextApprovedlevel);
-
-      const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}`);
+      console.log(level, semester, approved_level, dept);
+      const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`);
       const data = result.data.content;
+      console.log(data);
+      
 
-      const gpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level},${semester}`);
+      const gpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`);
       const gpaData = gpa.data.content;
       setStudentGPA(gpaData);
+
+    
 
       const processedData = data.reduce((acc, curr) => {
         const existingStudent = acc.find(student => student.student_id === curr.student_id);
         const gpaInfo = gpaData.find(ele => ele.student_id === curr.student_id);
+        if (existingStudent) {
+          existingStudent.courses.push({
+            course_id: curr.course_id,
+            overall_score: curr.total_rounded_mark,
+            grade: curr.grade,
+          });
+        } else {
+          acc.push({
+            student_id: curr.student_id,
+            courses: [{
+              course_id: curr.course_id,
+              overall_score: curr.total_rounded_mark,
+              grade: curr.grade,
+            }]
+          });
+        }
+        return acc;
+      }, []);
+
+      setFinalResults(processedData);
+      const courseIdsSet = new Set();
+      processedData.forEach(student => {
+        student.courses.forEach(course => {
+          courseIdsSet.add(course.course_id);
+        });
+      });
+      setCourses(Array.from(courseIdsSet));
+
+      setStudents(processedData.map(student => student.student_id));
+
+
+      //--------For repeaters
+
+
+      const Repeatresult = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`);
+      const repeaterdata=Repeatresult.data.content;
+
+      const Repeatersgpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`);
+      const RepeatersgpaData = gpa.data.content;
+      setRepeatStudentGPA(RepeatersgpaData);
+
+      const processedRepeatersData = repeaterdata.reduce((acc, curr) => {
+        const existingStudent = acc.find(student => student.student_id === curr.student_id);
+        const gpaInfo = RepeatersgpaData.find(ele => ele.student_id === curr.student_id);
         if (existingStudent) {
           existingStudent.courses.push({
             course_id: curr.course_id,
@@ -146,17 +198,17 @@ export default function DeanFinalMarkSheet(props) {
         console.error('Error fetching GPA data:', error.response || error.message);
       }
 
-      setFinalResults(processedData);
+      setRepeatersFinalResults(processedRepeatersData);
 
-      const courseIdsSet = new Set();
-      processedData.forEach(student => {
+      const repeaterscourseIdsSet = new Set();
+      processedRepeatersData.forEach(student => {
         student.courses.forEach(course => {
           courseIdsSet.add(course.course_id);
         });
       });
-      setCourses(Array.from(courseIdsSet));
+      setrepeatersCourses(Array.from(repeaterscourseIdsSet));
 
-      setStudents(processedData.map(student => student.student_id));
+      setrepeatStudents(processedRepeatersData.map(student => student.student_id));
 
     } catch (error) {
       console.error(error);
@@ -166,7 +218,7 @@ export default function DeanFinalMarkSheet(props) {
 
   useEffect(() => {
     resultSheet();
-  }, [level, semester, approved_level]);
+  }, [level, semester, approved_level,dept]);
 
   const handleSubmit = async (e) => {
     let response = null;
@@ -287,8 +339,11 @@ const alternateRowStyle = {
   return (
     <div className="container" style={{marginTop:'70px'}}>
       <ToastContainer/>
-      {finalResults.length !== 0 ? (
+     
+      {finalResults.length > 0 ? (
+
         <>
+        
          <div style={{ textAlign: 'center', marginTop: '20px' }}>
   <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>University of Ruhuna</h2>
   <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>Faculty of Technology</h2>
@@ -453,6 +508,58 @@ const alternateRowStyle = {
               </tbody>
             </table>
           </div>
+
+          {repeatersfinalResults.length>0 ?
+
+            <div className="">
+              <h5>Repeaters </h5>
+            <table className="overflow-x-scroll table border shadow table-hover" style={{ marginTop: "60px" }}>
+              <thead>
+                <tr>
+                  <th scope="col" className='table-info'>Student ID</th>
+                  {Allcourses.map((id, index) => (
+                    <React.Fragment key={index}>
+                      <th className=' table-secondary'>{id.course_id}</th>
+                      {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" || approved_level=="HOD" ?<th className=' table-primary'>Grade</th>:null}
+                    </React.Fragment>
+                  ))}
+                  <th scope="col" className=' table-warning'>SGPA</th>
+                  <th scope="col" className=' table-success'>CGPA</th>
+                </tr>
+              </thead>
+              <tbody>
+                {repeatersfinalResults.map((student, index) => (
+                  <tr key={index}>
+                    <td>{student.student_id}</td>
+                    {Allcourses.map((id, index) => {
+                      const courseData = student.courses.find((c) => c.course_id == id.course_id);
+                      return (
+                        <React.Fragment key={index}>
+                          {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" || approved_level=="HOD" ?<td>{courseData ? courseData.overall_score : "-"}</td>:null}
+                          <td>{courseData ? courseData.grade : "-"}</td>
+                        </React.Fragment>
+                      );
+                    })}
+                    {repeat_studentGPA.map((gpa, index) => {
+                      if (gpa.student_id === student.student_id) {
+                        return (
+                          <React.Fragment key={index}>
+                            <td>{gpa.sgpa}</td>
+                            <td>{gpa.cgpa}</td>
+                          </React.Fragment>
+                        );
+                      }
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          :null
+          }
+
+
+          
 
           <div className=' row mt-5' style={{display:"flex"}}>
 

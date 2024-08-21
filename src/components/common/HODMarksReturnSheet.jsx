@@ -177,8 +177,8 @@ useEffect(() => {
         
         try {
 
-            const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/0`);
-            const Repeatresponse = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/1`);
+            const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/0/${academicYear}`);
+            const Repeatresponse = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/1/${academicYear}`);
             setMarksSheet(response.data);
             setRepeatMarksSheet(Repeatresponse.data);
             setLoading(false); // Set loading to false after all data is fetched

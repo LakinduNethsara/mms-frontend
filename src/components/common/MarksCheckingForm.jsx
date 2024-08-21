@@ -83,9 +83,9 @@ console.log(ele.end)
       setAttendenceEligibility(result.data);
       console.log(result);
 
-      const list3 = await axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculationByStuID/${course_id},${student_id}`);
-      setCalculations(list3.data);
-      console.log(list3.data);
+      // const list3 = await axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculationByStuID/${course_id},${student_id}`);
+      // setCalculations(list3.data);
+      // console.log(list3.data);
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.log(error);

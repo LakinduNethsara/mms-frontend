@@ -62,7 +62,7 @@ export default function CCResultsBoard() {
 
         if (courseId !== "" && board.status=="Started") {
             const name = await getCourseName(courseId); // Get course name
-            history.push(`/RBMarksReturnSheet/${courseId}/${name}/${department}`);
+            history.push(`/RBMarksReturnSheet/${courseId}/${name}/${department}/${board.academic_year}`);
         } else if (courseId == "" && board.status=="Started"){
             history.push(`/FinalMarkSheet/${board.level}/${board.semester}/${board.department}`);
         }
