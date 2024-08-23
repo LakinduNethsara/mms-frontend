@@ -10,8 +10,11 @@ export default function CourseCriteriaByCC() {
     const [criteriaData, setCriteriaData] = useState([]); // State to hold the criteria data
     const [criteria_name, setCriteria_name] = useState(''); // State to hold the evaluation criteria name
     const asmntTypeRef = useRef(null); // Create a ref for the assessment type select element
+
+    const [selectedTypeofAssessment, setSelectedTypeofAssessment] = useState('');
     const [newAssessmentType, setNewAssessmentType] = useState({
         assessment_type_name: '',
+        ca_mid_end: '',
     }); // State to hold the new assessment type
 
     const [showButton, setShowButton] = useState(false);
@@ -29,8 +32,11 @@ export default function CourseCriteriaByCC() {
     const [noOfConducted, setNoOfConducted] = useState('');
     const [noOfTaken, setNoOfTaken] = useState('');
     const [disableInputs, setDisableInputs] = useState(false);
+    const [selectedMainAssessmentValue, setSelectedMainAssessmentValue] = useState('');
 
-    console.log(userData.email);
+    // console.log(newAssessmentType);
+
+    // console.log("Assessment Type : ",selectedAssessmentType);
 
     useEffect(() => {
         if(storedData){
@@ -48,7 +54,7 @@ export default function CourseCriteriaByCC() {
     const fetchData = async (email)=>{
       
         try{
-            const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`)
+            const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`);
           // console.log(result1.data.content);
             setAssessmentTypesData(result1.data.content);
 
@@ -60,6 +66,7 @@ export default function CourseCriteriaByCC() {
         }catch(error){
             console.log(error);
         }
+
         }
 
         useEffect(() => {
@@ -70,15 +77,19 @@ export default function CourseCriteriaByCC() {
           const handleAssessmentTypeChange = (event) => {
             const selectedValue = event.target.value;
             setSelectedAssessmentType(selectedValue);
-          
-            // Check if the selected value is "Final Assessment"
+
+            }
+
+            const selectedMainAssessment = (event) => {
+              const selectedValue = event.target.value;
+              setSelectedMainAssessmentValue(selectedValue);
+              // Check if the selected value is "Final Assessment"
             if (selectedValue === 'End') {
               // Set the values to '1' and disable the inputs
               setNoOfConducted('1');
               setNoOfTaken('1');
               setDisableInputs(true);
-            } else {
-              // Reset the values and enable the inputs
+            }else{
               setNoOfConducted('');
               setNoOfTaken('');
               setDisableInputs(false);
@@ -181,8 +192,11 @@ export default function CourseCriteriaByCC() {
       
         const onSave = async (newValue) => {
           try {
-            setNewAssessmentType({ assessment_type_name: newValue });
-            await axios.post("http://localhost:9090/api/astylist/savenewasty", { assessment_type_name: newValue } );
+            setNewAssessmentType({ assessment_type_name: newValue.popupInputValue});
+            console.log("New Assessment Type : " + newValue.popupInputValue);
+            console.log("New Assessment Type : " + newValue.selectedType);
+
+            await axios.post("http://localhost:9090/api/astylist/savenewasty", { assessment_type_name: newValue.popupInputValue,ca_mid_end: newValue.selectedType} );
             toast.success("New assessment type saved successfully!");
             setReloadButton(prevState =>!prevState);
             setSelectedAssessmentType(newValue);
@@ -195,82 +209,125 @@ export default function CourseCriteriaByCC() {
             // Handle error, e.g., show error message
           }
         }
+
+        const onSelected = (selectedType) => {
+          setSelectedTypeofAssessment(selectedType);
+        }
+
   return (
     <div>
         <div className=' container'>
-          <div className='h2' style={{marginTop:"70px"}}>Evaluation Criteria Creation</div>
-          <div style={{display:"flex"}}>
-            <div className=' col-1 mt-5' style={{float:"left",width:"43%"}}>
+          <div className='h3' style={{marginTop:"70px",color:'maroon'}}>Evaluation Criteria Creation</div>
+          <div className=' row'>
+            <div className=' col-9 mt-3 shadow p-5' >
               <form onSubmit={handleSubmit} >
-                <select className=' form-select' name="courseCode">
-                  <option selected>Select Course Code</option>
+                <label htmlFor="" className=' form-label'>Select a Course Code for Create Evaluation Criteria</label>
+                <select className=' form-select m-2' name="courseCode" style={{width:"350px"}} required>
+                  <option selected disabled>Select Course Code</option>
                   {
                     cidsData.map((cid,index) => (
                       <option key={`cid-${index}`} value={cid.course_id}>{cid.course_id}</option>
                     ))
                   }
                 </select>
-                <div className=' col-5 mt-5' style={{display:"flex",width:"auto"}}>
-                  <select className=' form-select m-2' ref={asmntTypeRef}>
-                    <option selected >Select The Assessment</option>
-                    <option value='CA' name="asmntType">Continuous Assessment</option>
-                    <option value='End' name="asmntType">Final Assessment</option>
-                  </select>
-                  <select className=' form-select m-2' value={selectedAssessmentType} onChange={(e) => {
-                      handleAssessmentTypeChange(e);
-                      if (e.target.value === 'Option') {
-                        setIsPopupVisible(true);
+                <div className=' col-10 mt-5' style={{display:"flex",width:"auto"}}>
+                  <div style={{marginRight:"80px"}} >
+                    <label htmlFor="" className=' form-label'>Select The Assessment</label>
+                    <select className=' form-select m-2' ref={asmntTypeRef} onChange={selectedMainAssessment} style={{width:"350px"}} required>
+                      <option selected disabled>Select The Assessment</option>
+                      <option value='CA' name="asmntType">Continuous Assessment</option>
+                      <option value='End' name="asmntType">Final Assessment</option>
+                    </select>
+                  </div>
+
+                  <div className=''>
+                    <label htmlFor="" className=' form-label'>Select Assessment Type</label>
+                    <label htmlFor="" className=' form-label small' style={{color:"red"}}>If's There a New Assessment Type Please Choose 'Add-New' Option</label>
+                    <select className=' form-select m-2' style={{width:"350px"}} value={selectedAssessmentType} onChange={(e) => {
+                        handleAssessmentTypeChange(e);
+                        if (e.target.value === 'Option') {
+                          setIsPopupVisible(true);
+                        }
+                      }} required>
+                      <option selected disabled>Select Assessment Type</option>
+                      {
+                        assessmentTypesData.map((assessmentType, index) => (
+                          <option key={index} value={assessmentType.assessment_type_name}>{assessmentType.assessment_type_name}</option>
+                        ))
                       }
-                    }} >
-                    <option selected>Select Assessment Type</option>
-                    {
-                      assessmentTypesData.map((assessmentType, index) => (
-                        <option key={index} value={assessmentType.assessment_type_name}>{assessmentType.assessment_type_name}</option>
-                      ))
-                    }
-                    <option value="Option">Option</option>
-                  </select>
+                      <option value="Option">Add-New</option>
+                    </select>
+                  </div>
                   <CustomPopup
                     isVisible={isPopupVisible}
                     onClose={() => setIsPopupVisible(false)}
                     onSave={onSave}
-
+                    // onSelected={onSelected}
                     
                   />
                   
                 </div>
-                <div className=' col-5' style={{display:"flex",width:"auto"}}>
+                {
+                  selectedMainAssessmentValue === 'CA'?
                   
-                <input
-                  name="no_of_conducted"
-                  type="number"
-                  className='form-control m-2'
-                  placeholder='Select No of Conduct'
-                  required
-                  value={noOfConducted}
-                  onChange={(e) => setNoOfConducted(e.target.value)}
-                  disabled={disableInputs}
-                />
-                  <input
-                    name="no_of_taken"
-                    type="number"
-                    className='form-control m-2'
-                    placeholder='Select No of Take'
-                    required
-                    value={noOfTaken}
-                    onChange={(e) => setNoOfTaken(e.target.value)}
-                    disabled={disableInputs}
-                  />
+                    <div className=' col-10 mt-4' style={{display:"flex"}}>
+                        
+                      <div style={{marginRight:"80px"}}>
+                        <label htmlFor="" className=' form-label'>Enter Number of Conduct Selected Assessment</label>
+                          <input
+                            name="no_of_conducted"
+                            type="number"
+                            className='form-control m-2'
+                            placeholder='No of Conduct'
+                            
+                            value={noOfConducted}
+                            onChange={(e) => setNoOfConducted(e.target.value)}
+                            disabled={disableInputs}
+                            style={{width:"350px"}}
+                          />
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="" className=' form-label'>Enter Number of Take Selected Assessment</label>
+                          <input
+                            name="no_of_taken"
+                            type="number"
+                            className='form-control m-2'
+                            placeholder='Select No of Take'
+                            
+                            value={noOfTaken}
+                            onChange={(e) => setNoOfTaken(e.target.value)}
+                            disabled={disableInputs}
+                            style={{width:"350px"}}
+                          />
+                      </div>
                   
-                </div>
-                <div className=' col-5' style={{display:"flex",width:"auto"}}>
-                <input name="percentage" type={"number"} className='form-control m-2' placeholder='Select percentage (%)' required/>
-                <button className='btn btn-success m-2' style={{width:"100px" ,height:"auto"}} type="submit">Insert</button>
+                    </div>
+                    :selectedMainAssessmentValue === 'End'?
+                    < >
+                    </>
+                    :null
+
+                    }
+                
+                <div className=' col-10 mt-4' style={{display:"flex"}}>
+                  <div style={{marginRight:"80px"}}>
+                    <label htmlFor="" className=' form-label'>Enter Percentage (%) Get to CA Calculation</label>
+                    <input name="percentage" style={{width:"350px",marginRight:"80px"}} type={"number"} className='form-control m-2' placeholder='Enter percentage (%)' required/>
+                    
+                  </div>
+                  <div>
+                    <div className=' form-check'>
+                      <input type="checkbox" className='form-check-input'  required/>
+                      <label htmlFor="" className=' form-label'> Confirm All Details are Correct</label>
+                    </div>
+                    <button className='btn btn-outline-dark btn-sm m-2' style={{width:"100px"}} type="submit">Insert</button>
+                  </div>
                 </div>
               </form>
             </div>
-            <div className=' col-1 m-5 shadow' style={{float:"right",width:"60%",borderRadius:"5px"}}>
-              <div className=' h4 p-3 text-success'>The Criteria</div>
+            <div className=' col-9 mt-3 shadow p-5'>
+              <div className=' h4 p-3' style={{color:"maroon"}}>The Criteria</div>
               <div className=' p-4'>
                 <table className=' table'>
                   <thead>

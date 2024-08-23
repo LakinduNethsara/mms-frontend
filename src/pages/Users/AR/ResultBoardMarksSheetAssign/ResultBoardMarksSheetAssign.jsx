@@ -253,6 +253,8 @@ export default function ResultBoardMarksSheetAssign() {
                 toast.error("There is a error with starting the result board",{autoClose:3000}); //Display the error message if an error occurs
             }
 
+            //Call API to calculate the GPA initially and insert to the database
+
         }else if(selectedResultBoard.status.toLowerCase() === "Started".toLowerCase()){ //Check if the result board is started
 
                 //Api call to just view result board

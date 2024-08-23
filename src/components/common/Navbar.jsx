@@ -290,7 +290,7 @@ function Navbar() {
                                             </li>
 
                                             <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
-                                                <a className="nav-link active" aria-current="page" href="/viewcaeli">      
+                                                <a className="nav-link active" aria-current="page" href="/lec_related_course_fa">      
                                                 Add FA Marks
                                                 </a>
                                             </li>

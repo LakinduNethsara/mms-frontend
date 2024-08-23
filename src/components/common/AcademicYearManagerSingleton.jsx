@@ -6,7 +6,7 @@ async function fetchAcademicYear() {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       return data[0]; // Return the entire object instead of just the academic year
     } catch (error) {
       console.error('Error fetching academic year:', error);
