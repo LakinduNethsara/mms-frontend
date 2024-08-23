@@ -95,6 +95,7 @@ export default function ABListPage() {
                   <th scope="col">Course Name</th>
                   <th scope="col">Student ID</th>
                   <th scope="col">Score</th>
+                  <th scope="col">Exam</th>
                   <th scope="col">Exam type</th>
                 </tr>          
               </thead>
@@ -103,7 +104,7 @@ export default function ABListPage() {
                 {courseList.map((element,index) => (
                   <tr className="clickable-row" key={index} onClick={()=>
                       {
-                        history.push(`/viewABUpdate/updateAB/${element[2]}/${element[3]}/${element[4]}/${element[5]}/${element[6]}/${element[8]}`)
+                        history.push(`/viewABUpdate/updateAB/${element[2]}/${element[3]}/${element[4]}/${element[5]}/${element[9]}/${element[8]}/${element[6]}`)
                       
                       }}
                   >
@@ -115,6 +116,7 @@ export default function ABListPage() {
                     <td>{element[4]}</td>
                     <td>{element[5]}</td>
                     <td>{element[6]}</td>
+                    <td>{element[9]}</td>
                   </tr>
                 ))}
               </tbody>

@@ -23,6 +23,8 @@ export default function UpdateABPage() {
     const [stateOfTheMedicalSubmission,setStateOfTheMedicalSubmission]=useState('');    //Use state to store the state of the medical submission
     const [stateOfTheMedicalSubmissionColor,setStateOfTheMedicalSubmissionColor]=useState('');    //Use state to store the color of the medical submission state
     
+    console.log(studentDetails);
+
     let academicYearDetails = {             //Object to store the academic year details
         previous_academic_year:"",
         current_academic_year:"",
@@ -45,12 +47,13 @@ export default function UpdateABPage() {
 
     }
 
-    let updateDataOject = {     //Object to store the updated marks data
+    let updateMarksTableOject = {     //Object to store the updated marks data
         course_id: studentDetails.course_id,                        //Set the course id ininially
         student_id: studentDetails.student_id,                      //Set the student id initially
         new_score: newScore,                                        //Set the new score initially
-        exam_type: studentDetails.exam_type,                        //Set the exam type initially  
+        marks_table_exam_type: studentDetails.marks_table_exam_type,                        //Set the exam type initially  
         academic_year: studentDetails.academic_year,                //Set the academic year initially
+        exam_type: studentDetails.exam_type                         //Set the exam type initially
 
     };
 
@@ -67,11 +70,12 @@ export default function UpdateABPage() {
 
         const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${studentDetails.academic_year}`);   //Get all the medical submission details from the backend
         
+        
         if(result.data.length>0){    //condition to check if the medical list is uploaded
            
             setMedicalListUploaded(true);   //Set the medicalListUploaded state to true if the medical list is uploaded
            
-            
+
             const selectedStudentMedicalDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentMedicalDetails/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/${studentDetails.exam_type}`);   //Get the selected student medical details from the backend
             if(selectedStudentMedicalDetails.data.length>0){    //condition to check whether the selected student has submitted a medical or not
 
@@ -107,17 +111,17 @@ export default function UpdateABPage() {
 
     const updateGrade = async()=>{              //Function to update the student grade
 
-        updateDataOject.course_id = studentDetails.course_id;           //Set the course id update in marks
-        updateDataOject.student_id = studentDetails.student_id;         //Set the student id update in marks
-        updateDataOject.new_score = newScore;                           //Set the new score update in marks
-        updateDataOject.exam_type = studentDetails.exam_type;           //Set the exam type update in marks
-        updateDataOject.academic_year = studentDetails.academic_year;   //Set the academic year update in marks
+        updateMarksTableOject.course_id = studentDetails.course_id;           //Set the course id update in marks
+        updateMarksTableOject.student_id = studentDetails.student_id;         //Set the student id update in marks
+        updateMarksTableOject.new_score = newScore;                           //Set the new score update in marks
+        updateMarksTableOject.exam_type = studentDetails.exam_type;           //Set the exam type update in marks
+        updateMarksTableOject.academic_year = studentDetails.academic_year;   //Set the academic year update in marks
 
         
 
 
         try{
-            const update = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentScore" , updateDataOject);   //Update the student AB exam score  with the new score (MC or F)
+            const update = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
             if(update.data<0){     //condition to check is there a error with updating the grade
                 alert("Error with updating AB score with new score"); 
                 toast.error('Error with updating AB score with new score',{autoClose:2000}); 
@@ -206,7 +210,7 @@ export default function UpdateABPage() {
                         
                         const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.current_academic_year}/Mid theory exam`);   //Get the mid therory exam results of the student in the current academic year
                         
-                        if (((!midExamMarksList.data.length>0) ||midExamMarksList.data[0].assignment_score.toLowerCase() !="F".toLowerCase()) && updateDataOject.new_score.toLowerCase()==="MC".toLowerCase()){      //Condition to check whether the student has passed the mid exam and have MC for end exam
+                        if (((!midExamMarksList.data.length>0) ||midExamMarksList.data[0].assignment_score.toLowerCase() !="F".toLowerCase()) && updateMarksTableOject.new_score.toLowerCase()==="MC".toLowerCase()){      //Condition to check whether the student has passed the mid exam and have MC for end exam
                             
                             existingGrade.grade="WH";                   //Set the grade to WH
                         }else{
@@ -217,7 +221,7 @@ export default function UpdateABPage() {
 
                         const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.current_academic_year}/Mid practical exam`);   //Get the mid practical exam results of the student in the current academic year
                         
-                        if (((!midExamMarksList.data.length>0) ||midExamMarksList.data[0].assignment_score.toLowerCase() !="F".toLowerCase()) && updateDataOject.new_score.toLowerCase()==="MC".toLowerCase()){              //Condition to check whether the student has passed the mid exam and have MC for end exam
+                        if (((!midExamMarksList.data.length>0) ||midExamMarksList.data[0].assignment_score.toLowerCase() !="F".toLowerCase()) && updateMarksTableOject.new_score.toLowerCase()==="MC".toLowerCase()){              //Condition to check whether the student has passed the mid exam and have MC for end exam
                             existingGrade.grade="WH"                   //Set the grade to WH   
                         }else{
                             //Grade will be existing grade (possinle grade)
