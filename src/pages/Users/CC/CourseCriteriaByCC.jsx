@@ -50,7 +50,7 @@ export default function CourseCriteriaByCC() {
           setUserData(null);
         }
         
-    }, []);
+    }, [email]);
 
     const fetchData = async (email)=>{
       

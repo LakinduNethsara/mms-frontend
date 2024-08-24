@@ -95,7 +95,7 @@ export default function AddCAMarksByLec() {
                 
 
                 // Fetch all data of CA Marks
-                const allDataOfCAMarksRes = await LecturerService.getAllDataOfCAMarks(course_id);
+                const allDataOfCAMarksRes = await LecturerService.getAllDataOfCAMarks(course_id, asInsideCurrentAcedemicYear);
                 // console.log("All data of CA Marks:", allDataOfCAMarksRes);
                 const allData = allDataOfCAMarksRes;
                 // console.log(allData)
@@ -386,7 +386,7 @@ export default function AddCAMarksByLec() {
     return (
         <div className='container'>
             <div className='container' style={{ marginTop: "50px" }}>
-                <h4>CA Marks Entry: <span style={{ color: "maroon" }}>{course_name} - {course_id}</span></h4>
+                <h4>Continuous Assessment Marks Entry : <span style={{ color: "maroon" }}>{course_name} - {course_id}</span></h4>
                 <br />
                 {/* <h4>Level: {level}</h4>
                 <h4>Semester: {semester}</h4>

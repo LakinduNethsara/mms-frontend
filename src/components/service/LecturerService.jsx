@@ -38,18 +38,18 @@ class LecturerService {
         }
     }
 
-    static async getAllDataOfCAMarks(course_id) {
+    static async getAllDataOfCAMarks(course_id,academic_year) {
         try {
-            const response = await axios.get(`${LecturerService.BASE_URL}/api/StudentAssessment/getEnteredCAMarks/${course_id}`);
+            const response = await axios.get(`${LecturerService.BASE_URL}/api/StudentAssessment/getEnteredCAMarks/${course_id},${academic_year}`);
             return response.data;
         } catch (err) {
             throw err;
         }
     }
 
-    static async getAllDataOfFAMarks(course_id) {
+    static async getAllDataOfFAMarks(course_id,academic_year) {
         try {
-            const response = await axios.get(`${LecturerService.BASE_URL}/api/StudentAssessment/getEnteredFAMarks/${course_id}`);
+            const response = await axios.get(`${LecturerService.BASE_URL}/api/StudentAssessment/getEnteredFAMarks/${course_id},${academic_year}`);
             return response.data;
         } catch (err) {
             throw err;
