@@ -54,6 +54,8 @@ import StudentRegCourses from './pages/Users/System_Analyst/StudentCourseReg/Stu
 import StudentsManagement from './pages/Users/System_Analyst/UsersManagement/StudentsManagement';
 import AddFAMarksByLec from './pages/Users/Lecturer/AddFAMarksByLec';
 import LecRelatedCoursesFA from './components/Users/Lecturer/LecRelatedCoursesFA';
+import GradeMargingChange from './pages/Users/HOD/GradeMargingChange';
+import CCAssignedResultSheet from './pages/Users/CC/CCAssignedResultSheet';
 
 
 
@@ -104,7 +106,7 @@ function App() {
                 <ViewMarksTableValidations/>
               </Route>
 
-              <Route path="/ARMarksReturnSheet/:course_id/:course_name/:department">    {/* Link to view ar Marks certify sheet*/}
+              <Route path="/ARMarksReturnSheet/:course_id/:course_name/:department/:academic_year">    {/* Link to view ar Marks certify sheet*/}
                 <HODMarksReturnSheet approved_level={"HOD"}/>
               </Route>
 
@@ -124,7 +126,7 @@ function App() {
                 <CertifyMarksPage/>
               </Route>
 
-              <Route path="/arFinalMarkSheet/:level/:semester/:dept">   {/* Link to view marks remaining to certify page */}
+              <Route path="/arFinalMarkSheet/:level/:semester/:dept/:academic_year">   {/* Link to view marks remaining to certify page */}
                 <DeanFinalMarkSheet approved_level={"RB"}/>
               </Route>
 
@@ -163,27 +165,27 @@ function App() {
             <Route exact path="/CourseCard/:level/:semester/:department" 
               render={(props) => <CourseCard {...props} approved_level={"lecturer"} />} 
             />
-            <Route exact path="/HODMarksReturnSheet/:course_id/:course_name/:department" 
+            <Route exact path="/HODMarksReturnSheet/:course_id/:course_name/:department/:academicYear" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"lecturer"} />} 
             />
-            <Route exact path="/ccMarksReturnSheet/:course_id/:course_name/:department" 
+            <Route exact path="/ccMarksReturnSheet/:course_id/:course_name/:department/:academicYear" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"finalized"} />} 
             />
-            <Route exact path="/RBMarksReturnSheet/:course_id/:course_name/:department" 
+            <Route exact path="/RBMarksReturnSheet/:course_id/:course_name/:department/:academicYear" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"AssignedRB"} />} 
             />
-            <Route exact path="/lMarksReturnSheet/:course_id/:course_name/:department" 
+            <Route exact path="/lMarksReturnSheet/:course_id/:course_name/:department/:academicYear" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"course_coordinator"} />} 
             />
 
-            <Route path="/FinalMarkSheet/:level/:semester/:dept"> 
+            <Route path="/FinalMarkSheet/:level/:semester/:dept/:academic_year"> 
               <DeanFinalMarkSheet approved_level={"HOD"}/>
             </Route>
 
-            <Route exact path="/deanFinalMarkSheet/:level/:semester/:dept" 
+            <Route exact path="/deanFinalMarkSheet/:level/:semester/:dept/:academic_year" 
               render={(props) => <DeanFinalMarkSheet {...props}  approved_level={"AR"} />} 
             />
-            <Route exact path="/vcFinalMarkSheet/:level/:semester/:dept" 
+            <Route exact path="/vcFinalMarkSheet/:level/:semester/:dept/:academic_year" 
               render={(props) => <DeanFinalMarkSheet {...props}  approved_level={"Dean"} />} 
             />
 
@@ -200,6 +202,14 @@ function App() {
             <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level" 
               render={() => <MarksCheckingForm/>} 
             />
+
+            <Route exact path="/changesGradeMargin">
+              <GradeMargingChange/>
+            </Route>
+
+            <Route exact path="/ccAssignedResultSheet/:id/:level/:semester/:department/:academic_year">
+              <CCAssignedResultSheet/>
+            </Route>
            
 
 
