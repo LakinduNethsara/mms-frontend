@@ -4,7 +4,11 @@ import { useHistory } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
 export default function CCMarksApproval() {
-    const [courses, setCourses] = useState([]);
+    const [courses, setCourses] = useState([
+        
+      
+    ]);
+    console.log(courses)
     const [selectedCourse, setSelectedCourse] = useState({
         course_id: "",
         department: ""
@@ -30,15 +34,23 @@ export default function CCMarksApproval() {
             console.log(userEmail);
 
             const response = await axios.get(`http://localhost:9090/api/courses/getcourseforcc/${userEmail}`);
-            if (response.data.code !== '00') {
-                throw new Error('Network response was not ok');
+            if (response.data.code == '00') 
+            {
+                const data = response.data.content.map(course => ({
+                    course_id: course[0],
+                    course_name: course[1],
+                    department_id: course[2],
+                    academicYear: course[3]
+                }));
+                setCourses(data);
             }
-            const data = response.data.content;
-            setCourses(data);
-            console.log(data);
+            else
+            {
+                setCourses([]);
+            }
+            
         } catch (error) {
-            console.error('There has been a problem with your fetch operation:', error);
-            console.error('Error details:', error.response);
+            
         }
     };
 
@@ -47,15 +59,24 @@ export default function CCMarksApproval() {
             console.log(userEmail);
 
             const response = await axios.get(`http://localhost:9090/api/courses/getCoursesforLectCertify/${userEmail}`);
-            if (response.data.code !== '00') {
-                throw new Error('Network response was not ok');
+            if (response.data.code == '00') {
+             
+                const data = response.data.content.map(course => ({
+                    course_id: course[0],
+                    course_name: course[1],
+                    department_id: course[2],
+                    academicYear: course[3]
+                }));
+                console.log(data);
+
+                setCourses(data);
             }
-            const data = response.data.content;
-            setCourses(data);
-            console.log(data);
+            else
+            {
+                setCourses([]);
+            }
+        
         } catch (error) {
-            console.error('There has been a problem with your fetch operation:', error);
-            console.error('Error details:', error.response);
         }
     };
 
@@ -67,23 +88,21 @@ export default function CCMarksApproval() {
             console.log("Approval Level:", data);
             return data;
         } catch (error) {
-            console.error('There has been a problem with your fetch operation:', error);
-            console.error('Error details:', error.response);
             return null;
         }
     };
 
-    const handleCourseClick = async (courseId, courseName,department) => {
+    const handleCourseClick = async (courseId, courseName,department,academic_year) => {
         setSelectedCourse(courseId,department);
         const approvalLevel = await fetchApprovalLevel(courseId,department); // Fetch approval level and wait for it to complete
 
         if (approvalLevel === "finalized") {
-            history.push(`/ccMarksReturnSheet/${courseId}/${courseName}/${department}`);
+            console.log(courseId, courseName,department,academic_year); 
+            history.push(`/ccMarksReturnSheet/${courseId}/${courseName}/${department}/${academic_year}`);
         } else if (approvalLevel === "course_coordinator") {
-            history.push(`/lMarksReturnSheet/${courseId}/${courseName}/${department}`);
+            history.push(`/lMarksReturnSheet/${courseId}/${courseName}/${department}/${academic_year}`);
         } else {
-            console.error("Unknown approval level:", approvalLevel);
-            // Handle any unexpected approval levels if necessary
+            
         }
     };
 
@@ -97,10 +116,13 @@ export default function CCMarksApproval() {
                         courses.map((course, index) => (
                             <div className="card shadow m-4" style={{ width: "18rem" }} key={index}>
                                 <div className="card-body">
+                                    {console.log(course.course_id, course.course_name, course.department_id, course.academicYear)}
                                     <h5 className="card-title py-2">{course.course_id}</h5>
                                     <h6 className='card-title py-1'>{course.course_name}</h6>
+                                    <h6 className='card-title py-1'>Department :{course.department_id}</h6>
+                                    <h6 className='card-title py-1'>Academic Year : {course.academicYear}</h6>
                                     <a className="btn btn-primary btn-sm mt-2"
-                                        onClick={() => handleCourseClick(course.course_id, course.course_name,course.department_id)}>
+                                        onClick={() => handleCourseClick(course.course_id, course.course_name,course.department_id,course.academicYear)}>
                                         To Give Approval
                                     </a>
                                 </div>
