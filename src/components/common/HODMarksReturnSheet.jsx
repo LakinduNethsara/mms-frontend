@@ -287,10 +287,11 @@ useEffect(() => {
            
         try {
             e.preventDefault();
-            const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
+            
             if(approval_level==="finalized"){
                 const lecturerAssign = await axios.post(`http://localhost:9090/api/approvalLevel/assignCertifyLecturer`,lecturerCertifyAssign);
             }
+            const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
             if (response.status === 200) {
               
                 setApprovalLevel(nextApprovedlevel)
