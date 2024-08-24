@@ -64,7 +64,7 @@ export default function CertifyMarksheet(props) {
                     </tr>
                   ):(
                     finalMarksheetList.map((item, index) =>(
-                      <tr key={index} className='clickable-row' onClick={()=>{approved_level=="AR"?history.push(`/deanFinalMarkSheet/${item.level}/${item.semester}/${item.department}`):approved_level=="Dean"?history.push(`/vcFinalMarkSheet/${item.level}/${item.semester}/${item.department}`):null}}>
+                      <tr key={index} className='clickable-row' onClick={()=>{approved_level=="AR"?history.push(`/deanFinalMarkSheet/${item.level}/${item.semester}/${item.department}/${item.academic_year}`):approved_level=="Dean"?history.push(`/vcFinalMarkSheet/${item.level}/${item.semester}/${item.department}/${item.academic_year}`):null}}>
                         <td>level {item.level}</td>
                         <td>semester {item.semester}</td>
                         <td>Dep. of {item.department}</td>

@@ -18,6 +18,7 @@ export default function HODProfile() {
     }]);
 
     const levels = [1, 2, 3, 4];
+    const semesters = [1, 2];
 
     useEffect(() => {
         const fetchAndSaveYear = async () => {
@@ -77,9 +78,11 @@ export default function HODProfile() {
                         <div className="col-md-3 mb-4" key={level}>
                             <div className="card text-center functionCard">
                                 <div className="card-body">
-                                    <a href={`/CourseCard/${level}/${current_semester}/${department}`} className="btn btn-primary home-page-class-button">
-                                        Level {level} Sem {current_semester}
+                                    {semesters.map((semester) => (
+                                    <a href={`/CourseCard/${level}/${semester}/${department}`} className="btn btn-primary home-page-class-button">
+                                        Level {level} Sem {semester}
                                     </a>
+                                    ))}
                                 </div>
                             </div>
                         </div>

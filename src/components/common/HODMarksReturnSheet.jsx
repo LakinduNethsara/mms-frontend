@@ -21,7 +21,7 @@ export default function HODMarksReturnSheet(props) {
     const[newSignature, setNewSignature] = useState();
     const[loading,setLoading]=useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
-    const[current_semester,setCurrent_semester]=useState("")
+    // const[current_semester,setCurrent_semester]=useState("")
     const[approval_level,setApprovalLevel]=useState(approved_level);
     const[marksSheet,setMarksSheet]=useState([]);
     const[repeatMarksSheet,setRepeatMarksSheet]=useState([]);
@@ -430,7 +430,7 @@ useEffect(() => {
                                     <div style={{display:"flex"}}>
                                             <h6>Academic Year: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{academicYear}&nbsp;&nbsp;</span></h6>
                                                 <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h6>
-                                                    <h6 className=' rounded-pill bg-success text-white'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination</h6>  
+                                                    {/* <h6 className=' rounded-pill bg-success text-white'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination</h6>   */}
                                     </div>
                                                                             
                                                                         
@@ -449,7 +449,7 @@ useEffect(() => {
                                  <th rowSpan='2' className=' table-info'>Student_ID</th>
                                  <th colSpan={forCA} className=' table-warning ' style={{textAlign:"center"}}>Continuous Assessment</th>
                                  <th colSpan={forFA} className=' table-primary ' style={{textAlign:"center"}}>Semester End Exam</th>
-                                 <th colSpan='4' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
+                                 <th colSpan='3' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
                                  <th rowSpan='2' className=' table-danger'>CA Eligibility</th>
                                  <th rowSpan='2' className='table-secondary' style={{textAlign:"center"}}>View</th>
                              </tr>
@@ -498,7 +498,7 @@ useEffect(() => {
                                  <th className=' table-success'>Total Final Marks</th>
                                  <th className=' table-success'>Total Rounded Marks</th>
                                  <th className=' table-success'>Results/Grades</th>
-                                 <th className=' table-success'>GPV</th>
+                                 {/* <th className=' table-success'>GPV</th> */}
                                  
                             
                                 
@@ -535,7 +535,7 @@ useEffect(() => {
                              <td>{ele.total_final_marks}</td>
                              <td>{ele.total_rounded_marks}</td>
                              <td>{ele.grade}</td>
-                             <td>{ele.gpv}</td>
+                             {/* <td>{ele.gpv}</td> */}
                              <td>{ele.ca_eligibility}</td>
                              {
  
@@ -567,7 +567,7 @@ useEffect(() => {
                                  <th rowSpan='2' className=' table-info'>Student_ID</th>
                                  <th colSpan={forCA} className=' table-warning ' style={{textAlign:"center"}}>Continuous Assessment</th>
                                  <th colSpan={forFA} className=' table-primary ' style={{textAlign:"center"}}>Semester End Exam</th>
-                                 <th colSpan='4' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
+                                 <th colSpan='3' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
                                  <th rowSpan='2' className=' table-danger'>CA Eligibility</th>
                                  <th rowSpan='2' className='table-secondary' style={{textAlign:"center"}}>View</th>
                              </tr>
@@ -616,7 +616,7 @@ useEffect(() => {
                                  <th className=' table-success'>Total Final Marks</th>
                                  <th className=' table-success'>Total Rounded Marks</th>
                                  <th className=' table-success'>Results/Grades</th>
-                                 <th className=' table-success'>GPV</th>
+                                 {/* <th className=' table-success'>GPV</th> */}
                                  
                             
                                 
@@ -653,7 +653,7 @@ useEffect(() => {
                              <td>{ele.total_final_marks}</td>
                              <td>{ele.total_rounded_marks}</td>
                              <td>{ele.grade}</td>
-                             <td>{ele.gpv}</td>
+                             {/* <td>{ele.gpv}</td> */}
                              <td>{ele.ca_eligibility}</td>
                              {
  

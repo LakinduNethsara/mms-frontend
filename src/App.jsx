@@ -55,6 +55,7 @@ import StudentsManagement from './pages/Users/System_Analyst/UsersManagement/Stu
 import AddFAMarksByLec from './pages/Users/Lecturer/AddFAMarksByLec';
 import LecRelatedCoursesFA from './components/Users/Lecturer/LecRelatedCoursesFA';
 import GradeMargingChange from './pages/Users/HOD/GradeMargingChange';
+import CCAssignedResultSheet from './pages/Users/CC/CCAssignedResultSheet';
 
 
 
@@ -125,7 +126,7 @@ function App() {
                 <CertifyMarksPage/>
               </Route>
 
-              <Route path="/arFinalMarkSheet/:level/:semester/:dept">   {/* Link to view marks remaining to certify page */}
+              <Route path="/arFinalMarkSheet/:level/:semester/:dept/:academic_year">   {/* Link to view marks remaining to certify page */}
                 <DeanFinalMarkSheet approved_level={"RB"}/>
               </Route>
 
@@ -177,14 +178,14 @@ function App() {
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"course_coordinator"} />} 
             />
 
-            <Route path="/FinalMarkSheet/:level/:semester/:dept"> 
+            <Route path="/FinalMarkSheet/:level/:semester/:dept/:academic_year"> 
               <DeanFinalMarkSheet approved_level={"HOD"}/>
             </Route>
 
-            <Route exact path="/deanFinalMarkSheet/:level/:semester/:dept" 
+            <Route exact path="/deanFinalMarkSheet/:level/:semester/:dept/:academic_year" 
               render={(props) => <DeanFinalMarkSheet {...props}  approved_level={"AR"} />} 
             />
-            <Route exact path="/vcFinalMarkSheet/:level/:semester/:dept" 
+            <Route exact path="/vcFinalMarkSheet/:level/:semester/:dept/:academic_year" 
               render={(props) => <DeanFinalMarkSheet {...props}  approved_level={"Dean"} />} 
             />
 
@@ -204,6 +205,10 @@ function App() {
 
             <Route exact path="/changesGradeMargin">
               <GradeMargingChange/>
+            </Route>
+
+            <Route exact path="/ccAssignedResultSheet/:id/:level/:semester/:department/:academic_year">
+              <CCAssignedResultSheet/>
             </Route>
            
 

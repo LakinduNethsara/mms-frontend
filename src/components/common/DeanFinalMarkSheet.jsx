@@ -13,7 +13,7 @@ export default function DeanFinalMarkSheet(props) {
   const [students, setStudents] = useState([]);
   const [repeatercourses, setrepeatersCourses] = useState([]);
   const [repeatstudents, setrepeatStudents] = useState([]);
-  const { level, semester, dept } = useParams();
+  const { level, semester, dept,academic_year } = useParams();
   const [studentGPA, setStudentGPA] = useState([{}]);
   const [repeat_studentGPA, setRepeatStudentGPA] = useState([{}]);
   const history = useHistory();
@@ -85,24 +85,12 @@ export default function DeanFinalMarkSheet(props) {
     "semester": semester,
     "approved_user_id": userNameAuth,
     "approval_level": nextApprovedlevel,
-    "academic_year": academicYear,
+    "academic_year": academic_year,
     "date_time": date.format(),
     "department_id": dept,
     "signature": newSignature
   };
 
-  useEffect(() => {
-    const fetchAndSaveYear = async () => {
-      const details = await fetchAcademicYear();
-      if (details) {
-        saveAcademicYearToLocal(details);
-        setAcademicDetails(details);
-        setAcademicYear(details.current_academic_year);
-      }
-    };
-
-    fetchAndSaveYear();
-  }, []);
 
   const resultSheet = async () => {
     try {
@@ -252,11 +240,11 @@ export default function DeanFinalMarkSheet(props) {
 
   const fetchSignature = async () => {
     try {
-      const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academicYear}`);
+      const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
       setARSign(ARSign.data.content);
-      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academicYear}`);
+      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
       setDeanSign(DeanSign.data.content);
-      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academicYear}`);
+      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
       setVCSign(VCSign.data.content);
 
       console.log(ARSign.data.content);
@@ -270,7 +258,7 @@ export default function DeanFinalMarkSheet(props) {
 
   useEffect(() => {
     fetchSignature();
-  }, [level, semester, dept, approved_level, academicYear]);
+  }, [level, semester, dept, approved_level, academic_year]);
 
 
 
@@ -348,7 +336,7 @@ const alternateRowStyle = {
   <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>University of Ruhuna</h2>
   <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>Faculty of Technology</h2>
   <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>Bachelor of Information and Communication Technology Honours Degree</h5>
-  <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>Level {level}     Semester {semester}     <br/>    Academic year {formatAcademicYear(academicYear)}</h5>
+  <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>Level {level}     Semester {semester}     <br/>    Academic year {formatAcademicYear(academic_year)}</h5>
   <h5 style={{ marginBottom: '20px', fontFamily: 'Arial, sans-serif', color: '#777' }}>Provisional results subject to confirmation by the Senate</h5>
 </div>
 
