@@ -26,6 +26,7 @@ export default function AddFAMarksByLec() {
     const [submitted, setSubmitted] = useState(false);
     const [markingTurnValaue, setMarkingTurnValaue] = useState([]);
     const [selectedAssessmentTypeValue,setSelectedAssessmentTypeValue] = useState([]);
+    const [chooseTurnMarking,setChooseTurnMarking] = useState([]);
     
 
 
@@ -179,7 +180,7 @@ export default function AddFAMarksByLec() {
                 ? {
                       ...mark,
                       assignment_score: e.target.value,
-                      assignment_name: selectedCriteria.assignment_name,
+                      assignment_name: chooseTurnMarking[0],
                       evaluation_criteria_id: selectedCriteria.evaluationcriteria_id
                   }
                 : mark
@@ -221,7 +222,7 @@ export default function AddFAMarksByLec() {
     const handleMarkingTurnChange = (e) => {
         const selectedMarkingTurnName = e.target.value;
 
-        
+        setChooseTurnMarking(prevValue => [...prevValue, selectedMarkingTurnName]);
 
         
     }
@@ -386,7 +387,7 @@ export default function AddFAMarksByLec() {
                 ? {
                       ...mark,
                       assignment_score: absentMarks,
-                      assignment_name: selectedCriteria.assignment_name,
+                      assignment_name: chooseTurnMarking[0],
                       evaluation_criteria_id: selectedCriteria.evaluationcriteria_id
                   }
                 : mark
@@ -420,7 +421,7 @@ export default function AddFAMarksByLec() {
                         }
                     </select>
                 </div>
-                <div>
+                <div className=' mt-4'>
                     <label className=' form-label'>Select The Turn of Exam Marking</label>
                     <select className="form-select" aria-label="Default select example" style={{ width: "350px" }} onChange={handleMarkingTurnChange}>
                         <option disabled selected>Select Turn</option>
