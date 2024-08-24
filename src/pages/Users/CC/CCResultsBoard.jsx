@@ -36,35 +36,17 @@ export default function CCResultsBoard() {
         }
     };
 
-    const getAssignedResultSheet = async (resultBoardId) => {
-        try {
-            const response = await axios.get(`http://localhost:9090/api/results_board/getAssignedResultSheet/${user_id}/${resultBoardId}`);
-            return response.data.content.course_id || ""; // Return courseId directly
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            return ""; // Return empty string on error
-        }
-    };
+    
 
-    const getCourseName = async (courseId) => {
-        try {
-            const response = await axios.get(`http://localhost:9090/api/courses/getcourse/${courseId}`);
-            return response.data.content.course_name || ""; // Return courseName directly
-        } catch (error) {
-            console.error('Error fetching course name:', error);
-            return ""; // Return empty string on error
-        }
-    };
+    
 
     const handleBoardClick = async (board) => {
         setSelectedRB(board.id);
-        const courseId = await getAssignedResultSheet(board.id); // Get courseId directly here
+        // Get courseId directly here
 
-        if (courseId !== "" && board.status=="Started") {
-            const name = await getCourseName(courseId); // Get course name
-            history.push(`/RBMarksReturnSheet/${courseId}/${name}/${department}`);
-        } else if (courseId == "" && board.status=="Started"){
-            history.push(`/FinalMarkSheet/${board.level}/${board.semester}/${board.department}`);
+        if (board.status=="Started") {
+          console.log(board.id,board.level,board.semester,board.department,board.academic_year)
+            history.push(`/ccAssignedResultSheet/${board.id}/${board.level}/${board.semester}/${board.department}/${board.academic_year}`);
         }
     };
 

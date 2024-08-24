@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
 import EditValueModal from './EditValueModal';
+import DateObject from 'react-date-object';
 
 
 export default function MarksCheckingForm() {
@@ -32,7 +33,7 @@ export default function MarksCheckingForm() {
           setUser(null);
       }
   }, []);
-   const userNameAuth = user?.full_name;
+   const userName = user?.email;
 
   const [attendanceEligibility, setAttendenceEligibility] = useState({
     id: "",
@@ -59,6 +60,8 @@ const[endMarks,setEndMarks]=useState({
 
 
 
+
+
 console.log(ele.end)
 
 
@@ -80,9 +83,9 @@ console.log(ele.end)
       setAttendenceEligibility(result.data);
       console.log(result);
 
-      const list3 = await axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculationByStuID/${course_id},${student_id}`);
-      setCalculations(list3.data);
-      console.log(list3.data);
+      // const list3 = await axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculationByStuID/${course_id},${student_id}`);
+      // setCalculations(list3.data);
+      // console.log(list3.data);
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.log(error);
@@ -134,41 +137,68 @@ console.log(ele.end)
   };
 
 
-  const textOnChange = (key, value, reason) => {
-    console.log(key,value,reason)
-    endMarks.end.map((e)=>
-    {
-      if (e.key==key){e.value=value}
-    })
-    // setEndMarks(prevState => ({
-    //   ...prevState,
-    //   end: prevState.end.map(item =>
-    //     item.key === key ? { ...item, value } : item
-    //   )
-    // }));
-    console.log(endMarks); 
-    updateMarks();
-  };
-
+  const textOnChange = async (key, value, reasons) => {
+    console.log(key, value, reasons);
   
-  const updateMarks=async()=>
-    {
-      
+    let EditLog = null; // Initialize EditLog to null
+  
+    // Check if endMarks.end is an array and iterate over it
+    if (Array.isArray(endMarks.end)) {
+      endMarks.end.forEach((e) => {
+        if (e.key === key) {
+          EditLog = {
+            user_id: userName,
+            student_id: student_id,
+            course_id: course_id,
+            type: e.key,
+            pre_mark: e.value,
+            current_mark: value,
+            date_time: new DateObject().format('YYYY-MM-DD'),
+            reason: reasons,
+          };
+  
+          // Update the value in endMarks.end
+          e.value = value;
+          console.log(EditLog);
+        }
+      });
+  
+      // Combine data for API request
+      const combinedData = {
+        studentData: endMarks,
+        marksEditLogDTO: EditLog,
+      };
+  
+      console.log(endMarks);
+      console.log(EditLog);
+  
       try {
-        ele.end=endMarks.end;
+        // Update endMarks.end with the new data
+        ele.end = endMarks.end;
         console.log(ele.end);
-        const response = await axios.put(`http://localhost:9090/api/marksReturnSheet/updateMarks`, ele);
-        
+  
+        // Make the API request
+        const response = await axios.put(
+          `http://localhost:9090/api/marksReturnSheet/updateMarks`,
+          combinedData
+        );
+  
+        // Show success message and navigate back
         setTimeout(() => {
           toast.success("Successfully Updated");
-        }, 1000)
+        }, 1000);
         history.goBack();
-        console.log(response.data)
+        console.log(response.data);
       } catch (error) {
         console.error('Error updating marks:', error);
         toast.error('Error updating marks');
+      }
     }
-  }
+  };
+  
+
+  
+  
 
   // Function to open the modal and set the editing item
   const handleEditClick = (key, value) => {

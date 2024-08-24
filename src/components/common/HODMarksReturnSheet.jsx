@@ -14,18 +14,17 @@ import toastr from 'toastr';
 
 export default function HODMarksReturnSheet(props) {
     const [noData, setNoData] = useState(false); // State to indicate if there is no data to display
-    const { course_id, course_name,department } = useParams();
+    const { course_id, course_name,department,academicYear } = useParams();
     const {approved_level}=props;
     const history = useHistory();
     // const [url,setUrl] = useState()
     const[newSignature, setNewSignature] = useState();
     const[loading,setLoading]=useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
-    const[academicYear,setAcademicYear]=useState("")
-    const[current_semester,setCurrent_semester]=useState("")
+    // const[current_semester,setCurrent_semester]=useState("")
     const[approval_level,setApprovalLevel]=useState(approved_level);
-    const[marksSheet,setMarksSheet]=useState([])
-    console.log(marksSheet)
+    const[marksSheet,setMarksSheet]=useState([]);
+    const[repeatMarksSheet,setRepeatMarksSheet]=useState([]);
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const[selectedlec,setSelectedEmail]=useState('')
@@ -34,36 +33,14 @@ export default function HODMarksReturnSheet(props) {
         date: new Date(),
       });
 
-      useEffect(() => {
-        const fetchAndSaveYear = async () => {
-            const details = await fetchAcademicYear();
-            if (details) {
-                saveAcademicYearToLocal(details);
-                setAcademicDetails(details);
-            }
-        };
 
-        fetchAndSaveYear();
-    }, []);
-
-    useEffect(() => {
-        if (academicDetails) { // Check if academicDetails is not null or undefined
-            setAcademicYear(academicDetails.current_academic_year);
-            setCurrent_semester(academicDetails.current_semester);
-        }
-    }, [academicDetails]); // Depend on academicDetails to trigger this effect
-    
-      console.log(academicYear)
-     console.log(date.format());
 
     const seenKeys = new Set();
     const seenKeysFA = new Set();
     const seenKeysForTHFA = new Set();
     const seenKeysForTHCA = new Set();
 
-    console.log(newSignature);
 
-    console.log(course_id,course_name)
     
     let forCA = 0;
     let forFA = 0;
@@ -125,18 +102,13 @@ export default function HODMarksReturnSheet(props) {
     // const { oktaAuth, authState } = useOktaAuth();
      const userNameAuth = user?.full_name;
 
-     console.log(userNameAuth)
-
-    
+     
     
     const saveDigitalSignature = (url) => {
-        setNewSignature(url);    
-        console.log(url);
-        console.log(setNewSignature)
+        setNewSignature(url); 
     };
     
-   
-  console.log(date)
+
 
     let CAAvailable = false;
     let ca_percentage=0;
@@ -185,7 +157,7 @@ export default function HODMarksReturnSheet(props) {
     const Returnapproval={
         "course_id": course_id,
         "approved_user_id":userNameAuth,
-        "approval_level":prevApprovedlevel,
+        "approval_level":"finalized",
         "academic_year":academicYear,
         "date_time": date.format(),
         "department_id":department,
@@ -205,11 +177,10 @@ useEffect(() => {
         
         try {
 
-            const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}`);
+            const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/0/${academicYear}`);
+            const Repeatresponse = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/1/${academicYear}`);
             setMarksSheet(response.data);
-            console.log(marksSheet)
-
-
+            setRepeatMarksSheet(Repeatresponse.data);
             setLoading(false); // Set loading to false after all data is fetched
         } catch (error) {
             setNoData(true); // Set noData to true if there is an error
@@ -299,41 +270,33 @@ useEffect(() => {
     };
   }, [newSignature]);
 
-    console.log(isCClevel.signature)
-
-
-  
-
+ 
     const handleSubmit = async (e) => {
         
         if(newSignature==null|| newSignature==""){
             e.preventDefault();
-            console.log("Empty signature")
+      
             toast.error("Empty Signature");
         }
         if(searchTerm==null || searchTerm=="" && nextApprovedlevel==="course_coordinator" ){
             e.preventDefault();
-            console.log("Empty signature")
+         
             toast.error("Empty Signature");
         }
         else{
            
         try {
             e.preventDefault();
-            console.log(approval.date_time)
-            const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
+            
             if(approval_level==="finalized"){
                 const lecturerAssign = await axios.post(`http://localhost:9090/api/approvalLevel/assignCertifyLecturer`,lecturerCertifyAssign);
             }
+            const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
             if (response.status === 200) {
-                console.log("Approval level updated successfully");
+              
                 setApprovalLevel(nextApprovedlevel)
                 toast.success('Marks Sheet Sent successfully');
                 history.goBack();
-                console.log(approval_level)
-                
-               
-               
             } else {
                 console.error("Failed to update approval level");
             }
@@ -351,11 +314,8 @@ useEffect(() => {
 
         
         try {
-            console.log(Returnapproval)
             const response = await axios.post(`http://localhost:9090/api/approvalLevel/return`,Returnapproval);
             if (response.status === 200) {
-                console.log("Marks Sheet Return successfully");
-                
                 toast.success("Result sheet approved successfully");
                  
                 setTimeout(() => {
@@ -377,7 +337,6 @@ useEffect(() => {
     marksSheet.map((ele, index) => (
         ele.ca.map((caScore, idx) => {
             if (!seenKeysForTHCA.has(caScore.key)) {
-                console.log(caScore.key);
                 forCA++
                 seenKeysForTHCA.add(caScore.key); // Mark this key as seen
             }
@@ -390,7 +349,6 @@ useEffect(() => {
     marksSheet.map((ele, index) => (
         ele.end.map((endScore, idx) => {
             if (!seenKeysForTHFA.has(endScore.key)) {
-                console.log(endScore.key);
                 forFA++
                 seenKeysForTHFA.add(endScore.key); // Mark this key as seen
             }
@@ -403,10 +361,8 @@ useEffect(() => {
           try {
             const result = await axios.get(`http://localhost:9090/api/lecreg/get/alllecturersdetails/${department}`);
             setData(result.data.content);
-            console.log(result.data.content)
             setFilteredData(result.data.content); // Initially, all data is considered as filtered
           } catch (error) {
-            console.error("Error fetching data:", error);
           }
         };
     
@@ -428,14 +384,6 @@ useEffect(() => {
         setSelectedEmail(email);
       }
 
-
-
-
-
-
-
-
-  newSignature ? console.log("Signature is present") : console.log("Signature is not present");
 
     return (
         <>
@@ -476,146 +424,263 @@ useEffect(() => {
                                             <td class=""><h2>Mark Return Sheet:</h2></td>
                                             
                                         </tr> */}
-                                        <tr>
-                                            <td><h5><b>Marks Obtained by the Candidate for:</b></h5></td>
-                                        </tr>
+                                             <tr>
+                                                <td><h5><b>Marks Obtained by the Candidate for:</b></h5></td>
+                                             </tr>
                                     </table>
-                                        <div style={{display:"flex"}}>
+                                    <div style={{display:"flex"}}>
                                             <h6>Academic Year: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{academicYear}&nbsp;&nbsp;</span></h6>
-                                            <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h6>
-                                            <h6 className=' rounded-pill bg-success text-white'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination</h6>  
-                                        </div>
-                                        
-                                    
-                    <h4>Course code and Title : <span className='rounded-pill bg-primary text-white'> &nbsp;&nbsp;{course_name} - {course_id}&nbsp;&nbsp; </span> </h4>
-                    </div>
+                                                <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h6>
+                                                    {/* <h6 className=' rounded-pill bg-success text-white'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination</h6>   */}
+                                    </div>
+                                                                            
+                                                                        
+                                    <h4>Course code and Title : <span className='rounded-pill bg-primary text-white'> &nbsp;&nbsp;{course_name} - {course_id}&nbsp;&nbsp; </span> </h4>
+                            </div>
 
-
-                    <div className=''>
-                        {/*  style={{overflow:"auto",width:"100%",height:"500px"}} */}
-                    <table className="table shadow table-bordered table-hover" style={{ marginTop: "30px", width: '80%' }}>
-
-                    <thead>
-                        
-                            <tr>
-                            
-                                <th rowSpan='2' className=' table-info'>Student_ID</th>
-                                <th colSpan={forCA} className=' table-warning ' style={{textAlign:"center"}}>Continuous Assessment</th>
-                                <th colSpan={forFA} className=' table-primary ' style={{textAlign:"center"}}>Semester End Exam</th>
-                                <th colSpan='4' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
-                                <th rowSpan='2' className=' table-danger'>CA Eligibility</th>
-                                <th rowSpan='2' className='table-secondary' style={{textAlign:"center"}}>View</th>
-                            </tr>
-                            <tr>
-                            {marksSheet.map((ele, index) =>
-                                ele.ca.map((caScore, idx) => {
-                               
-                                    if (!seenKeys.has(caScore.key)) {
-                               
-                                    console.log(caScore.key);
-
-                                    seenKeys.add(caScore.key);
-                                    
-                                    if(caScore.description=="percentage")
-                                        {
-                                            let percentage=parseInt(caScore.key.slice(0, 2))
-                                            console.log(percentage)
-                                            ca_percentage=ca_percentage+percentage;
-                                        }
-                                   
-                                    return <th key={`ca-${idx}`} className='table-warning'>{caScore.key}</th>;
-                                    }
-
-                                    return null;
-                                })
-                                
-                                )
-                                }
-
-                                
-                                <th className='table-warning'> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
-                                
-
-
-
-                                
-                                {marksSheet.map((ele, index) => (
-                                    ele.end.map((endScore, idx) => {
-                                      
-                                        if (!seenKeysFA.has(endScore.key)) {
-                                   
-                                        console.log(endScore.key);
-
-                                 
-                                        seenKeysFA.add(endScore.key);
-
-                                        return <th key={`end-${idx}`} className=' table-primary'>{endScore.key} </th>
-                                        }
-                                    })
-                                ))}
+                         {marksSheet.length > 0 ? (
+                        <div className=''>
+                         {/*  style={{overflow:"auto",width:"100%",height:"500px"}} */}
+                        <table className="table shadow table-bordered table-hover" style={{ marginTop: "30px", width: '80%' }}>
+ 
+                             <thead>
+                         
+                             <tr>
                              
-                                <th className=' table-success'>Total Final Marks</th>
-                                <th className=' table-success'>Total Rounded Marks</th>
-                                <th className=' table-success'>Results/Grades</th>
-                                <th className=' table-success'>GPV</th>
+                                 <th rowSpan='2' className=' table-info'>Student_ID</th>
+                                 <th colSpan={forCA} className=' table-warning ' style={{textAlign:"center"}}>Continuous Assessment</th>
+                                 <th colSpan={forFA} className=' table-primary ' style={{textAlign:"center"}}>Semester End Exam</th>
+                                 <th colSpan='3' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
+                                 <th rowSpan='2' className=' table-danger'>CA Eligibility</th>
+                                 <th rowSpan='2' className='table-secondary' style={{textAlign:"center"}}>View</th>
+                             </tr>
+                             <tr>
+                             {marksSheet.map((ele, index) =>
+                                 ele.ca.map((caScore, idx) => {
                                 
-                           
-                               
-                            </tr>
-                    </thead>
-                    
-
-                      <tbody>
-                      {marksSheet.map((ele, index) => (
-                        <tr key={index}>
-                            <td>{ele.student_id}</td>
-
-
-                            {
-                               Array.from(seenKeysForTHCA).map((c, idx) => {
-                                    let caValue = ele.ca.find(ca => ca.key === c);
-                                    return <td key={`ca-${idx}`}>{caValue!=null ? caValue.value : ''}</td>;
-                                }
-                                )
-                            }
-
-                            <td>{ele.total_ca_mark}</td>
+                                     if (!seenKeys.has(caScore.key)) {
                                 
-                            {
-                                Array.from(seenKeysForTHFA).map((c, idx) => {
-                                    let endValue = ele.end.find(end => end.key === c);
-                                    return <td key={`end-${idx}`}>{endValue!=null ? endValue.value : ''}</td>;
-                                }
-                                )
-                            }
+                                     seenKeys.add(caScore.key);
+                                     
+                                     if(caScore.description=="percentage")
+                                         {
+                                             let percentage=parseInt(caScore.key.slice(0, 2))
+                                             ca_percentage=ca_percentage+percentage;
+                                         }
+                                    
+                                     return <th key={`ca-${idx}`} className='table-warning'>{caScore.key}</th>;
+                                     }
+ 
+                                     return null;
+                                 })
+                                 
+                                 )
+                                 }
+ 
+                                 
+                                 <th className='table-warning'> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
+                                 
+ 
+ 
+ 
+                                 
+                                 {marksSheet.map((ele, index) => (
+                                     ele.end.map((endScore, idx) => {
+                                       
+                                         if (!seenKeysFA.has(endScore.key)) {
+                                 
+                                         seenKeysFA.add(endScore.key);
+ 
+                                         return <th key={`end-${idx}`} className=' table-primary'>{endScore.key} </th>
+                                         }
+                                     })
+                                 ))}
+                              
+                                 <th className=' table-success'>Total Final Marks</th>
+                                 <th className=' table-success'>Total Rounded Marks</th>
+                                 <th className=' table-success'>Results/Grades</th>
+                                 {/* <th className=' table-success'>GPV</th> */}
+                                 
                             
-                           
+                                
+                             </tr>
+                     </thead>
+                     
+ 
+                       <tbody>
+                       {marksSheet.map((ele, index) => (
+                         <tr key={index}>
+                             <td>{ele.student_id}</td>
+ 
+ 
+                             {
+                                Array.from(seenKeysForTHCA).map((c, idx) => {
+                                     let caValue = ele.ca.find(ca => ca.key === c);
+                                     return <td key={`ca-${idx}`}>{caValue!=null ? caValue.value : ''}</td>;
+                                 }
+                                 )
+                             }
+ 
+                             <td>{ele.total_ca_mark}</td>
+                                 
+                             {
+                                 Array.from(seenKeysForTHFA).map((c, idx) => {
+                                     let endValue = ele.end.find(end => end.key === c);
+                                     return <td key={`end-${idx}`}>{endValue!=null ? endValue.value : ''}</td>;
+                                 }
+                                 )
+                             }
+                             
                             
-                            <td>{ele.total_final_marks}</td>
-                            <td>{ele.total_rounded_marks}</td>
-                            <td>{ele.grade}</td>
-                            <td>{ele.gpv}</td>
-                            <td>{ele.ca_eligibility}</td>
-                            {
+                             
+                             <td>{ele.total_final_marks}</td>
+                             <td>{ele.total_rounded_marks}</td>
+                             <td>{ele.grade}</td>
+                             {/* <td>{ele.gpv}</td> */}
+                             <td>{ele.ca_eligibility}</td>
+                             {
+ 
+                             }
+ 
+                             <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
+                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
+                                 state: { ele }
+                             }}>View</Link></td>
+                         </tr>))}
+                         </tbody>
+ 
+                     </table>
+                 </div>
+                    ) : null
+                    }
 
-                            }
 
-                            <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
-                                pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
-                                state: { ele }
-                            }}>View</Link></td>
-                            {console.log(ele.student_id,ele.total_ca_mark,ele.total_final_mark,ele.total_rounded_mark,ele.grade,ele.gpv,ele.ca_eligibility)}
-                        </tr>))}
-                        </tbody>
+                {repeatMarksSheet.length > 0 ? (
+                         <div className=''>
+                         {/*  style={{overflow:"auto",width:"100%",height:"500px"}} */}
+                    <h4>Repeaters</h4>
+                     <table className="table shadow table-bordered table-hover" style={{ marginTop: "30px", width: '80%' }}>
+ 
+                     <thead>
+                         
+                             <tr>
+                             
+                                 <th rowSpan='2' className=' table-info'>Student_ID</th>
+                                 <th colSpan={forCA} className=' table-warning ' style={{textAlign:"center"}}>Continuous Assessment</th>
+                                 <th colSpan={forFA} className=' table-primary ' style={{textAlign:"center"}}>Semester End Exam</th>
+                                 <th colSpan='3' className=' table-success ' style={{textAlign:"center"}}>Final Marks</th>
+                                 <th rowSpan='2' className=' table-danger'>CA Eligibility</th>
+                                 <th rowSpan='2' className='table-secondary' style={{textAlign:"center"}}>View</th>
+                             </tr>
+                             <tr>
+                             {repeatMarksSheet.map((ele, index) =>
+                                 ele.ca.map((caScore, idx) => {
+                                
+                                     if (!seenKeys.has(caScore.key)) {
+                                
+                                     seenKeys.add(caScore.key);
+                                     
+                                     if(caScore.description=="percentage")
+                                         {
+                                             let percentage=parseInt(caScore.key.slice(0, 2))
+                                             ca_percentage=ca_percentage+percentage;
+                                         }
+                                    
+                                     return <th key={`ca-${idx}`} className='table-warning'>{caScore.key}</th>;
+                                     }
+ 
+                                     return null;
+                                 })
+                                 
+                                 )
+                                 }
+ 
+                                 
+                                 <th className='table-warning'> {ca_percentage+"% From Final Continuous Assignment Marks"}</th>
+                                 
+ 
+ 
+ 
+                                 
+                                 {repeatMarksSheet.map((ele, index) => (
+                                     ele.end.map((endScore, idx) => {
+                                       
+                                         if (!seenKeysFA.has(endScore.key)) {
+                                 
+                                         seenKeysFA.add(endScore.key);
+ 
+                                         return <th key={`end-${idx}`} className=' table-primary'>{endScore.key} </th>
+                                         }
+                                     })
+                                 ))}
+                              
+                                 <th className=' table-success'>Total Final Marks</th>
+                                 <th className=' table-success'>Total Rounded Marks</th>
+                                 <th className=' table-success'>Results/Grades</th>
+                                 {/* <th className=' table-success'>GPV</th> */}
+                                 
+                            
+                                
+                             </tr>
+                     </thead>
+                     
+ 
+                       <tbody>
+                       {repeatMarksSheet.map((ele, index) => (
+                         <tr key={index}>
+                             <td>{ele.student_id}</td>
+ 
+ 
+                             {
+                                Array.from(seenKeysForTHCA).map((c, idx) => {
+                                     let caValue = ele.ca.find(ca => ca.key === c);
+                                     return <td key={`ca-${idx}`}>{caValue!=null ? caValue.value : ''}</td>;
+                                 }
+                                 )
+                             }
+ 
+                             <td>{ele.total_ca_mark}</td>
+                                 
+                             {
+                                 Array.from(seenKeysForTHFA).map((c, idx) => {
+                                     let endValue = ele.end.find(end => end.key === c);
+                                     return <td key={`end-${idx}`}>{endValue!=null ? endValue.value : ''}</td>;
+                                 }
+                                 )
+                             }
+                             
+                            
+                             
+                             <td>{ele.total_final_marks}</td>
+                             <td>{ele.total_rounded_marks}</td>
+                             <td>{ele.grade}</td>
+                             {/* <td>{ele.gpv}</td> */}
+                             <td>{ele.ca_eligibility}</td>
+                             {
+ 
+                             }
+ 
+                             <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
+                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
+                                 state: { ele }
+                             }}>View</Link></td>
+                         </tr>))}
+                         </tbody>
+ 
+                     </table>
+                 </div>
+                    ) : null
+                    }
+                   
 
-                    </table>
-                </div>
+
+
+                
                 <div className=' m-5'></div>
             <div className=' row shadow-lg' style={{width:"1500px",height:'320px', padding:'10px'}}>
                 <div className=' col-5' style={{float:"left",marginTop:"50px",marginLeft:'20px'}}>
                             
                     <div>
-                        {console.log(nextApprovedlevel)}
                         <table>
                             
                                 
@@ -665,12 +730,7 @@ useEffect(() => {
                                     </>
                                     :null
                                     }
-                                    
-                                
-                                
-                            
-                            
-                                
+
                                 
                                     {
                                     nextApprovedlevel == "HOD" &&
@@ -718,7 +778,7 @@ useEffect(() => {
                                     </>:null
                                     }                                 
                                     {
-                                        nextApprovedlevel == "RB" || nextApprovedlevel == "AR"  ? 
+                                        approved_level=="AssignedRB" || nextApprovedlevel == "RB" || nextApprovedlevel == "AR"  ? 
                                         <>
                                         <tr>
                                                 <td>Coordinator/ Examinar :</td>
@@ -748,7 +808,7 @@ useEffect(() => {
                                                                     <td>Head of the Department : </td>
                                                                     <td></td>
                                                                     <td>Sign:</td>
-                                                                    <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> 
+                                                                    <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> 
                                                                     <td>Date:</td>
                                                                     <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>: 
                                                                     
