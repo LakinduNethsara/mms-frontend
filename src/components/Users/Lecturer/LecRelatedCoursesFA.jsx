@@ -13,6 +13,8 @@ export default function LecRelatedCoursesFA() {
 
     useEffect(() => {
         if(storedData){
+
+            
             
             setEmail(JSON.parse(storedData).email);
         }else{
@@ -35,10 +37,10 @@ export default function LecRelatedCoursesFA() {
                 {courses.map((course, index) => (
                     <div className="card shadow m-4" style={{width: "18rem"}} key={index}>
                         <div className="card-body">
-                            <h5 className="card-title py-2">{course.course_id}</h5> 
-                            <h6 className='card-title py-1'>{course.course_name}</h6> 
-                            {console.log(course.course_id,course.course_name)} 
-                            <a className="btn btn-primary btn-sm mt-2" onClick={ ()=> history.push(`/fa_addby_lec/${course.course_id}/${course.course_name}`)}>To FA Eligibility</a>
+                            <h5 className="card-title py-2">{course[1]}</h5> 
+                            <h6 className='card-title py-1'>{course[2]}</h6> 
+                            {/* {console.log(course[1],course[2])}  */}
+                            <a className="btn btn-primary btn-sm mt-2" onClick={ ()=> history.push(`/fa_addby_lec/${course[1]}/${course[2]}`)}>To FA Eligibility</a>
                         </div>
                     </div>
                 ))}
