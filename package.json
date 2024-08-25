@@ -16,6 +16,7 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "react": "^18.3.1",
+    "react-bootstrap": "^2.10.4",
     "react-date-object": "^2.1.9",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",

@@ -8,7 +8,8 @@ import SignatureForApproval from '../common/SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../common/AcademicYearManagerSingleton';
 import { ToastContainer, toast } from 'react-toastify';
 import DateObject from 'react-date-object';
-import toastr from 'toastr';
+import { useRef } from 'react';
+
 
 
 
@@ -28,9 +29,18 @@ export default function HODMarksReturnSheet(props) {
     const[selectedlec,setSelectedEmail]=useState('')
     const [filteredData, setFilteredData] = useState([]);
     const[degree,setDegree]=useState("");
+  const [filteredLecturers, setFilteredLecturers] = useState([]);
+ 
+  const [lecturerList, setLecturerList] = useState([]);
+
+  const dropdownRef = useRef(null);
+  const inputRef = useRef(null);
     var date = new DateObject({
         date: new Date(),
       });
+
+
+   
     
       useEffect(() => {
         if (department === "ICT") {
@@ -109,7 +119,28 @@ export default function HODMarksReturnSheet(props) {
     }, []);
     // const { oktaAuth, authState } = useOktaAuth();
      const userNameAuth = user?.full_name;
+     const user_department = user?.department_id;
 
+     useEffect(() => {
+        const fetchLecturers = async () => {
+          try {
+            setLoading(true);
+            const response = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${user_department}`);
+            if (response.data.code === '00') {
+              setLecturerList(response.data.content);
+            } else {
+            //   console.error('Failed to fetch lecturers:', response.data.message);
+            }
+          } catch (error) {
+            // console.error('Error fetching lecturers:', error);
+          }
+          finally{
+            setLoading(false);
+          }
+        };
+    
+        fetchLecturers();
+      }, [user_department]);
      
     
     const saveDigitalSignature = (url) => {
@@ -161,8 +192,9 @@ export default function HODMarksReturnSheet(props) {
         "lecturer_id":selectedlec,
         "course_id": course_id,
         "department_id":department,
+      
     }
-
+    
     const Returnapproval={
         "course_id": course_id,
         "approved_user_id":userNameAuth,
@@ -185,20 +217,24 @@ useEffect(() => {
     const fetchData = async () => {
         
         try {
-
+            setLoading(true);
             const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/0/${academicYear}`);
             const Repeatresponse = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/1/${academicYear}`);
             setMarksSheet(response.data);
             setRepeatMarksSheet(Repeatresponse.data);
-            setLoading(false); // Set loading to false after all data is fetched
+           
         } catch (error) {
             setNoData(true); // Set noData to true if there is an error
+        }finally
+        {
+            setLoading(false); // Set loading to false after all data is fetched
         }
 
     };
 
     const SignFunc = async () => {
         try {
+            setLoading(true);
             const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/${academicYear}`);
             const signatures = response.data.content; // Adjust this based on your actual response structure
     
@@ -209,9 +245,13 @@ useEffect(() => {
             if (ccLevel) setISCClevel(ccLevel);
             if (lecLevel) setISLeclevel(lecLevel);
             if (hodLevel) setISHODlevel(hodLevel);
-    
+            
         } catch (error) {
             console.error('Error fetching signature data:', error);
+        }
+        finally
+        {
+            setLoading(false);
         }
     };
     
@@ -225,39 +265,53 @@ useEffect(() => {
 
 
 
-    const SigFunc = async () => {
-        const fetchCCLevel = async () => {
-            try {
-                const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/course_coordinator/${academicYear}`);
-                setISCClevel(response.data.content);
-            } catch (error) {
-                console.error('Error fetching CC level data:', error);
-            } 
-        };
+    // const SigFunc = async () => {
+    //     const fetchCCLevel = async () => {
+    //         try {
+    //             setLoading(true)
+    //             const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/course_coordinator/${academicYear}`);
+    //             setISCClevel(response.data.content);
+                
+    //         } catch (error) {
+    //             console.error('Error fetching CC level data:', error);
+    //         } finally
+    //         {
+    //             setLoading(false);
+    //         }
+    //     };
     
-        const fetchLecLevel = async () => {
-            try {
-                const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
-                setISLeclevel(response.data.content);
-            } catch (error) {
-                console.error('Error fetching Lecturer level data:', error);
-            } 
-        };
+    //     const fetchLecLevel = async () => {
+    //         try {
+    //             setLoading(true);
+    //             const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
+    //             setISLeclevel(response.data.content);
+    //             setLoading(true);
+    //         } catch (error) {
+    //             console.error('Error fetching Lecturer level data:', error);
+    //         } finally
+    //         {
+    //             setLoading(false); // Set loading to false after all data is fetched
+    //         }
+    //     };
     
-        const fetchHODLevel = async () => {
-            try {
-                const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
-                setISHODlevel(response.data.content);
-            } catch (error) {
-                console.error('Error fetching HOD level data:', error);
-            } 
-        };
+    //     const fetchHODLevel = async () => {
+    //         try {
+    //             setLoading(true)
+    //             const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
+    //             setISHODlevel(response.data.content);
+    //         } catch (error) {
+    //             console.error('Error fetching HOD level data:', error);
+    //         } finally
+    //         {
+    //             setLoading(false);
+    //         }
+    //     };
     
-        // Execute each fetch function independently
-        fetchCCLevel();
-        fetchLecLevel();
-        fetchHODLevel();
-    };
+    //     // Execute each fetch function independently
+    //     fetchCCLevel();
+    //     fetchLecLevel();
+    //     fetchHODLevel();
+    // };
     
 
     
@@ -365,35 +419,50 @@ useEffect(() => {
         })
     ))
 
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const result = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${department}`);
-            setData(result.data.content);
-            setFilteredData(result.data.content); // Initially, all data is considered as filtered
-          } catch (error) {
+
+
+    
+
+      const getFuzzyMatches = (input, list) => {
+        const lowerInput = input.toLowerCase();  // Convert search input to lowercase
+        return list.filter(lecturer => lecturer.name_with_initials.toLowerCase().includes(lowerInput));  // Filter list based on input
+      };
+      
+    
+
+      
+    
+      useEffect(() => {
+        const handleClickOutside = (e) => {
+          if (dropdownRef.current && !dropdownRef.current.contains(e.target) && !inputRef.current.contains(e.target)) {
+            setFilteredLecturers([]);
           }
         };
-    
-        fetchData();
+      
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
       }, []);
-
-      const handleSearchChange = (event) => {
-        const searchTerm = event.target.value.toLowerCase();
-        setSearchTerm(searchTerm);
+      
     
-        const filtered = data.filter(item =>
-            item.name_with_initials && item.name_with_initials.toLowerCase().includes(searchTerm)
-        );
-        setFilteredData(filtered);
-    };
-
-      const handleClick = (userId,email) => {
-        setSearchTerm(userId);
-        setSelectedEmail(email);
-      }
-
-
+      const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        console.log(searchTerm)
+        if (searchTerm) {
+            const matches = getFuzzyMatches(searchTerm, lecturerList);
+            setFilteredLecturers(matches);
+          } else {
+            setFilteredLecturers([]);
+          }
+      };
+      
+    
+      const handleLecturerSelect = (lecturer) => {
+        setSelectedEmail(lecturer.email);
+        setSearchTerm(lecturer.name_with_initials);
+        setFilteredLecturers([]);
+        setSelectedEmail
+      };
+    
     return (
         <>
             
@@ -402,7 +471,11 @@ useEffect(() => {
             
             
             {loading ? (
-                <div>Loading...</div> // Display a loading message or spinner here
+                 <div className="d-flex justify-content-center">
+                 <div className="spinner-border" role="status">
+                     <span className="sr-only"></span>
+                 </div>
+             </div>
             ) : (
                 <>
                 <div id="marks-return-sheet" style={{ width:"95%",marginLeft:"40px"}} className=' container'>
@@ -842,30 +915,59 @@ useEffect(() => {
                         nextApprovedlevel === "course_coordinator" ? 
                         <div>
                             <hr />
-                            <div>
-                                <input
-                                    className='form-control'
-                                    type="text"
-                                    placeholder="Search by Lecturer Name..."
-                                    value={searchTerm}
-                                    onChange={handleSearchChange}
-                                />
-                                
-                                    
-                                <div className='list-group'>
-                                {filteredData.length > 0? (
-                                    filteredData.map((item, index) => (
-                                        searchTerm == ''?
-                                        null
-                                        : 
-                                        
-                                        <button  key={index} type="button" className="list-group-item list-group-item-action"  onClick={() => handleClick(item.name_with_initials,item.email)}> {item.name_with_initials}</button >
-                                    ))
-                                    ) : (
-                                        <button  type="button" className="list-group-item list-group-item-action">No results found.</button >
-                                )}
-                                </div>
-                            </div>
+                            <div style={{ marginBottom: '20px', position: 'relative', display: 'inline-block', width: '300px' }}>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search Lecturer"
+          style={{
+            padding: '10px',
+            borderRadius: '4px',
+            border: '1px solid #ccc',
+            width: '100%'
+          }}
+          ref={inputRef}
+        />
+        {console.log(filteredLecturers)}
+        {filteredLecturers.length > 0 && (
+          <ul
+            ref={dropdownRef}
+            style={{
+              listStyleType: 'none',
+              padding: '0',
+              margin: '0',
+              position: 'absolute',
+              top: '100%',
+              left: '0',
+              right: '0',
+              backgroundColor: 'white',
+              border: '1px solid #ccc',
+              borderTop: 'none',
+              borderRadius: '0 0 4px 4px',
+              maxHeight: '150px',
+              overflowY: 'auto',
+              zIndex: '1000'
+            }}
+          >
+            {filteredLecturers.map((lecturer) => (
+              <li
+                key={lecturer.id}
+                onClick={() => handleLecturerSelect(lecturer)}
+                style={{
+                  padding: '8px',
+                  cursor: 'pointer',
+                  backgroundColor: 'white',
+                  borderBottom: '1px solid #ddd'
+                }}
+              >
+                {lecturer.name_with_initials}
+                {console.log(lecturer)}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
                         </div>
                         :
                         null
