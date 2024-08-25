@@ -32,9 +32,13 @@ export default function EditStudentModal({ row, onSubmit, onClose }) {
                     </div>
                     <div className=' mt-3 px-5' style={{ margin: '0 auto',width:"600px" }}> 
                         <div className=' row g-1'>
+                            <div style={{display:"none"}}> 
+                                <label className='form-label' htmlFor="user_id">ID</label>
+                                <input className='form-control' type="text" name="user_id" value={userDetails.id} onChange={handleInputChange} size="30" />
+                            </div> 
                             <div> 
                                 <label className='form-label' htmlFor="user_id">Student ID</label>
-                                <input className='form-control' type="text" name="user_id" value={userDetails.student_id} onChange={handleInputChange} size="30" />
+                                <input className='form-control' type="text" name="user_id" value={userDetails.user_id} onChange={handleInputChange} size="30" />
                             </div> 
                             <div>
                                 <label className='form-label' htmlFor="user_id">Full name</label>
@@ -47,16 +51,12 @@ export default function EditStudentModal({ row, onSubmit, onClose }) {
                         </div>
                         <div className=' row g-1'>
                             <div>
-                                <label className='form-label' htmlFor="user_name">Username</label>
-                                <input className='form-control' type="text" name="user_name" value={userDetails.user_name} onChange={handleInputChange} size="30" />
-                            </div>
-                            <div>
                                 <label className='form-label' htmlFor="email">Email</label>
                                 <input className='form-control' type="text" name="email" value={userDetails.email} onChange={handleInputChange} size="30" />
                             </div>
                             <div>
                                 <label className='form-label' htmlFor="password">Password</label>
-                                <input className='form-control' type="text" name="password" value={userDetails.password} onChange={handleInputChange} size="30" />
+                                <input className='form-control' type="password" name="password" value={userDetails.password} onChange={handleInputChange} size="30" />
                             </div> 
                         </div>
                         <div className=' row g-1'>
@@ -68,12 +68,20 @@ export default function EditStudentModal({ row, onSubmit, onClose }) {
                                 <label className='form-label' htmlFor="department_id">Department</label>
                                 <input className='form-control' type="text" name="department_id" value={userDetails.department_id} onChange={handleInputChange} size="30" />
                             </div>
+                            <div>
+                                <label className='form-label' htmlFor="department_id">Role</label>
+                                <input className='form-control' type="text" name="department_id" value={userDetails.role} onChange={handleInputChange} size="30" />
+                            </div>
+                            <div>
+                                <label className='form-label' htmlFor="department_id">Is Deleted</label>
+                                <input className='form-control' type="text" name="department_id" value={userDetails.is_deleted} onChange={handleInputChange} size="30" />
+                            </div>
                         </div>
                         
                         
                     </div>
-                    <button className='btn btn-outline-success btn-sm mt-3 mx-3' type="submit">Save</button>
-                    <button className='btn btn-outline-danger btn-sm mt-3' type="button" onClick={onClose}>Cancel</button>
+                    <button style={{width:"100px"}} className='btn btn-outline-success btn-sm mt-3 mx-3' type="submit">Save</button>
+                    <button style={{width:"100px"}} className='btn btn-outline-danger btn-sm mt-3' type="button" onClick={onClose}>Cancel</button>
                 </form>
             </div>
         </div>

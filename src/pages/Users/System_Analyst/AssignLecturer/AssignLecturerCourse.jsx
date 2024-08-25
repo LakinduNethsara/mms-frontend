@@ -18,12 +18,13 @@ export default function AssignLecturerCourse() {
     });
     const [newLecturer, setNewLecturer] = useState([]);
 
-    console.log(cCoordinatorids);
-    console.log(selectedLecturerIds);
-    console.log(newCourseCoordinator);
+    // console.log(cCoordinatorids);
+    // console.log(selectedLecturerIds);
+    // console.log(newCourseCoordinator);
 
     useEffect(() => {
         loadCids();
+        loadUserDetails();
     }, []);
 
     useEffect(() => {
@@ -33,27 +34,33 @@ export default function AssignLecturerCourse() {
                 saveAcademicYearToLocal(details);
                 setAcademicDetails(details);
                 setAcademicYear(details.current_academic_year);
-                console.log(details.current_academic_year);
+                // console.log(details.current_academic_year);
             }
         };
 
         fetchAndSaveYear();
+        
     }, []);
 
     const loadCids = async () => {
         try {
             const response = await axios.get('http://localhost:9090/api/courses/allcoursesids');
-            console.log(response.data);
+            // console.log(response.data);
             if (Array.isArray(response.data.content)) {
                 setCids(response.data.content);
                 console.log(response.data.content);
             } else {
                 console.error("Expected an array of course IDs, but received:", response.data.content);
             }
+            
         } catch (error) {
             console.error("Error fetching course IDs:", error);
         }
 
+        
+    };
+
+    const loadUserDetails = async () => {
         try {
             const result = await axios.get('http://localhost:9090/api/lecreg/get/alllecturersdetails');
             if (Array.isArray(result.data.content)) {
@@ -67,6 +74,7 @@ export default function AssignLecturerCourse() {
         }
     };
 
+
     const handleLecturerIdSelect = (event) => {
         const selectedId = event.target.value;
         setSelectedLecturerIds(prevIds => {
@@ -76,7 +84,7 @@ export default function AssignLecturerCourse() {
             return prevIds;
         });
 
-        console.log(selectedId);
+        // console.log(selectedId);
     };
 
     const handleSubmit = async () => {
@@ -96,11 +104,11 @@ export default function AssignLecturerCourse() {
             selectedLecturerIds: selectedLecturerIds,
         });
 
-        console.log(newCourseCoordinator);
-        console.log(selectedCoordinatorId);
-        console.log(selectedCourseId);
-        console.log(academicYear);
-        console.log(selectedLecturerIds);
+        // console.log(newCourseCoordinator);
+        // console.log(selectedCoordinatorId);
+        // console.log(selectedCourseId);
+        // console.log(academicYear);
+        // console.log(selectedLecturerIds);
 
         try {
             await axios.post('http://localhost:9090/api/ccmanage/insertacc', newCourseCoordinator);
@@ -134,6 +142,8 @@ export default function AssignLecturerCourse() {
             user_id: selectedCoordinatorId
         }));
     };
+
+
   return (
     <div className='container' style={{ marginTop: "70px" }}>
             <div className='mt-4 mb-5'>
@@ -159,7 +169,7 @@ export default function AssignLecturerCourse() {
                             <select className="form-select" onChange={handleCourseCoordinatorChange}>
                                 <option selected>Select Course Coordinator</option>
                                 {cCoordinatorids.map((coordinatorId, index) => (
-                                    <option key={`coordinator-${index}`} value={coordinatorId}>{coordinatorId}</option>
+                                    <option key={`coordinator-${index}`} value={coordinatorId.full_name}>{coordinatorId.full_name}</option>
                                 ))}
                             </select>
                             <label htmlFor="type">Course Coordinator</label>
@@ -173,7 +183,7 @@ export default function AssignLecturerCourse() {
                             <select className="form-select" onChange={handleLecturerIdSelect}>
                                 <option selected>Select Lecturer ID</option>
                                 {cCoordinatorids.map((coordinatorId, index) => (
-                                    <option key={`lecturer-${index}`} value={coordinatorId}>{coordinatorId}</option>
+                                    <option key={`lecturer-${index}`} value={coordinatorId.full_name}>{coordinatorId.full_name}</option>
                                 ))}
                             </select>
                             <label htmlFor="type">Lecturer ID</label>

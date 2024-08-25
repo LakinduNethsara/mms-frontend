@@ -8,7 +8,7 @@ export default function ManageCourseModule() {
     const [course_id, setCourseId] = useState('');
     const [type, setType] = useState('');
     const [department_id, setDepartment] = useState('');
-    const [credit, setCourseCredit] = useState('');
+    // const [credit, setCourseCredit] = useState('');
     const [hours, setCourseHours] = useState('');
     const [level, setLevel] = useState('');
     const [semester, setSemester] = useState('');
@@ -45,10 +45,10 @@ export default function ManageCourseModule() {
             toast.error("Department is required.");
             return false;
         }
-        if (!credit) {
-            toast.error("Course credit is required.");
-            return false;
-        }
+        // if (!credit) {
+        //     toast.error("Course credit is required.");
+        //     return false;
+        // }
         if (!hours) {
             toast.error("Course hours is required.");
             return false;
@@ -77,7 +77,7 @@ export default function ManageCourseModule() {
         course_id,
         type,
         department_id,
-        credit,
+        // credit,
         hours,
         level,
         semester,
@@ -85,21 +85,31 @@ export default function ManageCourseModule() {
 
     try {
         const response = await axios.post('http://localhost:9090/api/courses/insertacourse', courseData);
-        console.log(response.data.content);
+        // console.log(response.data.content);
         toast.success('Course added successfully!');
       // Optionally, clear the form fields after successful submission
         setCourseName('');
         setCourseId('');
         setType('');
         setDepartment('');
-        setCourseCredit('');
+        // setCourseCredit('');
         setCourseHours('');
         setLevel('');
         setSemester('');
         fetchData();
     } catch (error) {
-        console.error('Error adding course:', error);
-        toast.error('Error adding course. Please try again.');
+        // console.error('Error adding course:', error);
+        toast.error('This course already exists!');
+        // window.location.reload();
+        setCourseName('');
+        setCourseId('');
+        setType('');
+        setDepartment('');
+        // setCourseCredit('');
+        setCourseHours('');
+        setLevel('');
+        setSemester('');
+        fetchData();
     }
     };
 
@@ -120,7 +130,7 @@ export default function ManageCourseModule() {
             <div className="col-md">
             <div className="form-floating">
                 <input type="text" className="form-control" id="course_id" placeholder="Enter course id" value={course_id} onChange={(e) => setCourseId(e.target.value)} />
-                <label htmlFor="course_id">Course ID</label>
+                <label htmlFor="course_id">Course Code</label>
             </div>
             </div>
             <div className="col-md">
@@ -147,12 +157,12 @@ export default function ManageCourseModule() {
                 <label htmlFor="department_id">Department</label>
             </div>
             </div>
-            <div className="col-md">
+            {/* <div className="col-md">
             <div className="form-floating">
                 <input type="number" className="form-control" id="credit" placeholder="Enter course Credit" value={credit} onChange={(e) => setCourseCredit(e.target.value)} />
                 <label htmlFor="credit">Course Credit</label>
             </div>
-            </div>
+            </div> */}
             <div className="col-md">
             <div className="form-floating">
                 <input type="number" className="form-control" id="hours" placeholder="Enter course hours" value={hours} onChange={(e) => setCourseHours(e.target.value)} />
@@ -181,7 +191,7 @@ export default function ManageCourseModule() {
             setCourseId('');
             setType('');
             setDepartment('');
-            setCourseCredit('');
+            // setCourseCredit('');
             setCourseHours('');
             setLevel('');
             setSemester('');
@@ -198,7 +208,6 @@ export default function ManageCourseModule() {
                     <th>Course ID</th>
                     <th>Type</th>
                     <th>Department</th>
-                    <th>Credit</th>
                     <th>Hours</th>
                     <th>Level</th>
                     <th>Semester</th>
@@ -211,7 +220,6 @@ export default function ManageCourseModule() {
                     <td>{row.course_id}</td>
                     <td>{row.type}</td>
                     <td>{row.department_id}</td>
-                    <td>{row.credit}</td>
                     <td>{row.hours}</td>
                     <td>{row.level}</td>
                     <td>{row.semester}</td>

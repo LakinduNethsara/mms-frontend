@@ -12,6 +12,7 @@ export default function StudentsManagement() {
     const history = useHistory();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
+    const [clearButtonClicked, setClearButtonClicked] = useState(false);
 
     const expectedKeys = ["user_id", "full_name", "name_with_initials", "email","password","registered_year","role","department_id","is_deleted"];
 
@@ -33,6 +34,12 @@ export default function StudentsManagement() {
         await axios.delete(`http://localhost:9090/api/lecreg/delete/deleteById/${id}`);
         toast.success("Student deleted successfully!");
         fetchData();
+    };
+
+    const handleClearData = () => {
+        setData([]);
+        toast.info("Data cleared successfully!");
+        setClearButtonClicked(false); // Reset the clear button state
     };
 
     const handleFileUpload = (e) => {
@@ -75,11 +82,11 @@ export default function StudentsManagement() {
         e.preventDefault();
         try {
             await axios.post("http://localhost:9090/api/lecreg/insertbulkusersdetails", data);
-            alert("Data submitted successfully!");
+            toast.success("Data submitted successfully!");
             window.location.reload();
         } catch (error) {
-            console.error("Error submitting data:", error);
-            alert("Error submitting data. Please try again.");
+            // console.error("Error submitting data:", error);
+            toast.error("Error submitting data. some users are exists!");
         }
     };
 
@@ -108,7 +115,9 @@ export default function StudentsManagement() {
 
     const handleEditSubmit = async (updatedUser) => {
 
-        await axios.put(`http://localhost:9090/api/lecreg/savelecdetails`, updatedUser);
+        console.log(updatedUser);
+
+        await axios.put(`http://localhost:9090/api/lecreg/edit/alecdetails`, updatedUser);
         fetchData();
 };
     return (
@@ -141,7 +150,15 @@ export default function StudentsManagement() {
                         </tbody>
                     </table>
                     )}
-                    <button type='submit' className='btn btn-outline-success btn-sm my-1'>Submit</button>
+                    <button style={{width:"100px"}} type='submit' className='btn btn-outline-success btn-sm my-1' disabled={clearButtonClicked}>Submit</button>
+                    <button 
+                            type='button'
+                            style={{width:"100px",marginLeft:"10px"}}
+                            className={`btn btn-outline-danger btn-sm my-1 ${clearButtonClicked ? 'disabled' : ''}`}
+                            onClick={() => handleClearData()}
+                        >
+                            Clear
+                    </button>
                 </form>
                 </div>
             </div>

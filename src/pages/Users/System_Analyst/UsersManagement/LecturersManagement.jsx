@@ -122,8 +122,8 @@ export default function LecturersManagement() {
                             </div>
                             <div className='col-md-3'>
                                 <label htmlFor='role' className='form-label'>User Role</label>
-                                <select type={"text"} className=' form-select' placeholder='Enter User Role' name='role' value={user.role} onChange={(e) => onInputChange(e)} >
-                                    <option value="">Select Role</option>
+                                <select type={"text"} className=' form-select' placeholder='Choose User Role' name='role' value={user.role} onChange={(e) => onInputChange(e)} >
+                                    <option value="" disabled>Select Role</option>
                                     <option value="lecturer">Lecturer</option>
                                     <option value="dean">Dean</option>
                                     <option value="hod">HOD</option>
@@ -146,7 +146,16 @@ export default function LecturersManagement() {
 
                             <div className='col-md-3'>
                                 <label htmlFor='department_id' className='form-label'>Department</label>
-                                <input type={"text"} className='form-control' placeholder='Enter Department' name='department_id' value={user.department_id} onChange={(e) => onInputChange(e)} />
+                                {/* <input type={"text"} className='form-control' placeholder='Enter Department' name='department_id' value={user.department_id} onChange={(e) => onInputChange(e)} /> */}
+                                <select type={"text"} className=' form-select' placeholder='Choose Department' name='department_id' value={user.department_id} onChange={(e) => onInputChange(e)} >
+                                    <option value="" disabled>Select Department</option>
+                                    <option value="ICT">ICT</option>
+                                    <option value="ET">ET</option>
+                                    <option value="BST">BST</option>
+                                    <option value="Multi_Disciplinary">Multi_Disciplinary</option>
+                                    <option value="academic">academic</option>
+                                    <option value="non-academic">non-academic</option>
+                                </select>
                             </div>
 
                             <div className='col-md-3 d-flex align-items-end'>
