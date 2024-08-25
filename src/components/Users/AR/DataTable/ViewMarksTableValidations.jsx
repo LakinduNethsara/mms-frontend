@@ -13,18 +13,22 @@ export default function ViewMarksTableValidations() {
     const course_variables = useParams();   // get the course variables from the url
     const [interrupt, setInterrupt] = useState(false);      // state to store the interrupt status
     const history = useHistory();    // get the history object
-    const requiredApprovedLevel = "HOD";
+    const requiredApprovedLevel1 = "HOD";
+    const requiredApprovedLevel2 = "RB";
+    const requiredApprovedLevel3 = "AR";
+    const requiredApprovedLevel4 = "Dean";
+    const requiredApprovedLevel5 = "VC";
+
     
 
     const fetchData = async ()=>{
-
       try{
 
         const academicYear = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`);      // get the academic year details
         setInterrupt(false);   // set the interrupt state to false
         try{
           
-          const approvedLevel= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getMarksApprovalLevelBySelectedCourseAndAcademicYear/${course_variables.course_id}/${academicYear.data[0]["current_academic_year"]}`);    // get the approved level for the course
+          const approvedLevel= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getMarksApprovalLevelBySelectedCourseAndAcademicYear/${course_variables.course_id}/${course_variables.academicYear}`);    // get the approved level for the course
           
           setInterrupt(false);   // set the interrupt state to false
           
@@ -32,13 +36,13 @@ export default function ViewMarksTableValidations() {
 
             setInterrupt(false);   // set the interrupt state to false
 
-            if(approvedLevel.data[0]["approval_level"]===requiredApprovedLevel){    // check whether the course is under the approval level HOD
+            if((approvedLevel.data[0]["approval_level"]===requiredApprovedLevel1) || (approvedLevel.data[0]["approval_level"]===requiredApprovedLevel2) || (approvedLevel.data[0]["approval_level"]===requiredApprovedLevel3) || (approvedLevel.data[0]["approval_level"]===requiredApprovedLevel4) || (approvedLevel.data[0]["approval_level"]===requiredApprovedLevel5)){    // check whether the course is under the approval level HOD
 
               setInterrupt(false);   // set the interrupt state to false
 
               try{
 
-                const ABStudents = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getABDetailsByCourseId/${course_variables.course_id}`);    // get the students having AB for relevent exams
+                const ABStudents = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getABDetailsByCourseId/${course_variables.course_id}/${course_variables.academicYear}`);    // get the students having AB for relevent exams
                 setInterrupt(false);   // set the interrupt state to false
 
                 if(ABStudents.data.length>0){       //if there are student having AB scores
@@ -55,7 +59,7 @@ export default function ViewMarksTableValidations() {
 
                       setInterrupt(false);   // set the interrupt state to false
                       
-                      history.push(`/ARMarksReturnSheet/${course_variables.course_id}/${course_variables.course_name}/${course_variables.department_id}/2023-2024`);    // redirect to the marks return sheet page
+                      history.push(`/ARMarksReturnSheet/${course_variables.course_id}/${course_variables.course_name}/${course_variables.department_id}/${course_variables.academicYear}`);    // redirect to the marks return sheet page
                     }
                     else{
                       setInterrupt("No students marks for this course");   // set the interrupt state to "No students data found"

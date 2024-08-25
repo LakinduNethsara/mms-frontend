@@ -102,7 +102,7 @@ function App() {
               </Route>
 
 
-              <Route path="/viewMarks/:course_id/:course_name/:department_id">   {/* Link to view marks remaining to approve page validations */}
+              <Route path="/viewMarks/:course_id/:course_name/:department_id/:academicYear">   {/* Link to view marks remaining to approve page validations */}
                 <ViewMarksTableValidations/>
               </Route>
 
