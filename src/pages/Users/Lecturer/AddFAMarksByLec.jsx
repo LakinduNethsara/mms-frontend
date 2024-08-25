@@ -27,7 +27,14 @@ export default function AddFAMarksByLec() {
     const [markingTurnValaue, setMarkingTurnValaue] = useState([]);
     const [selectedAssessmentTypeValue,setSelectedAssessmentTypeValue] = useState([]);
     const [chooseTurnMarking,setChooseTurnMarking] = useState([]);
-    
+    const [choosFinalMarkVisibility,setChooseFinalMarkVisibility] = useState(false);
+    const [finalMarkSelectioDivVisibility,setFinalMarkSelectioDivVisibility] = useState(false);
+    const [selectedMarkingOption, setSelectedMarkingOption] = useState('');             //Store selected value of radio buttons
+    const [finalMarkSelectButtonVisibility, setFinalMarkSelectButtonVisibility] = useState(false);
+    const [academicYear, setAcademicYear] = useState();
+
+
+    var selectedAssignmentName="";
 
 
     useEffect(() => {
@@ -80,6 +87,7 @@ export default function AddFAMarksByLec() {
                     saveAcademicYearToLocal(details);
                     setAcademicDetails(details);
                     asInsideCurrentAcedemicYear = details.current_academic_year;
+                    setAcademicYear(details.current_academic_year);
                 }
 
                 // Fetch all related students
@@ -202,20 +210,27 @@ export default function AddFAMarksByLec() {
     };
 
     const handleCriteriaChange = (e) => {
-        const selectedAssignmentName = e.target.value;
+        selectedAssignmentName = e.target.value;
         setSelectedAssessmentTypeValue(prevValue => [...prevValue, selectedAssignmentName]);
-    
         const criteria = evaluationCriteria.find(c => c.assignment_name === selectedAssignmentName);
         setSelectedCriteria(criteria);
     
         // Directly use the selected assignment name instead of relying on state
         if(selectedAssignmentName === 'End theory exam'){
+            setMarkingTurnValaue([]);
             setMarkingTurnValaue(prevValue => [...prevValue,"1st Marking", "2nd Marking"]);
+            setChooseFinalMarkVisibility(true);
         }else if (selectedAssignmentName === 'End practical exam'){
+            setMarkingTurnValaue([]);
             setMarkingTurnValaue(prevValue => [...prevValue,"(Practical) 1st Marking"]);
+            setChooseFinalMarkVisibility(false);
+            setFinalMarkSelectioDivVisibility(false);
         }else{
+            setMarkingTurnValaue([]);
             var getVal = "("+selectedAssignmentName+") 1st Marking";
             setMarkingTurnValaue(prevValue => [...prevValue,getVal]);
+            setChooseFinalMarkVisibility(false);
+            setFinalMarkSelectioDivVisibility(false);
         }
     };
 
@@ -223,6 +238,12 @@ export default function AddFAMarksByLec() {
         const selectedMarkingTurnName = e.target.value;
 
         setChooseTurnMarking(prevValue => [...prevValue, selectedMarkingTurnName]);
+
+        if(selectedMarkingTurnName === 'Final Marks'){
+            setFinalMarkSelectioDivVisibility(true);
+        }else{
+            setFinalMarkSelectioDivVisibility(false);
+        }
 
         
     }
@@ -396,6 +417,21 @@ export default function AddFAMarksByLec() {
         setCaMarks(updatedCaMarks);
     }
 
+    const handleRadioChange = (event) => {                  //Function to handle radio change
+        setSelectedMarkingOption(event.target.value);
+        setFinalMarkSelectButtonVisibility(true);
+         
+    };
+
+    const GenerateButtonFunctionality = async ()=>{
+
+        const result = await LecturerService.GenerateFinalMarksFromEnd(selectedAssessmentTypeValue[0],course_id,selectedMarkingOption,academicYear);
+        console.log(selectedAssessmentTypeValue[0]);
+        console.log(course_id);
+        console.log(selectedMarkingOption);
+        console.log(academicYear);
+
+    }
 
     return (
         <div className='container'>
@@ -429,6 +465,10 @@ export default function AddFAMarksByLec() {
                             markingTurnValaue.map((turn, index) => (
                                 <option key={index} >{turn}</option>
                             ))
+
+                        }
+                        {
+                            choosFinalMarkVisibility ? <option>Final Marks</option> : null
                         }
                     </select>
                 </div>
@@ -437,50 +477,92 @@ export default function AddFAMarksByLec() {
 
             
             <div style={{ marginTop: '70px'}}>
-                {regStudent.length > 0 && (
-                    <>
-                        {/* {console.log(regStudent[currentStudentIndex].id)} */}
-                        <label>
-                            Student ID : <span style={{ color: "maroon" }}> <b>{caMarks[currentStudentIndex]?.student_id}</b> </span>
-                            {console.log(caMarks)}
-                        </label>
+                {
+                    finalMarkSelectioDivVisibility ? (                  //Radio button selection visibility
+                        <>
+                        <label style={{color:"blue",marginBottom:"30px"}}>Select one option to generate final marks from 1st marking and 2nd marking</label><br/>
 
-
-                        <div style={{display:"flex",marginTop:"20px"}}>
-                            <div style={{display:"flex"}}>
-                                <label className=' form-label' style={{marginRight:"10px"}}>
-                                    Marks :
-                                </label>
-                                <input className='form-control' style={{ width: '200px',maxHeight:"40px" }}
-                                    placeholder={caMarks[currentStudentIndex]?.assignment_score === 'AB' ? 'AB' : 'Enter Marks'}
-                                    type="number"
-                                    value={caMarks[currentStudentIndex]?.assignment_score || ''}
-                                    onChange={handleMarksChange}
-                                />
-                            </div>
-                            <div className=' mx-3'>
-                                <label htmlFor="" className=' form-label text-danger mx-4'>If This Student Absent Click Absent Button</label>
-                                <br />
-                                <button className=' btn btn-dark btn-sm mx-4' style={{width:"100px"}} onClick={handleAbsent}>Absent</button>
-                            </div>
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1st Marking" onChange={handleRadioChange}></input>
+                            <label className="form-check-label" >1st Marking</label>
                         </div>
-                    </>
-                )}
+
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2nd Marking" onChange={handleRadioChange}></input>
+                            <label className="form-check-label" >2nd Marking</label>
+                        </div>
+
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="average" onChange={handleRadioChange}></input>
+                            <label className="form-check-label" >Average of Both</label>
+                        </div>
+
+                        
+                        </>
+                    ):(
+                        <>
+                            {regStudent.length > 0 && (
+                                <>
+                                    {/* {console.log(regStudent[currentStudentIndex].id)} */}
+                                    <label>
+                                        Student ID : <span style={{ color: "maroon" }}> <b>{caMarks[currentStudentIndex]?.student_id}</b> </span>
+                                        
+                                    </label>
+
+
+                                    <div style={{display:"flex",marginTop:"20px"}}>
+                                        <div style={{display:"flex"}}>
+                                            <label className=' form-label' style={{marginRight:"10px"}}>
+                                                Marks :
+                                            </label>
+                                            <input className='form-control' style={{ width: '200px',maxHeight:"40px" }}
+                                                placeholder={caMarks[currentStudentIndex]?.assignment_score === 'AB' ? 'AB' : 'Enter Marks'}
+                                                type="number"
+                                                value={caMarks[currentStudentIndex]?.assignment_score || ''}
+                                                onChange={handleMarksChange}
+                                            />
+                                        </div>
+                                        <div className=' mx-3'>
+                                            <label htmlFor="" className=' form-label text-danger mx-4'>If This Student Absent Click Absent Button</label>
+                                            <br />
+                                            <button className=' btn btn-dark btn-sm mx-4' style={{width:"100px"}} onClick={handleAbsent}>Absent</button>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        
+                        </>
+                    )
+                }
+
+                
             </div>
 
-            <div style={{ marginTop: '20px' }}>
-                <button className='btn btn-outline-dark btn-sm'  style={{width:"100px"}} onClick={handlePrevClick} disabled={currentStudentIndex === 0}>
-                     Previous
-                </button>
-                <button className='btn btn-outline-dark btn-sm'  onClick={handleNextClick} disabled={currentStudentIndex >= regStudent.length - 1} style={{ marginLeft: '10px' ,width:"100px"}}>
-                    Next
-                </button>
-                <div style={{ marginTop: '20px' }}>
+            {
+                finalMarkSelectioDivVisibility ? (                  //Disable next previous button and show calculate button
+                    <div style={{ marginTop: '20px' }}>
+                        
+                        <button className='btn btn-dark btn-sm'  style={{width:"160px"}} disabled={!finalMarkSelectButtonVisibility} onClick={GenerateButtonFunctionality}>
+                            Generate Final Marks
+                        </button>
+                    </div>
+                ):(
+                    <div style={{ marginTop: '20px' }}>
+                        <button className='btn btn-outline-dark btn-sm'  style={{width:"100px"}} onClick={handlePrevClick} disabled={currentStudentIndex === 0}>
+                            Previous
+                        </button>
+                        <button className='btn btn-outline-dark btn-sm'  onClick={handleNextClick} disabled={currentStudentIndex >= regStudent.length - 1} style={{ marginLeft: '10px' ,width:"100px"}}>
+                            Next
+                        </button>
+                    <div style={{ marginTop: '20px' }}>
                 {currentStudentIndex === regStudent.length - 1 && (
                     <p style={{color:"red"}}>Last Student ID...</p>
                 )}
             </div>
             </div>
+                )
+            }
+            
             </div>
             <div className=' col-3 shadow-lg p-4' >
                 <div>
