@@ -39,6 +39,7 @@ export default function DeanFinalMarkSheet(props) {
   }, []);
   // const { oktaAuth, authState } = useOktaAuth();
    const userNameAuth = user?.full_name;
+   const role=user?.role;
 
    console.log(userNameAuth)
    console.log(level,semester,dept)
@@ -101,11 +102,9 @@ export default function DeanFinalMarkSheet(props) {
       } else if (approved_level === "Dean") {
         setNextApprovedlevel("VC");
       }
-      console.log(approved_level, nextApprovedlevel);
-      console.log(level, semester, approved_level, dept);
       const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`);
       const data = result.data.content;
-      console.log(data);
+      
       
 
       const gpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`);
@@ -327,10 +326,22 @@ const alternateRowStyle = {
   return (
     <div className="container" style={{marginTop:'70px'}}>
       <ToastContainer/>
+      
      
       {finalResults.length > 0 ? (
 
         <>
+
+        {
+        role == "dean" && approved_level == "HOD" ? (
+          <button
+            className="btn btn-outline-success"
+            style={{ float: "right" }}
+            onClick={() => history.push(`/changesGradeMargin`)}
+          >
+            Change Grade Margin
+          </button>
+        ) : null}
         
          <div style={{ textAlign: 'center', marginTop: '20px' }}>
   <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>University of Ruhuna</h2>
@@ -356,6 +367,8 @@ const alternateRowStyle = {
     backgroundColor: '#f9f9f9',
   }}
 >
+
+
   <h5 style={{ textAlign: 'center', marginBottom: '10px', fontWeight: 'bold', color: '#333' }}>
     Key to Grading
   </h5>

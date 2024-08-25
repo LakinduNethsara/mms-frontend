@@ -195,13 +195,10 @@ function App() {
             <Route exact path="/pendingVCCertifyMarksheet" 
               render={(props) => <CertifyMarksheet {...props}  approved_level={"Dean"}/>} 
             />
-            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level" 
+            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level/:student_id/:academic_year/:repeat" 
               render={() => <MarksCheckingForm/>} 
             />
 
-            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level" 
-              render={() => <MarksCheckingForm/>} 
-            />
 
             <Route exact path="/changesGradeMargin">
               <GradeMargingChange/>
@@ -244,6 +241,8 @@ function App() {
             <Route path="/ccresultsboard">
               <CCResultsBoard />
             </Route>
+
+            
 
             {/* System analyst */}
             <Route path="/managestaff">

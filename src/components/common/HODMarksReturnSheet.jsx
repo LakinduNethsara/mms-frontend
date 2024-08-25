@@ -543,8 +543,8 @@ useEffect(() => {
                              }
  
                              <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
-                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
-                                 state: { ele }
+                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}/${ele.student_id}/${academicYear}/0`
+                                 
                              }}>View</Link></td>
                          </tr>))}
                          </tbody>
@@ -661,8 +661,8 @@ useEffect(() => {
                              }
  
                              <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
-                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
-                                 state: { ele }
+                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}/${ele.student_id}/${academicYear}/1`,
+                            
                              }}>View</Link></td>
                          </tr>))}
                          </tbody>
