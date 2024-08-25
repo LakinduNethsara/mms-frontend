@@ -55,7 +55,7 @@ export default function ViewMarksTableValidations() {
 
                       setInterrupt(false);   // set the interrupt state to false
                       
-                      history.push(`/ARMarksReturnSheet/${course_variables.course_id}/${course_variables.course_name}/${course_variables.department_id}`);    // redirect to the marks return sheet page
+                      history.push(`/ARMarksReturnSheet/${course_variables.course_id}/${course_variables.course_name}/${course_variables.department_id}/2023-2024`);    // redirect to the marks return sheet page
                     }
                     else{
                       setInterrupt("No students marks for this course");   // set the interrupt state to "No students data found"
