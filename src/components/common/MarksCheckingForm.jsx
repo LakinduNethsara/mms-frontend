@@ -20,10 +20,21 @@ export default function MarksCheckingForm() {
     "key":"",
     "value":""
   });
+  const[marksSheet,setMarksSheet]=useState({
+    
+      "student_id": "",
+      "student_name": "",
+      "course_id": "",
+      "repeat": "",
+      "ca": [],
+      "end": []
+  });
+    const [data, setData] = useState([]);
 
   const [user, setUser] = useState({
         
   });
+ 
 
   const storedData = localStorage.getItem('user');
   useEffect(() => {
@@ -44,28 +55,63 @@ export default function MarksCheckingForm() {
   });
 
 
-const location=useLocation()
 
-const {course_id, course_name,approval_level } = useParams();
-const{ele}=location.state;
-
-const student_id=ele.student_id
+const {course_id, course_name,approval_level,student_id,academic_year,repeat } = useParams();
 
 
+const fetchData = async () => {
+  try {
+    const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/${repeat}/${academic_year}`);
+    const data = response.data;
 
-const[endMarks,setEndMarks]=useState({
+    // Filter the data based on student_id
+    const filteredData = data.filter((item) => item.student_id === student_id);
+
+    // Check if there is matching data
+    if (filteredData.length > 0) {
+      // Set the marksSheet state with the first item from filtered data
+      setMarksSheet(filteredData[0]);
+    } else {
+     
+      setMarksSheet({
+        // Optionally, set default values for the marksSheet state if no data is found
+        student_id: "",
+        student_name: "",
+        course_id: "",
+        repeat: "",
+        ca: [],
+        end: [],
+        total_ca_mark: "",
+        total_final_marks: "",
+        total_rounded_marks: "",
+        grade: "",
+        ca_eligibility: ""
+      });
+    }
+
+  } catch (error) {
+
+    setNoData(true); // Set noData to true if there is an error
+  }
+};
+
+
+useEffect(() => {
+  fetchData();
+}, [course_id,academic_year,repeat]);
+
+
+
+
+
+const endMarks={
   student_id:student_id,
   course_id:course_id,
-  end:ele.end});
+  end:marksSheet.end};
 
 
 
 
-
-console.log(ele.end)
-
-
-  
 
   useEffect(() => {
     Eligi();
@@ -81,16 +127,12 @@ console.log(ele.end)
     try {
       const result = await axios.get(`http://localhost:9090/api/attendanceEligibility/getAttendanceEligibilityByStuIdCourseId/${course_id},${student_id}`);
       setAttendenceEligibility(result.data);
-      console.log(result);
-
-      // const list3 = await axios.get(`http://localhost:9090/api/marksCalculations/getMarksCalculationByStuID/${course_id},${student_id}`);
-      // setCalculations(list3.data);
-      // console.log(list3.data);
+   
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        console.log(error);
+   
       }
-      console.log(error);
+     
     }
   };
 
@@ -114,10 +156,10 @@ console.log(ele.end)
       // Send the notification
       const response = await axios.post(`http://localhost:9090/api/notifications/sendNotification`, notification);
       setText(''); // Clear the text area
-      console.log(response.data.message);
+     
       toast.success(response.data.message);
     } catch (error) {
-      console.error('Error sending notification:');
+  
       toast.error('Error sending notification');
     }
   };
@@ -138,7 +180,7 @@ console.log(ele.end)
 
 
   const textOnChange = async (key, value, reasons) => {
-    console.log(key, value, reasons);
+
   
     let EditLog = null; // Initialize EditLog to null
   
@@ -159,7 +201,7 @@ console.log(ele.end)
   
           // Update the value in endMarks.end
           e.value = value;
-          console.log(EditLog);
+ 
         }
       });
   
@@ -169,28 +211,27 @@ console.log(ele.end)
         marksEditLogDTO: EditLog,
       };
   
-      console.log(endMarks);
-      console.log(EditLog);
+    
   
       try {
-        // Update endMarks.end with the new data
-        ele.end = endMarks.end;
-        console.log(ele.end);
+      
   
         // Make the API request
         const response = await axios.put(
           `http://localhost:9090/api/marksReturnSheet/updateMarks`,
           combinedData
         );
+        
+        window.location.reload();
   
         // Show success message and navigate back
         setTimeout(() => {
           toast.success("Successfully Updated");
         }, 1000);
-        history.goBack();
-        console.log(response.data);
+        
+       
       } catch (error) {
-        console.error('Error updating marks:', error);
+        
         toast.error('Error updating marks');
       }
     }
@@ -202,7 +243,7 @@ console.log(ele.end)
 
   // Function to open the modal and set the editing item
   const handleEditClick = (key, value) => {
-    console.log(key,value)
+    
     setEditingItem({ key, value });
     setIsModalOpen(true);
   };
@@ -221,7 +262,7 @@ console.log(ele.end)
       <ToastContainer />
       
       <div className=' bg-white' style={{marginTop:"70px"}}>
-      <h2 style={{marginLeft:"30px"}}>{student_id} {ele.student_name}</h2>
+      <h2 style={{marginLeft:"30px"}}>{student_id} {marksSheet.student_name}</h2>
       <h3 style={{marginLeft:"30px"}}>{course_id} {course_name}</h3>
       
         <div className="container bg-transparent">
@@ -236,11 +277,9 @@ console.log(ele.end)
 
 
                   {
-                    ele.ca.map((e)=>
+                    marksSheet.ca.map((e)=>
                     (<tr>
-                      {
-                        console.log(e)
-                      }
+                     
                       <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
                       <td scope="col" style={{ textAlign: 'left',fontWeight:  e.description=="score"? 'normal' : 'bold'  }}>{e.value}</td>
                     
@@ -252,10 +291,10 @@ console.log(ele.end)
                   {
                     
 
-                   ele.end.map((e)=>
+                   marksSheet.end.map((e)=>
                       (<tr>
                         <td className='table-primary' scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.key}</td>
-                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.description=="score"&& (approval_level=="finalized" ||approval_level=="AssignedRB")? 
+                        <td scope="col" style={{ textAlign: 'left',fontWeight: e.description === "score" ? 'normal' : 'bold' }}>{e.description=="score"&& (approval_level=="finalized" ||approval_level=="AssignedRB") &&e.key!="Final Marks"? 
                           <>
                           <input type="text" defaultValue={e.value} size={5} disabled ></input> 
                           {/* <button className=' btn btn-outline-dark btn-sm mx-4' style={{width:"80px"}} type='button' >Edit</button> */}
@@ -291,10 +330,10 @@ console.log(ele.end)
                   <tr>
                     <td>Total CA Marks</td>
                     <td>
-                    <input className=' mx-4' size="10"  type='text' value={ele.total_ca_mark} disabled />
+                    <input className=' mx-4' size="10"  type='text' value={marksSheet.total_ca_mark} disabled />
                     </td>
                     <td>CA Eligibility</td>
-                    <td><input type='text' className=' mx-4' size="10" value={ele.ca_eligibility} disabled /></td>
+                    <td><input type='text' className=' mx-4' size="10" value={marksSheet.ca_eligibility} disabled /></td>
                   </tr>
                   <tr><th><br /></th></tr>
                   <tr>
@@ -313,7 +352,7 @@ console.log(ele.end)
                   <tr>
                     <td>Eligibility</td>
                     <td>
-                      {(ele.ca_eligibility == "Eligible" && attendanceEligibility.eligibility == "Eligible") ? <input type='text' className=' mx-4 bg-success' size="10" style={{color:"white"}} value="Eligible" disabled /> : <input type='text' className=' mx-4 bg-danger ' style={{color:"white"}} size="10" value="Not Eligible" disabled />}        
+                      {(marksSheet.ca_eligibility == "Eligible" && attendanceEligibility.eligibility == "Eligible") ? <input type='text' className=' mx-4 bg-success' size="10" style={{color:"white"}} value="Eligible" disabled /> : <input type='text' className=' mx-4 bg-danger ' style={{color:"white"}} size="10" value="Not Eligible" disabled />}        
                      
                     </td>
                   </tr>
@@ -322,9 +361,9 @@ console.log(ele.end)
               <div>
                 <div className="py-4 px-5">
                   <label> <b>Final Marks</b> </label>
-                  <input type='text' size="10" className=' mx-3' value={ele.total_rounded_marks} disabled />
+                  <input type='text' size="10" className=' mx-3' value={marksSheet.total_rounded_marks} disabled />
                   <label> <b>Grade</b> </label>
-                  <input type='text' size="10" className=' mx-3' value={ele.grade} disabled />
+                  <input type='text' size="10" className=' mx-3' value={marksSheet.grade} disabled />
                 </div>
               </div>
               {

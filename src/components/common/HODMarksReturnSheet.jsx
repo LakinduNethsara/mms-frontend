@@ -17,11 +17,9 @@ export default function HODMarksReturnSheet(props) {
     const { course_id, course_name,department,academicYear } = useParams();
     const {approved_level}=props;
     const history = useHistory();
-    // const [url,setUrl] = useState()
     const[newSignature, setNewSignature] = useState();
     const[loading,setLoading]=useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
-    // const[current_semester,setCurrent_semester]=useState("")
     const[approval_level,setApprovalLevel]=useState(approved_level);
     const[marksSheet,setMarksSheet]=useState([]);
     const[repeatMarksSheet,setRepeatMarksSheet]=useState([]);
@@ -29,10 +27,20 @@ export default function HODMarksReturnSheet(props) {
     const [searchTerm, setSearchTerm] = useState('');
     const[selectedlec,setSelectedEmail]=useState('')
     const [filteredData, setFilteredData] = useState([]);
+    const[degree,setDegree]=useState("");
     var date = new DateObject({
         date: new Date(),
       });
-
+    
+      useEffect(() => {
+        if (department === "ICT") {
+            setDegree("Bachelor of Information and Communication Technology Honours Degree");
+        } else if (department === "BST") {
+            setDegree("Bachelor of Bio Systems Technology Honours Degree");
+        } else if (department === "ET") {
+            setDegree("Bachelor of Engineering Technology Honours Degree");
+        }
+    }, [department]);
 
 
     const seenKeys = new Set();
@@ -151,7 +159,8 @@ export default function HODMarksReturnSheet(props) {
     
     const lecturerCertifyAssign={
         "lecturer_id":selectedlec,
-        "course_id": course_id
+        "course_id": course_id,
+        "department_id":department,
     }
 
     const Returnapproval={
@@ -359,7 +368,7 @@ useEffect(() => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const result = await axios.get(`http://localhost:9090/api/lecreg/get/alllecturersdetails/${department}`);
+            const result = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${department}`);
             setData(result.data.content);
             setFilteredData(result.data.content); // Initially, all data is considered as filtered
           } catch (error) {
@@ -430,7 +439,7 @@ useEffect(() => {
                                     </table>
                                     <div style={{display:"flex"}}>
                                             <h6>Academic Year: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{academicYear}&nbsp;&nbsp;</span></h6>
-                                                <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h6>
+                                                <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{degree}&nbsp;&nbsp;</span></h6>
                                                     {/* <h6 className=' rounded-pill bg-success text-white'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination</h6>   */}
                                     </div>
                                                                             
@@ -543,8 +552,8 @@ useEffect(() => {
                              }
  
                              <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
-                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
-                                 state: { ele }
+                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}/${ele.student_id}/${academicYear}/0`
+                                 
                              }}>View</Link></td>
                          </tr>))}
                          </tbody>
@@ -661,8 +670,8 @@ useEffect(() => {
                              }
  
                              <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
-                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}`,
-                                 state: { ele }
+                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}/${ele.student_id}/${academicYear}/1`,
+                            
                              }}>View</Link></td>
                          </tr>))}
                          </tbody>
@@ -848,7 +857,9 @@ useEffect(() => {
                                     filteredData.map((item, index) => (
                                         searchTerm == ''?
                                         null
-                                        : <button  key={index} type="button" className="list-group-item list-group-item-action"  onClick={() => handleClick(item.name_with_initials,item.email)}> {item.name_with_initials}</button >
+                                        : 
+                                        
+                                        <button  key={index} type="button" className="list-group-item list-group-item-action"  onClick={() => handleClick(item.name_with_initials,item.email)}> {item.name_with_initials}</button >
                                     ))
                                     ) : (
                                         <button  type="button" className="list-group-item list-group-item-action">No results found.</button >

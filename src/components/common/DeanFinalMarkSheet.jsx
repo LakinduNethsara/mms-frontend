@@ -21,8 +21,7 @@ export default function DeanFinalMarkSheet(props) {
   const { approved_level } = props;
   const [newSignature, setNewSignature] = useState();
   const [nextApprovedlevel, setNextApprovedlevel] = useState("");
-  const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
-  const [academicYear, setAcademicYear] = useState("");
+  const [degree,setDegree]=useState("");
   const[Allcourses,setAllCourses]=useState([]);
 
   const [user, setUser] = useState({
@@ -39,9 +38,17 @@ export default function DeanFinalMarkSheet(props) {
   }, []);
   // const { oktaAuth, authState } = useOktaAuth();
    const userNameAuth = user?.full_name;
+   const role=user?.role;
 
-   console.log(userNameAuth)
-   console.log(level,semester,dept)
+   useEffect(() => {
+    if (dept === "ICT") {
+        setDegree("Bachelor of Information and Communication Technology Honours Degree");
+    } else if (dept === "BST") {
+        setDegree("Bachelor of Bio Systems Technology Honours Degree");
+    } else if (dept === "ET") {
+        setDegree("Bachelor of Engineering Technology Honours Degree");
+    }
+}, [dept]);
 
   var date = new DateObject({
     date: new Date(),
@@ -101,11 +108,9 @@ export default function DeanFinalMarkSheet(props) {
       } else if (approved_level === "Dean") {
         setNextApprovedlevel("VC");
       }
-      console.log(approved_level, nextApprovedlevel);
-      console.log(level, semester, approved_level, dept);
       const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`);
       const data = result.data.content;
-      console.log(data);
+      
       
 
       const gpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`);
@@ -327,15 +332,27 @@ const alternateRowStyle = {
   return (
     <div className="container" style={{marginTop:'70px'}}>
       <ToastContainer/>
+      
      
       {finalResults.length > 0 ? (
 
         <>
+
+        {
+        role == "dean" && approved_level == "HOD" ? (
+          <button
+            className="btn btn-outline-success"
+            style={{ float: "right" }}
+            onClick={() => history.push(`/changesGradeMargin`)}
+          >
+            Change Grade Margin
+          </button>
+        ) : null}
         
          <div style={{ textAlign: 'center', marginTop: '20px' }}>
   <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>University of Ruhuna</h2>
   <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>Faculty of Technology</h2>
-  <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>Bachelor of Information and Communication Technology Honours Degree</h5>
+  <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>{degree}</h5>
   <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>Level {level}     Semester {semester}     <br/>    Academic year {formatAcademicYear(academic_year)}</h5>
   <h5 style={{ marginBottom: '20px', fontFamily: 'Arial, sans-serif', color: '#777' }}>Provisional results subject to confirmation by the Senate</h5>
 </div>
@@ -356,6 +373,8 @@ const alternateRowStyle = {
     backgroundColor: '#f9f9f9',
   }}
 >
+
+
   <h5 style={{ textAlign: 'center', marginBottom: '10px', fontWeight: 'bold', color: '#333' }}>
     Key to Grading
   </h5>
@@ -561,7 +580,7 @@ const alternateRowStyle = {
                 <div>
                 <h5>Certified Correct,</h5>
                 <img src={newSignature} style={{ width: '80px', height: '40px' }}  />
-                <p>Ms H.H Kaumadi Dharmasiri</p>
+                <p></p>
                 <p>Assistant Registrar</p>
                 <p>Faculty of Technology</p>
                 </div>
@@ -576,7 +595,7 @@ const alternateRowStyle = {
                  
                    <h5>Certified Correct,</h5>
                    <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} />
-                   <p>Ms H.H Kaumadi Dharmasiri</p>
+                   <p></p>
                    <p>Assistant Registrar</p>
                    <p>Faculty of Technology</p>
                    <br/><br/>
@@ -586,7 +605,7 @@ const alternateRowStyle = {
                   {newSignature !== null?
                   <>
                     <img src={newSignature} style={{ width: '80px', height: '40px' }}  />
-                    <p>Prof. P.K.S.C Jayasinghe</p>
+                    <p></p>
                     <p>Dean/Faculty of Technology</p>
                   </>:null}
 
@@ -600,7 +619,7 @@ const alternateRowStyle = {
                  
                    <h5>Certified Correct,</h5>
                    <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} />
-                   <p>Ms H.H Kaumadi Dharmasiri</p>
+                   <p></p>
                    <p>Assistant Registrar</p>
                    <p>Faculty of Technology</p>
                    <br/><br/>
@@ -608,7 +627,7 @@ const alternateRowStyle = {
                     {DeanSign.signature !== null || DeanSign.signature !== "" ?
                       <div>
                       <img src={DeanSign.signature} style={{ width: '80px', height: '40px' }}/>
-                      <p>Prof. P.K.S.C Jayasinghe</p>
+                      <p></p>
                       <p>Dean/Faculty of Technology</p>
                       <br/><br/>
                       </div>:null}
@@ -617,7 +636,7 @@ const alternateRowStyle = {
 
                       <div>
                       <img src={newSignature} style={{ width: '80px', height: '40px' }} />
-                      <p>Snr Prof. Sujeewa Amarasena</p>
+                      <p></p>
                       <p>Vice Chancellor</p>
                       <p>Faculty of Technology</p>
                       <br/>
