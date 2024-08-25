@@ -40,21 +40,15 @@ export default function DeanFinalMarkSheet(props) {
    const userNameAuth = user?.full_name;
    const role=user?.role;
 
-   if(dept=="ICT")
-    {
-      setDegree("Bachelor of Information and Communication Technology Honours Degree")
-    }else if(dept=="BST")
-    {
-      setDegree("Bachelor of Bio Systems Technology Honours Degree")
+   useEffect(() => {
+    if (dept === "ICT") {
+        setDegree("Bachelor of Information and Communication Technology Honours Degree");
+    } else if (dept === "BST") {
+        setDegree("Bachelor of Bio Systems Technology Honours Degree");
+    } else if (dept === "ET") {
+        setDegree("Bachelor of Engineering Technology Honours Degree");
     }
-    else if(dept=="ET")
-    {
-      setDegree("Bachelor of Engineering Technology Honours Degree")
-    }
-    else
-    {
-      setDegree("")
-    }
+}, [dept]);
 
   var date = new DateObject({
     date: new Date(),

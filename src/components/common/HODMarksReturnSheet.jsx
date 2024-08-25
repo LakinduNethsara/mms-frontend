@@ -368,7 +368,7 @@ useEffect(() => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const result = await axios.get(`http://localhost:9090/api/lecreg/get/alllecturersdetails/${department}`);
+            const result = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${department}`);
             setData(result.data.content);
             setFilteredData(result.data.content); // Initially, all data is considered as filtered
           } catch (error) {
