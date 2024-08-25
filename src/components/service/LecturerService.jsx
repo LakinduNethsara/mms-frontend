@@ -91,6 +91,16 @@ class LecturerService {
             throw err;
         }
     }
+
+
+    static async GenerateFinalMarksFromEnd(assignemt_name,course_id,selected,academic_year) {
+        try {
+            const response = await axios.get(`${LecturerService.BASE_URL}/api/StudentAssessment/GenerateFinalMarksFromEnd/${assignemt_name}/${course_id}/${selected}/${academic_year}`);
+            return response;
+        } catch (err) {
+            throw err;
+        }
+    }
     
 
 }
