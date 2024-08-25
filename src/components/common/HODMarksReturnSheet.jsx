@@ -857,7 +857,9 @@ useEffect(() => {
                                     filteredData.map((item, index) => (
                                         searchTerm == ''?
                                         null
-                                        : <button  key={index} type="button" className="list-group-item list-group-item-action"  onClick={() => handleClick(item.name_with_initials,item.email)}> {item.name_with_initials}</button >
+                                        : 
+                                        
+                                        <button  key={index} type="button" className="list-group-item list-group-item-action"  onClick={() => handleClick(item.name_with_initials,item.email)}> {item.name_with_initials}</button >
                                     ))
                                     ) : (
                                         <button  type="button" className="list-group-item list-group-item-action">No results found.</button >
