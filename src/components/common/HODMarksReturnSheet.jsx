@@ -17,11 +17,9 @@ export default function HODMarksReturnSheet(props) {
     const { course_id, course_name,department,academicYear } = useParams();
     const {approved_level}=props;
     const history = useHistory();
-    // const [url,setUrl] = useState()
     const[newSignature, setNewSignature] = useState();
     const[loading,setLoading]=useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
-    // const[current_semester,setCurrent_semester]=useState("")
     const[approval_level,setApprovalLevel]=useState(approved_level);
     const[marksSheet,setMarksSheet]=useState([]);
     const[repeatMarksSheet,setRepeatMarksSheet]=useState([]);
@@ -29,10 +27,20 @@ export default function HODMarksReturnSheet(props) {
     const [searchTerm, setSearchTerm] = useState('');
     const[selectedlec,setSelectedEmail]=useState('')
     const [filteredData, setFilteredData] = useState([]);
+    const[degree,setDegree]=useState("");
     var date = new DateObject({
         date: new Date(),
       });
-
+    
+      useEffect(() => {
+        if (department === "ICT") {
+            setDegree("Bachelor of Information and Communication Technology Honours Degree");
+        } else if (department === "BST") {
+            setDegree("Bachelor of Bio Systems Technology Honours Degree");
+        } else if (department === "ET") {
+            setDegree("Bachelor of Engineering Technology Honours Degree");
+        }
+    }, [department]);
 
 
     const seenKeys = new Set();
@@ -431,7 +439,7 @@ useEffect(() => {
                                     </table>
                                     <div style={{display:"flex"}}>
                                             <h6>Academic Year: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{academicYear}&nbsp;&nbsp;</span></h6>
-                                                <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;Bachelor of Information and Communication Technology Honours Degree&nbsp;&nbsp;</span></h6>
+                                                <h6 className=' mx-5'>Degree: <span className=' rounded-pill bg-success text-white'>&nbsp;&nbsp;{degree}&nbsp;&nbsp;</span></h6>
                                                     {/* <h6 className=' rounded-pill bg-success text-white'>{current_semester === "1" ? "1st" : "2nd"} Semester Examination</h6>   */}
                                     </div>
                                                                             
