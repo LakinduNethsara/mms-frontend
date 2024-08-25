@@ -151,7 +151,8 @@ export default function HODMarksReturnSheet(props) {
     
     const lecturerCertifyAssign={
         "lecturer_id":selectedlec,
-        "course_id": course_id
+        "course_id": course_id,
+        "department_id":department,
     }
 
     const Returnapproval={

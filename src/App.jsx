@@ -195,6 +195,9 @@ function App() {
             <Route exact path="/pendingVCCertifyMarksheet" 
               render={(props) => <CertifyMarksheet {...props}  approved_level={"Dean"}/>} 
             />
+            <Route exact path="/pendingHODCertifyMarksheet" 
+              render={(props) => <CertifyMarksheet {...props}  approved_level={"lecturer"}/>} 
+            />
             <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level/:student_id/:academic_year/:repeat" 
               render={() => <MarksCheckingForm/>} 
             />

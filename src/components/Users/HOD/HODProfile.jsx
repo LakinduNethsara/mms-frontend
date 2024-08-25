@@ -72,8 +72,20 @@ export default function HODProfile() {
     return (
         <>
             <div className="container mt-4">
-                <h2>Certify Marks Return Sheet</h2>
+                
                 <div className="row">
+                    <div className="col-md-3 mb-4">
+                        <div className="card text-center functionCard">
+                            <div className="card-body">
+                                <a href={`/pendingHODCertifyMarksheet`} className="btn btn-primary home-page-class-button">
+                                    Certify Marks Return Sheet
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* <div className="row">
                     {levels.map((level) => (
                         <div className="col-md-3 mb-4" key={level}>
                             <div className="card text-center functionCard">
@@ -87,7 +99,7 @@ export default function HODProfile() {
                             </div>
                         </div>
                     ))}
-                </div>
+                </div> */}
 
                 <h2>Results Board</h2>
                 <div className="row">
@@ -117,20 +129,6 @@ export default function HODProfile() {
         </div>
     )}
 </div>
-            <h2>Grading</h2>
-            <div className="row">
-                   
-                        <div className="col-md-3 mb-4" >
-                            <div className="card text-center functionCard">
-                                <div className="card-body">
-                                    <a href={`/changesGradeMargin`} className="btn btn-primary home-page-class-button">
-                                        Grading
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                   
-                </div>
             </div>
         </>
     );
