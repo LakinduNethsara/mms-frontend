@@ -70,7 +70,7 @@ export default function CertifyMarksPage(props) {
                 </tr>
               </thead>
               
-              <tbody>
+              <tbody> 
                 {
                   !finalMarksheetList.length >0 ? (
                     <tr>
