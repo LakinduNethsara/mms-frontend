@@ -83,7 +83,7 @@ function App() {
               <Route exact path="/ar_profile" component={HomePageAR} />           {/* AR Home Page */}
               <Route exact path="/viewMedicals" component={ViewMedicalPage} />      {/* Link to view medical table page */}
               <Route exact path="/viewablist" component={ABListPage} />           {/* Link to view AB student list page */}
-              <Route exact path="/viewABUpdate/updateAB/:course_id/:course_name/:student_id/:grade/:exam_type/:academic_year" component={UpdateABPage} />   {/* Link to AB status update form */}
+              <Route exact path="/viewABUpdate/updateAB/:course_id/:course_name/:student_id/:grade/:marks_table_exam_type/:academic_year/:exam_type/:midORend" component={UpdateABPage} />   {/* Link to AB status update form */}
               
               <Route path="/arviewictmarks">  {/* Link to view ICT marks page - Level selection */}
                 <ViewMarks department_id={"ICT"}/>
