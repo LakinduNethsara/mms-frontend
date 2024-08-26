@@ -7,6 +7,7 @@ import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal }
 import DateObject from 'react-date-object';
 
 export default function DeanFinalMarkSheet(props) {
+  const [loading, setLoading] = useState(true);
   const [finalResults, setFinalResults] = useState([]);
   const [repeatersfinalResults, setRepeatersFinalResults] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -98,121 +99,109 @@ export default function DeanFinalMarkSheet(props) {
     "signature": newSignature
   };
 
-
-  const resultSheet = async () => {
-    try {
-      if (approved_level === "RB") {
-        setNextApprovedlevel("AR");
-      } else if (approved_level === "AR") {
-        setNextApprovedlevel("Dean");
-      } else if (approved_level === "Dean") {
-        setNextApprovedlevel("VC");
-      }
-      const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`);
-      const data = result.data.content;
-      
-      
-
-      const gpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`);
-      const gpaData = gpa.data.content;
-      setStudentGPA(gpaData);
-
-    
-
-      const processedData = data.reduce((acc, curr) => {
-        const existingStudent = acc.find(student => student.student_id === curr.student_id);
-        const gpaInfo = gpaData.find(ele => ele.student_id === curr.student_id);
-        if (existingStudent) {
-          existingStudent.courses.push({
-            course_id: curr.course_id,
-            overall_score: curr.total_rounded_mark,
-            grade: curr.grade,
-          });
-        } else {
-          acc.push({
-            student_id: curr.student_id,
-            courses: [{
-              course_id: curr.course_id,
-              overall_score: curr.total_rounded_mark,
-              grade: curr.grade,
-            }]
-          });
-        }
-        return acc;
-      }, []);
-
-      setFinalResults(processedData);
-      const courseIdsSet = new Set();
-      processedData.forEach(student => {
-        student.courses.forEach(course => {
-          courseIdsSet.add(course.course_id);
-        });
-      });
-      setCourses(Array.from(courseIdsSet));
-
-      setStudents(processedData.map(student => student.student_id));
-
-
-      //--------For repeaters
-
-
-      const Repeatresult = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`);
-      const repeaterdata=Repeatresult.data.content;
-
-      const Repeatersgpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`);
-      const RepeatersgpaData = gpa.data.content;
-      setRepeatStudentGPA(RepeatersgpaData);
-
-      const processedRepeatersData = repeaterdata.reduce((acc, curr) => {
-        const existingStudent = acc.find(student => student.student_id === curr.student_id);
-        const gpaInfo = RepeatersgpaData.find(ele => ele.student_id === curr.student_id);
-        if (existingStudent) {
-          existingStudent.courses.push({
-            course_id: curr.course_id,
-            overall_score: curr.total_rounded_mark,
-            grade: curr.grade,
-          });
-        } else {
-          acc.push({
-            student_id: curr.student_id,
-            courses: [{
-              course_id: curr.course_id,
-              overall_score: curr.total_rounded_mark,
-              grade: curr.grade,
-            }]
-          });
-        }
-        return acc;
-      }, []);
-
-      try {
-
-      } catch (error) {
-        console.error('Error fetching GPA data:', error.response || error.message);
-      }
-
-      setRepeatersFinalResults(processedRepeatersData);
-
-      const repeaterscourseIdsSet = new Set();
-      processedRepeatersData.forEach(student => {
-        student.courses.forEach(course => {
-          courseIdsSet.add(course.course_id);
-        });
-      });
-      setrepeatersCourses(Array.from(repeaterscourseIdsSet));
-
-      setrepeatStudents(processedRepeatersData.map(student => student.student_id));
-
-    } catch (error) {
-      console.error(error);
-      setError(error.message);
-    }
-  };
-
+ 
   useEffect(() => {
-    resultSheet();
-  }, [level, semester, approved_level,dept]);
-
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const nextLevelMap = {
+          "RB": "AR",
+          "AR": "Dean",
+          "Dean": "VC"
+        };
+        setNextApprovedlevel(nextLevelMap[approved_level] || "");
+  
+        // Fetch final results
+        const finalResultsResponse = await axios.get(
+          `http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`
+        );
+        const finalResultsData = finalResultsResponse.data.content;
+  
+        // Process final results
+        const processedFinalResults = finalResultsData.reduce((acc, curr) => {
+          const existingStudent = acc.find(student => student.student_id === curr.student_id);
+          if (existingStudent) {
+            existingStudent.courses.push({
+              course_id: curr.course_id,
+              overall_score: curr.total_rounded_mark,
+              grade: curr.grade,
+            });
+          } else {
+            acc.push({
+              student_id: curr.student_id,
+              courses: [
+                {
+                  course_id: curr.course_id,
+                  overall_score: curr.total_rounded_mark,
+                  grade: curr.grade,
+                },
+              ],
+            });
+          }
+          return acc;
+        }, []);
+  
+        setFinalResults(processedFinalResults);
+  
+        // Fetch courses
+        const coursesResponse = await axios.get(
+          `http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`
+        );
+        setAllCourses(coursesResponse.data);
+  
+        // Fetch GPA
+        const gpaResponse = await axios.get(
+          `http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`
+        );
+        setStudentGPA(gpaResponse.data.content);
+  
+        // Fetch repeaters data
+        const repeatersResponse = await axios.get(
+          `http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`
+        );
+        const repeaterData = repeatersResponse.data.content;
+  
+        // Process repeaters data
+        const processedRepeaterData = repeaterData.reduce((acc, curr) => {
+          const existingStudent = acc.find(student => student.student_id === curr.student_id);
+          if (existingStudent) {
+            existingStudent.courses.push({
+              course_id: curr.course_id,
+              overall_score: curr.total_rounded_mark,
+              grade: curr.grade,
+            });
+          } else {
+            acc.push({
+              student_id: curr.student_id,
+              courses: [
+                {
+                  course_id: curr.course_id,
+                  overall_score: curr.total_rounded_mark,
+                  grade: curr.grade,
+                },
+              ],
+            });
+          }
+          return acc;
+        }, []);
+  
+        setRepeatersFinalResults(processedRepeaterData);
+  
+        // Fetch signatures
+        await fetchSignature();
+  
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch data');
+      }
+    };
+  
+    fetchData();
+  }, [level, semester, approved_level, dept]);
+  
+  // ... rest of the code remains the same
+  
   const handleSubmit = async (e) => {
     let response = null;
     e.preventDefault();
@@ -245,6 +234,8 @@ export default function DeanFinalMarkSheet(props) {
 
   const fetchSignature = async () => {
     try {
+      setLoading(true);
+
       const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
       setARSign(ARSign.data.content);
       const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
@@ -258,9 +249,11 @@ export default function DeanFinalMarkSheet(props) {
 
     } catch (error) {
       console.error('Error fetching signature data:', error.response || error.message);
-    }
+    }finally{
+      setLoading(false);}
   };
 
+  console.log(level, semester, dept, approved_level, academic_year);
   useEffect(() => {
     fetchSignature();
   }, [level, semester, dept, approved_level, academic_year]);
@@ -270,10 +263,13 @@ export default function DeanFinalMarkSheet(props) {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+        setLoading(true);
         const courses = await axios.get(`http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
         setAllCourses(courses.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
+      }finally{
+        setLoading(false);
       }
     };
   
@@ -332,7 +328,14 @@ const alternateRowStyle = {
   return (
     <div className="container" style={{marginTop:'70px'}}>
       <ToastContainer/>
-      
+      {loading ? (
+                 <div className="d-flex justify-content-center">
+                 <div className="spinner-border" role="status">
+                     <span className="sr-only"></span>
+                 </div>
+             </div>
+            ) : (
+              <>
      
       {finalResults.length > 0 ? (
 
@@ -682,7 +685,11 @@ const alternateRowStyle = {
 
           </div>
        
-      )}
+      )
+    }
+      </>
+)}  
+
     </div>
   );
 }
