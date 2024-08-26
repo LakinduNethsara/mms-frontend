@@ -112,36 +112,20 @@ export default function HODMarksReturnSheet(props) {
 
     const storedData = localStorage.getItem('user');
     useEffect(() => {
+        setLoading(true);
         if(storedData){
+            
             setUser(JSON.parse(storedData));
         }else{
             setUser(null);
         }
+        setLoading(false);
     }, []);
     // const { oktaAuth, authState } = useOktaAuth();
      const userNameAuth = user?.full_name;
      const user_department = user?.department_id;
 
-     useEffect(() => {
-        const fetchLecturers = async () => {
-          try {
-            setLoading(true);
-            const response = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${user_department}`);
-            if (response.data.code === '00') {
-              setLecturerList(response.data.content);
-            } else {
-            //   console.error('Failed to fetch lecturers:', response.data.message);
-            }
-          } catch (error) {
-            // console.error('Error fetching lecturers:', error);
-          }
-          finally{
-            setLoading(false);
-          }
-        };
-    
-        fetchLecturers();
-      }, [user_department]);
+     
      
     
     const saveDigitalSignature = (url) => {
@@ -206,7 +190,31 @@ export default function HODMarksReturnSheet(props) {
         "signature":newSignature
     }
 
-   
+    useEffect(() => {
+        const fetchLecturers = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${user_department}`);
+                if (response.data.code === '00') {
+                    setLecturerList(response.data.content);
+                    console.log("Lecturers fetched:", response.data.content);
+                } else {
+                    console.error('Failed to fetch lecturers:', response.data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching lecturers:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        if (user_department) {
+            fetchLecturers();
+        } else {
+            console.warn('User department is not set, skipping fetchLecturers call.');
+        }
+    }, [user_department]);
+    
 
 
 
@@ -260,59 +268,6 @@ useEffect(() => {
         SignFunc();
     }, [course_id, academicYear]);
     
-
-   
-    
-
-
-
-    // const SigFunc = async () => {
-    //     const fetchCCLevel = async () => {
-    //         try {
-    //             setLoading(true)
-    //             const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/course_coordinator/${academicYear}`);
-    //             setISCClevel(response.data.content);
-                
-    //         } catch (error) {
-    //             console.error('Error fetching CC level data:', error);
-    //         } finally
-    //         {
-    //             setLoading(false);
-    //         }
-    //     };
-    
-    //     const fetchLecLevel = async () => {
-    //         try {
-    //             setLoading(true);
-    //             const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
-    //             setISLeclevel(response.data.content);
-    //             setLoading(true);
-    //         } catch (error) {
-    //             console.error('Error fetching Lecturer level data:', error);
-    //         } finally
-    //         {
-    //             setLoading(false); // Set loading to false after all data is fetched
-    //         }
-    //     };
-    
-    //     const fetchHODLevel = async () => {
-    //         try {
-    //             setLoading(true)
-    //             const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
-    //             setISHODlevel(response.data.content);
-    //         } catch (error) {
-    //             console.error('Error fetching HOD level data:', error);
-    //         } finally
-    //         {
-    //             setLoading(false);
-    //         }
-    //     };
-    
-    //     // Execute each fetch function independently
-    //     fetchCCLevel();
-    //     fetchLecLevel();
-    //     fetchHODLevel();
-    // };
     
 
     
@@ -422,16 +377,14 @@ useEffect(() => {
 
 
 
+  
     
 
       const getFuzzyMatches = (input, list) => {
         const lowerInput = input.toLowerCase();  // Convert search input to lowercase
         return list.filter(lecturer => lecturer.name_with_initials.toLowerCase().includes(lowerInput));  // Filter list based on input
       };
-      
-    
 
-      
     
       useEffect(() => {
         const handleClickOutside = (e) => {
@@ -443,26 +396,26 @@ useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
       }, []);
+
+      useEffect(() => {
+        const matches = getFuzzyMatches(searchTerm, lecturerList);
+        setFilteredLecturers(matches);
+        console.log(matches)
+    }, [searchTerm,lecturerList]);
       
     
-      const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-        console.log(searchTerm)
-        if (searchTerm) {
-            const matches = getFuzzyMatches(searchTerm, lecturerList);
-            setFilteredLecturers(matches);
-          } else {
-            setFilteredLecturers([]);
-          }
-      };
+    const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+};
+    
       
     
-      const handleLecturerSelect = (lecturer) => {
-        setSelectedEmail(lecturer.email);
-        setSearchTerm(lecturer.name_with_initials);
-        setFilteredLecturers([]);
-        setSelectedEmail
-      };
+const handleLecturerSelect = (lecturer) => {
+    setSelectedEmail(lecturer.email);
+    setSearchTerm(lecturer.name_with_initials);
+    setFilteredLecturers([]);
+};
     
     return (
         <>
@@ -964,7 +917,7 @@ useEffect(() => {
                 }}
               >
                 {lecturer.name_with_initials}
-                {console.log(lecturer)}
+                
               </li>
             ))}
           </ul>
