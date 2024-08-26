@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import LecturerService from '../../../components/service/LecturerService';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../components/common/AcademicYearManagerSingleton';
 
 
@@ -32,6 +34,7 @@ export default function AddFAMarksByLec() {
     const [selectedMarkingOption, setSelectedMarkingOption] = useState('');             //Store selected value of radio buttons
     const [finalMarkSelectButtonVisibility, setFinalMarkSelectButtonVisibility] = useState(false);
     const [academicYear, setAcademicYear] = useState();
+    const [loader, setLoader] = useState(false);
 
 
     var selectedAssignmentName="";
@@ -53,6 +56,7 @@ export default function AddFAMarksByLec() {
 
     useEffect(() => {
         const fetchAllData = async () => {
+            setLoader(true);
             try {
                 // console.log("Fetching all data...");
                 // Reverse the courseId string
@@ -88,27 +92,27 @@ export default function AddFAMarksByLec() {
                     setAcademicDetails(details);
                     asInsideCurrentAcedemicYear = details.current_academic_year;
                     setAcademicYear(details.current_academic_year);
+                    console.log(asInsideCurrentAcedemicYear)
                 }
 
                 // Fetch all related students
                 const allRelatedStudentsRes = await LecturerService.getAllRelatedStudentID(course_id,asInsideCurrentAcedemicYear);
                 const allRelatedStudents = allRelatedStudentsRes.content;
 
-                var studentArray = [];
-                allRelatedStudents.map((student, index) => {
-                    studentArray.push(student.student_id);
-                }
-                )
-                // console.log(studentArray);
+                const uniqueStudentIds = new Set(allRelatedStudents.map(student => student.student_id));
+                const studentArray = Array.from(uniqueStudentIds);
+
+                
                 
                 setRegStudent(studentArray);
                 
 
-                // Fetch all data of CA Marks
+                // Fetch all data of FA Marks
                 const allDataOfCAMarksRes = await LecturerService.getAllDataOfFAMarks(course_id, asInsideCurrentAcedemicYear);
-                // console.log("All data of CA Marks:", allDataOfCAMarksRes);
-                const allData = allDataOfCAMarksRes;
+                // console.log("All data of FA Marks:", allDataOfCAMarksRes);
+                const allData = allDataOfCAMarksRes.content || [];
                 // console.log(allData)
+                setDataCAMarksAll([]);
                 setDataCAMarksAll(allData);
 
                 // Assuming allData is already fetched and stored in state
@@ -137,8 +141,9 @@ export default function AddFAMarksByLec() {
             } catch (error) {
                 // console.error("Error fetching data:", error);
             }
+            setLoader(false);
         };
-
+        // setDataCAMarksAll([]);
         fetchAllData();
     }, [course_id,submitted]);
 
@@ -194,18 +199,29 @@ export default function AddFAMarksByLec() {
                 : mark
         );
         // console.log("Updated CA Marks:", updatedCaMarks);
-        setCaMarks(updatedCaMarks);
+
+        // Ensure we don't have any duplicate entries
+        const uniqueCaMarks = [...new Map(updatedCaMarks.map(item => [JSON.stringify(item), item])).values()];
+
+
+        setCaMarks(uniqueCaMarks);
     };
 
     const handleNextClick = () => {
         // console.log("Current student index:", currentStudentIndex);
-        setCurrentStudentIndex((prevIndex) => prevIndex + 1);
+        // setCurrentStudentIndex((prevIndex) => prevIndex + 1);
+        if (currentStudentIndex < regStudent.length - 1) {
+            setCurrentStudentIndex(prevIndex => prevIndex + 1);
+        }
         
     };
 
     const handlePrevClick = () => {
         // console.log("Current student index:", currentStudentIndex);
-        setCurrentStudentIndex((prevIndex) => prevIndex - 1);
+        // setCurrentStudentIndex((prevIndex) => prevIndex - 1);
+        if (currentStudentIndex > 0) {
+            setCurrentStudentIndex(prevIndex => prevIndex - 1);
+        }
         
     };
 
@@ -251,14 +267,49 @@ export default function AddFAMarksByLec() {
     const handleSubmit = async () => {
         try {
             // console.log("Submitting CA Marks:", caMarks);
-            await LecturerService.insertCAMarks(caMarks);
+            // const dataToSubmit = caMarks.filter((_, index) => index === currentStudentIndex);
+
+            // Flatten the caMarks array to include all students' marks
+                const flattenedCaMarks = caMarks.flatMap((mark, index) => [
+                    { ...mark, student_id: mark.student_id }
+                ]);
+
+                // Filter out any empty marks (in case there were any)
+                const filteredCaMarks = flattenedCaMarks.filter(m => m.assignment_score !== '');
+
+            await LecturerService.insertCAMarks(filteredCaMarks);
             // console.log("CA Marks submitted successfully!");
+            toast.success("FA Marks submitted successfully!");
+
+            // Reset the current student index
+            setCurrentStudentIndex(0);
+
+            // Reset the current student index
+            setCurrentStudentIndex(0);
+
+            // Reset the caMarks array
+            setCaMarks([]);
+
+            // Reset the regStudent array
+            setRegStudent([]);
+
+            // Reset the uniqueAssigmentName array
+            setUniqueAssigmentName([]);
+
+            // Reset the dataCAMarksAll array
+            setDataCAMarksAll([]);
+
+            // Reset the submitted state
+            setSubmitted(false);
+
+            window.location.reload();
             
+
         } catch (error) {
             // console.error("Error submitting CA Marks:", error);
         }
 
-        setSubmitted(true);
+        // setSubmitted(true);
     };
 
     // console.log(caMarks[currentStudentIndex]?.student_id);
@@ -413,8 +464,12 @@ export default function AddFAMarksByLec() {
                   }
                 : mark
         );
+
+        // Ensure we don't have any duplicate entries
+        const uniqueCaMarks = [...new Map(updatedCaMarks.map(item => [JSON.stringify(item), item])).values()];
+
         // console.log("Updated CA Marks:", updatedCaMarks);
-        setCaMarks(updatedCaMarks);
+        setCaMarks(uniqueCaMarks);
     }
 
     const handleRadioChange = (event) => {                  //Function to handle radio change
@@ -435,6 +490,25 @@ export default function AddFAMarksByLec() {
 
     return (
         <div className='container'>
+            <ToastContainer />
+            {
+                loader ? ( 
+
+                    
+                    <div style={{margin:"100px",display:"flex"}}>
+
+                        <div class="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+                    </div>
+                    
+                
+                ) : (
+                
+                <>
+
+
             <div className='container' style={{ marginTop: "50px" }}>
                 <h4>Final Assessment Marks Entry : <span style={{ color: "maroon" }}>{course_name} - {course_id}</span></h4>
                 <br />
@@ -443,7 +517,7 @@ export default function AddFAMarksByLec() {
                 <h4>reversedata: {reversedata}</h4> */}
             </div>
 
-        <div className=' row' >
+            <div className=' row' >
             <div className=' col-8 p-4 shadow-lg' style={{marginRight:"20px"}}>
                 <div>
                     <label className=' form-label'>Select Assessment Type:</label>
@@ -591,7 +665,7 @@ export default function AddFAMarksByLec() {
                     </tbody>
                 </table>
             </div>
-        </div>
+            </div>
 
             
 
@@ -638,7 +712,7 @@ export default function AddFAMarksByLec() {
                             
                 </div>
             </div>
-
+            </>)}
             
         </div>
     );

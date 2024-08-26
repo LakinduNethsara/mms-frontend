@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditStudentModal from './EditStudentModal';
+const [loader, setLoader] = useState(false);
 
 export default function StudentsManagement() {
     const [data, setData] = useState([]);
@@ -23,8 +24,10 @@ export default function StudentsManagement() {
 
     const fetchData = async () => {
         try {
+            setLoader(true);
             const response = await axios.get("http://localhost:9090/api/studentdetails/getallstudentsdetails");
             setStudentsData(response.data.content);
+            setLoader(false);
         } catch (error) {
             console.error("Error fetching data from API:", error);
         }
@@ -122,6 +125,19 @@ export default function StudentsManagement() {
 };
     return (
         <div className='container'>
+            {loader ? ( 
+
+                    
+                <div style={{margin:"100px",display:"flex"}}>
+
+                    <div class="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+                </div>
+
+
+                ) : (<>
             <div className='py-4'>
                 <div className="h2 ">Students Registraion</div>
                 <div className=' my-2' style={{float:"right"}}>
@@ -200,6 +216,8 @@ export default function StudentsManagement() {
                     <EditStudentModal row={editingUser} onSubmit={handleEditSubmit} onClose={closeEditModal} />
                 )}
             <ToastContainer />
+
+            </>)} 
         </div>
     )
 }

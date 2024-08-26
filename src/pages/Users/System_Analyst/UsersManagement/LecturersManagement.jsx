@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditUserModal from './EditUserModal';
@@ -8,7 +8,7 @@ import EditUserModal from './EditUserModal';
 export default function LecturersManagement() {
     const [users, setUser] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingUser, setEditingUser] = useState(null);
+    const [editingUser, setEditingUser] = useState('');
     const [user, setUserDetails] = useState({
         user_id: "",
         full_name: "",
@@ -20,6 +20,7 @@ export default function LecturersManagement() {
         department_id: "",
         is_deleted: false
     });
+
 
     const [refreshKey, setRefreshKey] = useState(Date.now());
 
@@ -91,7 +92,7 @@ export default function LecturersManagement() {
 
     const closeEditModal = () => {
         setIsModalOpen(false);
-        setEditingUser(null);
+        setEditingUser('');
     };
 
     const handleEditSubmit = async (updatedUser) => {

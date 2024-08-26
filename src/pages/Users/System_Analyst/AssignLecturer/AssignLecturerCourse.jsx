@@ -18,14 +18,18 @@ export default function AssignLecturerCourse() {
     });
     const [newLecturer, setNewLecturer] = useState([]);
 
+    const [loader, setLoader] = useState(false);
+
     // console.log(cCoordinatorids);
     // console.log(selectedLecturerIds);
     // console.log(newCourseCoordinator);
 
     useEffect(() => {
         loadCids();
-        loadUserDetails();
+        //loadUserDetails();
     }, []);
+
+
 
     useEffect(() => {
         const fetchAndSaveYear = async () => {
@@ -43,10 +47,13 @@ export default function AssignLecturerCourse() {
     }, []);
 
     const loadCids = async () => {
+        setLoader(true);
         try {
+        
             const response = await axios.get('http://localhost:9090/api/courses/allcoursesids');
             // console.log(response.data);
             if (Array.isArray(response.data.content)) {
+                
                 setCids(response.data.content);
                 console.log(response.data.content);
             } else {
@@ -57,10 +64,6 @@ export default function AssignLecturerCourse() {
             console.error("Error fetching course IDs:", error);
         }
 
-        
-    };
-
-    const loadUserDetails = async () => {
         try {
             const result = await axios.get('http://localhost:9090/api/lecreg/get/alllecturersdetails');
             if (Array.isArray(result.data.content)) {
@@ -72,7 +75,24 @@ export default function AssignLecturerCourse() {
         } catch (error) {
             console.error("Error fetching course coordinator IDs:", error);
         }
+
+        setLoader(false);
+        
     };
+
+    // const loadUserDetails = async () => {
+    //     try {
+    //         const result = await axios.get('http://localhost:9090/api/lecreg/get/alllecturersdetails');
+    //         if (Array.isArray(result.data.content)) {
+    //             setCCoordinatorids(result.data.content);
+    //             console.log(result.data.content);
+    //         } else {
+    //             console.error("Expected an array of course coordinator IDs, but received:", result.data.content);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error fetching course coordinator IDs:", error);
+    //     }
+    // };
 
 
     const handleLecturerIdSelect = (event) => {
@@ -84,7 +104,7 @@ export default function AssignLecturerCourse() {
             return prevIds;
         });
 
-        // console.log(selectedId);
+         console.log(selectedId);
     };
 
     const handleSubmit = async () => {
@@ -94,12 +114,17 @@ export default function AssignLecturerCourse() {
             return;
         }
 
-        const selectedCoordinatorId = cCoordinatorids.find(coordinatorId => coordinatorId === cCoordinatorids[0]);
-        const selectedCourseId = cids.find(cid => cid === cids[0]);
+        const selectedCoordinatorId = cCoordinatorids.find(coordinatorId => coordinatorId === newCourseCoordinator.user_id);
+        const selectedCourseId = cids.find(course => course.id === newCourseCoordinator.course_id);
+
+        if (!selectedCoordinatorId || !selectedCourseId) {
+            toast.error("Invalid selection. Please choose a valid course coordinator and course.");
+            return;
+        }
 
         setNewCourseCoordinator({
-            user_id: selectedCoordinatorId,
-            course_id: selectedCourseId,
+            user_id: selectedCoordinatorId.user_id,
+            course_id: selectedCourseId.id,
             academic_year: academicYear,
             selectedLecturerIds: selectedLecturerIds,
         });
@@ -133,6 +158,7 @@ export default function AssignLecturerCourse() {
             ...prevState,
             course_id: selectedCourseCode
         }));
+        console.log(selectedCourseCode);
     };
 
     const handleCourseCoordinatorChange = (event) => {
@@ -142,6 +168,7 @@ export default function AssignLecturerCourse() {
             user_id: selectedCoordinatorId
         }));
     };
+    
 
 
   return (
@@ -150,6 +177,18 @@ export default function AssignLecturerCourse() {
                 <div className='h2 mt-lg-5'>Lecturer Assign Course Module</div>
             </div>
             <ToastContainer />
+
+            {
+                loader ? ( 
+                    <div style={{margin:"100px",display:"flex"}}>
+
+                    <div class="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+                </div>
+                    ) : (
+        <div>
             <form>
                 <div className="row g-3 my-1">
                     <div className="col-md">
@@ -169,7 +208,7 @@ export default function AssignLecturerCourse() {
                             <select className="form-select" onChange={handleCourseCoordinatorChange}>
                                 <option selected>Select Course Coordinator</option>
                                 {cCoordinatorids.map((coordinatorId, index) => (
-                                    <option key={`coordinator-${index}`} value={coordinatorId.full_name}>{coordinatorId.full_name}</option>
+                                    <option key={`coordinator-${index}`} value={coordinatorId.user_id}>{coordinatorId.full_name}</option>
                                 ))}
                             </select>
                             <label htmlFor="type">Course Coordinator</label>
@@ -183,7 +222,7 @@ export default function AssignLecturerCourse() {
                             <select className="form-select" onChange={handleLecturerIdSelect}>
                                 <option selected>Select Lecturer ID</option>
                                 {cCoordinatorids.map((coordinatorId, index) => (
-                                    <option key={`lecturer-${index}`} value={coordinatorId.full_name}>{coordinatorId.full_name}</option>
+                                    <option key={`lecturer-${index}`} value={coordinatorId.user_id}>{coordinatorId.full_name}</option>
                                 ))}
                             </select>
                             <label htmlFor="type">Lecturer ID</label>
@@ -206,6 +245,13 @@ export default function AssignLecturerCourse() {
                 <button type="button" onClick={handleSubmit} className="btn btn-outline-dark btn-sm" style={{width:"100px"}}>Submit</button>
                 <button type="button" onClick={handleClear} className="btn btn-outline-danger mx-2 btn-sm" style={{width:"100px"}}>Clear All</button>
             </div>
+          </div>
+                  )
+            }
+            
+          
         </div>
   )
 }
+
+
