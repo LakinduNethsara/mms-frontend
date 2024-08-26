@@ -40,7 +40,14 @@ const handleChange = (link) => {
 
         <div className="row">
 
-
+        <div className="col mb-4"> 
+            <div className="card text-center functionCard">
+              <div className="card-body">
+                  <br/><h5 className="card-title">Upload Medical </h5><br/>
+                <a href="/aruploadmedicals" className="btn btn-primary home-page-class-button">Upload</a>
+              </div>
+            </div>
+          </div>
 
           <div className="col mb-4"> 
             <div className="card text-center functionCard">
