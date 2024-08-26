@@ -20,6 +20,7 @@ export default function AddRelatedDept() {
     };
 
     const handleInputChange = (courseId, field, value) => {
+        console.log(courseId, field, value);
         setSelectedData(prevState => ({
             ...prevState,
             [courseId]: {
@@ -33,17 +34,49 @@ export default function AddRelatedDept() {
         const courseData = selectedData[courseId];
         
         if (courseData) {
-            axios.post('http://localhost:9090/api/coursedept/insertacoursetocrdept', {
-                course_id: courseId,
-                ...courseData
-            })
-            .then(response => {
-                alert('Data saved successfully');
-                // toastr.success('Data saved successfully');
-            })
-            .catch(error => {
-                console.error('Error saving data:', error);
-            });
+            const departmentDataList = [];
+
+            // Check and add ICT department data if selected
+            if (courseData.ICT) {
+                departmentDataList.push({
+                    course_id: courseId,
+                    department_id: 'ICT',
+                    credit: courseData.credits_ICT ? parseFloat(courseData.credits_ICT) : null,
+                    gpa_ngpa: courseData.gpa_ngpa_ICT ? courseData.gpa_ngpa_ICT : null
+                });
+            }
+
+            // Check and add ET department data if selected
+            if (courseData.ET) {
+                departmentDataList.push({
+                    course_id: courseId,
+                    department_id: 'ET',
+                    credit: courseData.credits_ET ? parseFloat(courseData.credits_ET) : null,
+                    gpa_ngpa: courseData.gpa_ngpa_ET ? courseData.gpa_ngpa_ET : null
+                });
+            }
+
+            // Check and add BST department data if selected
+            if (courseData.department_id) {
+                departmentDataList.push({
+                    course_id: courseId,
+                    department_id: 'BST',
+                    credit: courseData.credit ? parseFloat(courseData.credit) : null,
+                    gpa_ngpa: courseData.gpa_ngpa ? courseData.gpa_ngpa : null
+                });
+            }
+
+            if (departmentDataList.length > 0) {
+                axios.post('http://localhost:9090/api/coursedept/insertacoursetocrdept', departmentDataList)
+                .then(response => {
+                    alert('Data saved successfully');
+                })
+                .catch(error => {
+                    console.error('Error saving data:', error);
+                });
+            } else {
+                alert('Please select at least one department.');
+            }
         } else {
             alert('Please fill out all required fields.');
         }
@@ -70,8 +103,7 @@ export default function AddRelatedDept() {
                                             type="checkbox" 
                                             role="switch" 
                                             id="ICT"
-                                            value={"ICT"}
-                                            onChange={(e) => handleInputChange(course.id, 'ICT', e.target.checked)}
+                                            onChange={(e) => handleInputChange(course.course_id, 'ICT', e.target.checked)}
                                         />
                                         <label className="form-check-label" htmlFor="ICT">ICT</label>
                                     </div>
@@ -83,7 +115,7 @@ export default function AddRelatedDept() {
                                             max="10" 
                                             min="1" 
                                             className="form-control"
-                                            onChange={(e) => handleInputChange(course.id, 'credits_ICT', e.target.value)} 
+                                            onChange={(e) => handleInputChange(course.course_id, 'credits_ICT', e.target.value)} 
                                         />
                                     </div>
 
@@ -92,16 +124,15 @@ export default function AddRelatedDept() {
                                         <select 
                                             className="form-select" 
                                             required
-                                            onChange={(e) => handleInputChange(course.id, 'gpa_ngpa_ICT', e.target.value)}
+                                            onChange={(e) => handleInputChange(course.course_id, 'gpa_ngpa_ICT', e.target.value)}
                                         >
-                                            <option selected disabled value="">Choose...</option>
+                                            <option value="" disabled selected>Choose...</option>
                                             <option value="gpa">GPA</option>
                                             <option value="ngpa">NGPA</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                
                                 <hr />
                                 <div style={{ display: "flex", marginTop: "20px" }}>
                                     <div className="form-check form-switch mx-5">
@@ -110,8 +141,7 @@ export default function AddRelatedDept() {
                                             type="checkbox" 
                                             role="switch" 
                                             id="ET"
-                                            value={"BST"}
-                                            onChange={(e) => handleInputChange(course.id, 'ET', e.target.checked)}
+                                            onChange={(e) => handleInputChange(course.course_id, 'ET', e.target.checked)}
                                         />
                                         <label className="form-check-label" htmlFor="ET">ET</label>
                                     </div>
@@ -123,7 +153,7 @@ export default function AddRelatedDept() {
                                             max="10" 
                                             min="1" 
                                             className="form-control"
-                                            onChange={(e) => handleInputChange(course.id, 'credits_ET', e.target.value)} 
+                                            onChange={(e) => handleInputChange(course.course_id, 'credits_ET', e.target.value)} 
                                         />
                                     </div>
 
@@ -132,9 +162,9 @@ export default function AddRelatedDept() {
                                         <select 
                                             className="form-select" 
                                             required
-                                            onChange={(e) => handleInputChange(course.id, 'gpa_ngpa_ET', e.target.value)}
+                                            onChange={(e) => handleInputChange(course.course_id, 'gpa_ngpa_ET', e.target.value)}
                                         >
-                                            <option selected disabled value="">Choose...</option>
+                                            <option value="" disabled selected>Choose...</option>
                                             <option value="gpa">GPA</option>
                                             <option value="ngpa">NGPA</option>
                                         </select>
@@ -142,7 +172,6 @@ export default function AddRelatedDept() {
                                 </div>
 
                                 <hr />
-                                {/* Repeat similar blocks for other department (BST)  */}
                                 <div style={{ display: "flex", marginTop: "20px" }}>
                                     <div className="form-check form-switch mx-5">
                                         <input 
@@ -150,8 +179,7 @@ export default function AddRelatedDept() {
                                             type="checkbox" 
                                             role="switch" 
                                             id="BST"
-                                            value={"BST"}
-                                            onChange={(e) => handleInputChange(course.id, 'department_id', e.target.checked)}
+                                            onChange={(e) => handleInputChange(course.course_id, 'department_id', e.target.checked)}
                                         />
                                         <label className="form-check-label" htmlFor="BST">BST</label>
                                     </div>
@@ -163,7 +191,7 @@ export default function AddRelatedDept() {
                                             max="10" 
                                             min="1" 
                                             className="form-control"
-                                            onChange={(e) => handleInputChange(course.id, 'credit', e.target.value)} 
+                                            onChange={(e) => handleInputChange(course.course_id, 'credit', e.target.value)} 
                                         />
                                     </div>
 
@@ -172,22 +200,21 @@ export default function AddRelatedDept() {
                                         <select 
                                             className="form-select" 
                                             required
-                                            onChange={(e) => handleInputChange(course.id, 'gpa_ngpa', e.target.value)}
+                                            onChange={(e) => handleInputChange(course.course_id, 'gpa_ngpa', e.target.value)}
                                         >
-                                            <option selected disabled value="">Choose...</option>
+                                            <option value="" disabled selected>Choose...</option>
                                             <option value="gpa">GPA</option>
                                             <option value="ngpa">NGPA</option>
                                         </select>
                                     </div>
                                 </div>
                                 
-
                                 <hr />
                                 <button 
                                     type='submit' 
                                     className='btn btn-success btn-sm mx-5 my-3' 
                                     style={{ width: "100px" }} 
-                                    onClick={() => handleSubmit(course.id)}
+                                    onClick={() => handleSubmit(course.course_id)}
                                 >
                                     Submit
                                 </button>
