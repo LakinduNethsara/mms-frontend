@@ -70,7 +70,7 @@ export default function CertifyMarksPage(props) {
                 </tr>
               </thead>
               
-              <tbody>
+              <tbody> 
                 {
                   !finalMarksheetList.length >0 ? (
                     <tr>
@@ -78,7 +78,7 @@ export default function CertifyMarksPage(props) {
                     </tr>
                   ):(
                     finalMarksheetList.map((item, index) =>(
-                      <tr key={index} className='clickable-row' onClick={()=>{history.push(`/arFinalMarkSheet/${item.level}/${item.semester}/${item.department}${item.academic_year}`)}}>
+                      <tr key={index} className='clickable-row' onClick={()=>{history.push(`/arFinalMarkSheet/${item.level}/${item.semester}/${item.department}/${item.academic_year}`)}}>
                         <td>level {item.level}</td>
                         <td>semester {item.semester}</td>
                         <td>Dep. of {item.department}</td>

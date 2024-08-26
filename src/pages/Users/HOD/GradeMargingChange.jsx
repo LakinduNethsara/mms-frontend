@@ -192,7 +192,7 @@ export default function GradeMarginChange() {
           checked={academic_year === academicDetails.current_academic_year}
           onChange={(e) => setAcademicYear(e.target.value)}
         />
-        <label htmlFor="current">Current</label>
+        <label htmlFor="current">Current {academicDetails.current_academic_year}</label>
         <input
           type="radio"
           id="previous"
@@ -201,7 +201,7 @@ export default function GradeMarginChange() {
           checked={academic_year === academicDetails.previous_academic_year}
           onChange={(e) => setAcademicYear(e.target.value)}
         />
-        <label htmlFor="previous">Previous</label>
+        <label htmlFor="previous">Previous {academicDetails.previous_academic_year}</label>
       </div>
 
       <div style={{ marginBottom: '20px', position: 'relative', display: 'inline-block', width: '300px' }}>
