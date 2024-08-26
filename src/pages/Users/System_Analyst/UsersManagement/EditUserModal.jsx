@@ -84,8 +84,11 @@ export default function EditUserModal({ user, onSubmit, onClose }) {
                         
                         
                     </div>
-                    <button className='btn btn-outline-success btn-sm mt-3 mx-3' type="submit">Save</button>
-                    <button className='btn btn-outline-danger btn-sm mt-3' type="button" onClick={onClose}>Cancel</button>
+                    <div className=' px-5'>
+                        <button style={{width:"100px"}} className='btn btn-outline-success btn-sm mt-3 mx-3' type="submit">Save</button>
+                        <button style={{width:"100px"}} className='btn btn-outline-danger btn-sm mt-3' type="button" onClick={onClose}>Cancel</button>
+                    </div>
+                    
                 </form>
             </div>
         </div>

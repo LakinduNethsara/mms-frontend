@@ -56,6 +56,7 @@ import AddFAMarksByLec from './pages/Users/Lecturer/AddFAMarksByLec';
 import LecRelatedCoursesFA from './components/Users/Lecturer/LecRelatedCoursesFA';
 import GradeMargingChange from './pages/Users/HOD/GradeMargingChange';
 import CCAssignedResultSheet from './pages/Users/CC/CCAssignedResultSheet';
+import AddRelatedDept from './pages/Users/System_Analyst/CourseModule/AddRelatedDept';
 
 
 
@@ -272,7 +273,13 @@ function App() {
 
             </Route>
 
+
     
+
+            <Route path="/relateddeptreq">
+              <AddRelatedDept />
+            </Route>
+
 
             <Route path="/fa_addby_lec/:course_id/:course_name">
               <AddFAMarksByLec />
