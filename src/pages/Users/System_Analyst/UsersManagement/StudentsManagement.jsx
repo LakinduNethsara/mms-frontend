@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditStudentModal from './EditStudentModal';
-const [loader, setLoader] = useState(false);
+
 
 export default function StudentsManagement() {
     const [data, setData] = useState([]);
@@ -14,7 +14,7 @@ export default function StudentsManagement() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
     const [clearButtonClicked, setClearButtonClicked] = useState(false);
-
+    const [loader, setLoader] = useState(false);
     const expectedKeys = ["user_id", "full_name", "name_with_initials", "email","password","registered_year","role","department_id","is_deleted"];
 
 
@@ -125,19 +125,7 @@ export default function StudentsManagement() {
 };
     return (
         <div className='container'>
-            {loader ? ( 
-
-                    
-                <div style={{margin:"100px",display:"flex"}}>
-
-                    <div class="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
-                </div>
-
-
-                ) : (<>
+            
             <div className='py-4'>
                 <div className="h2 ">Students Registraion</div>
                 <div className=' my-2' style={{float:"right"}}>
@@ -179,6 +167,19 @@ export default function StudentsManagement() {
                 </div>
             </div>
             <div>
+            {loader ? ( 
+
+                    
+                <div style={{margin:"100px",display:"flex"}}>
+
+                    <div class="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+                </div>
+
+
+                ) : (<>
                 <div className="h2 mt-lg-5">Students Details</div>
                 <table className='table table-hover'>
                     <thead>
@@ -211,13 +212,14 @@ export default function StudentsManagement() {
                         ))}
                     </tbody>
                 </table>
+              </>)}  
+
             </div>
                 {isModalOpen && editingUser && (
                     <EditStudentModal row={editingUser} onSubmit={handleEditSubmit} onClose={closeEditModal} />
                 )}
             <ToastContainer />
 
-            </>)} 
         </div>
     )
 }

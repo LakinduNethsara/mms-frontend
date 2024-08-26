@@ -7,7 +7,7 @@ function LoginPage(){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const el = useRef(null);
-    // const [loader, setLoader] = useState(false);
+    const [loader, setLoader] = useState(false);
 
     useEffect(() => {
         const typed = new Typed(el.current, {
@@ -30,7 +30,7 @@ function LoginPage(){
         };
 
         try{
-            // setLoader(true);
+            setLoader(true);
             const response = await axios.post('http://localhost:9090/api/user/login',credentials);
             
             console.log(response.data.content);
@@ -61,7 +61,7 @@ function LoginPage(){
                 
                 window.location.href = "/";
             }
-            // setLoader(false);
+            setLoader(false);
         }catch(error){
             toast.error("Invalid User Credentials");
             console.log(error);
@@ -100,14 +100,14 @@ function LoginPage(){
 
                         {/* <!-- Submit button --> */}
                         <div className=' mt-3'>
-                            {/* {loader ? (  */}
+                            {loader ? ( 
 
                                 <div class="spinner-border spinner-border-sm" role="status">
                                 <span class="visually-hidden">Loading...</span>
                                 </div>
-                            {/* ) : ( */}
+                            ) : (
                                     <button type="submit" className="btn btn-outline-dark btn-sm " style={{width:"100PX"}}>LOGIN</button>
-                                {/* )} */}
+                                )}
                             
                             <button type="button" className="btn btn-outline-danger btn-sm mx-3" style={{width:"100PX"}} onClick={handleCancle}>CANCLE</button>
                         </div>
