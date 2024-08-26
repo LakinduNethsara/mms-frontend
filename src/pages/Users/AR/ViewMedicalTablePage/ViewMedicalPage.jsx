@@ -109,7 +109,7 @@ export default function ViewMedicalPage() {
               <table className="table table-striped dataTable" style={{textAlign:"center"}}>
 
 
-                <thead className='ar-medical-table-head' style={{backgroundColor:"#ffffff",position:"sticky",top:"65px",zIndex:"1"}}>
+                <thead className='ar-medical-table-head' style={{backgroundColor:"#ffffff",position:"sticky",top:"60px",zIndex:"1"}}>
 
 
                   <tr>

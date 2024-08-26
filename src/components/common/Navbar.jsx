@@ -21,7 +21,7 @@ function Navbar() {
     }
 
     return (
-        <nav className="navbar bg-body-tertiary fixed-top">
+        <nav className="navbar bg-body-tertiary ">
             <div className="container-fluid">
                 {
                     user != null ? 
