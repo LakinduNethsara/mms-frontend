@@ -36,7 +36,7 @@ const handleChange = (link) => {
   return (
     <div>
       {/* horizontall cards*/ }
-      <div className="container functionCardContainer"style={{width:"950px"}}>
+      <div className="container functionCardContainer">
 
         <div className="row">
 

@@ -98,9 +98,7 @@ function App() {
                 <ViewMarks department_id={"BST"}/>
               </Route>
 
-              <Route path="/arviewmtdmarks">    {/* Link to view Multi Disciplinary marks page - Level selection */}
-                <ViewMarks department_id={"Multi_Disciplinary"}/>
-              </Route>
+              
 
 
               <Route path="/viewMarks/:course_id/:course_name/:department_id/:academicYear">   {/* Link to view marks remaining to approve page validations */}

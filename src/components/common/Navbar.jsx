@@ -91,11 +91,7 @@ function Navbar() {
                                                         Department of BST
                                                         </a>
                                                     </li>
-                                                    <li>
-                                                        <a className="dropdown-item" href="/arviewmtdmarks">            {/*Link to the MTD department marks return sheet*/}
-                                                        Department of Multi Disciplinary
-                                                        </a>
-                                                    </li>
+                                                    
                                                 </ul>
                                             </li>
                                             {/* <hr></hr> */}
