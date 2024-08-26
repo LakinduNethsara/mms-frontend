@@ -98,7 +98,9 @@ function App() {
                 <ViewMarks department_id={"BST"}/>
               </Route>
 
-              
+              <Route path="/aruploadmedicals">        {/* LInk to upload medical component */}
+              <MedicalsEligibiltyManage />
+              </Route>
 
 
               <Route path="/viewMarks/:course_id/:course_name/:department_id/:academicYear">   {/* Link to view marks remaining to approve page validations */}
