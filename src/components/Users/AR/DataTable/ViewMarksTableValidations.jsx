@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import "./viewMarksTableValidations.css";
 import { Redirect } from 'react-router-dom';
+import BackButton from '../BackButton/BackButton';
 
 
 export default function ViewMarksTableValidations() {
@@ -131,9 +132,15 @@ export default function ViewMarksTableValidations() {
         interrupt===false ? (
           null
         ) : (
+          <>
           <div className='alert alert-danger error-message' role='alert' style={{marginTop:"10%",textAlign:"center",height:"100px",width:"70%",marginLeft:"auto",marginRight:"auto",paddingTop:"30px"}}>
               <h5>{interrupt}</h5>
+              
           </div>
+          <div style={{textAlign:"right",paddingRight:"30px"}}>
+            <BackButton/>
+          </div>
+          </>
         )
       }
       
