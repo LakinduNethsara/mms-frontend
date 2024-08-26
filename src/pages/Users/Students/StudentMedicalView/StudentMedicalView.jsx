@@ -27,7 +27,7 @@ export default function StudentmedicalView() {
     const loadStudentDetails = async () => {
         if(studentEmail != null){
 
-            const studentDetailsResult = await axios.get(`http://localhost:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)
+            const studentDetailsResult = await axios.get(`http://192.248.50.155:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)
             setStudentId(studentDetailsResult.data.user_id);
             setStudentName(studentDetailsResult.data.name_with_initials);
             setStudentRegisteredYear(studentDetailsResult.data.registered_year);
@@ -49,7 +49,7 @@ export default function StudentmedicalView() {
 
             try{
 
-                const allYearResponse = await axios.get(`http://localhost:9090/api/Student/getStudentMedicalList/${studentId}`)             //Call api to get all medical submissions
+                const allYearResponse = await axios.get(`http://192.248.50.155:9090/api/Student/getStudentMedicalList/${studentId}`)             //Call api to get all medical submissions
                 if(!allYearResponse.data.length>0){                     //Check if the response is empty
                     setErrorMessage("No medical submissions available")         //Set error message
                 }else {                                            //If response is not empty
@@ -61,7 +61,7 @@ export default function StudentmedicalView() {
                     }else{                              //If another year is selected
 
                         //Call api to get selected year medical submissions
-                        const selectedYearResponse = await axios.get(`http://localhost:9090/api/Student/getStudentMedicalListBySelectedYear/${studentId}/${year}`)              //Api call to get medicals of selected year
+                        const selectedYearResponse = await axios.get(`http://192.248.50.155:9090/api/Student/getStudentMedicalListBySelectedYear/${studentId}/${year}`)              //Api call to get medicals of selected year
                         setStudentMedicalList(selectedYearResponse.data);               //Set selected year medical submissions to the state
                     }
                 }

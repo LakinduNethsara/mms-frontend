@@ -108,12 +108,12 @@ export default function DeanFinalMarkSheet(props) {
       } else if (approved_level === "Dean") {
         setNextApprovedlevel("VC");
       }
-      const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`);
+      const result = await axios.get(`http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`);
       const data = result.data.content;
       
       
 
-      const gpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`);
+      const gpa = await axios.get(`http://192.248.50.155:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`);
       const gpaData = gpa.data.content;
       setStudentGPA(gpaData);
 
@@ -156,10 +156,10 @@ export default function DeanFinalMarkSheet(props) {
       //--------For repeaters
 
 
-      const Repeatresult = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`);
+      const Repeatresult = await axios.get(`http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`);
       const repeaterdata=Repeatresult.data.content;
 
-      const Repeatersgpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`);
+      const Repeatersgpa = await axios.get(`http://192.248.50.155:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`);
       const RepeatersgpaData = gpa.data.content;
       setRepeatStudentGPA(RepeatersgpaData);
 
@@ -219,7 +219,7 @@ export default function DeanFinalMarkSheet(props) {
     try {
       console.log(approval.academic_year, approval.approval_level, approval.approved_user_id, approval.date_time, approval.department_id, approval.level, approval.semester, approval.signature);
       // Use the nextApprovedlevel variable directly in the network request
-      response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
+      response = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
 
       toast.success("Result sheet approved successfully");
 
@@ -245,11 +245,11 @@ export default function DeanFinalMarkSheet(props) {
 
   const fetchSignature = async () => {
     try {
-      const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
+      const ARSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
       setARSign(ARSign.data.content);
-      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
+      const DeanSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
       setDeanSign(DeanSign.data.content);
-      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
+      const VCSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
       setVCSign(VCSign.data.content);
 
       console.log(ARSign.data.content);
@@ -270,7 +270,7 @@ export default function DeanFinalMarkSheet(props) {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const courses = await axios.get(`http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
+        const courses = await axios.get(`http://192.248.50.155:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
         setAllCourses(courses.data);
       } catch (error) {
         console.error('Error fetching courses:', error);

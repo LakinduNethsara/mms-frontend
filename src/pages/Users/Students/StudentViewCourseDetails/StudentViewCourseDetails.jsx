@@ -32,7 +32,7 @@ export default function StudentViewCourseDetails() {
   const loadStudentDetails = async () => {
     if(studentEmail != null){
 
-        const studentDetailsResult = await axios.get(`http://localhost:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)
+        const studentDetailsResult = await axios.get(`http://192.248.50.155:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)
         setStudentId(studentDetailsResult.data.user_id);
         setStudentName(studentDetailsResult.data.name_with_initials);
         setStudentRegisteredYear(studentDetailsResult.data.registered_year);
@@ -45,7 +45,7 @@ export default function StudentViewCourseDetails() {
 
   const loadCourseList = async () => {
       try{
-        const courseListResponse = await axios.get(`http://localhost:9090/api/Student/getAllCourses`)
+        const courseListResponse = await axios.get(`http://192.248.50.155:9090/api/Student/getAllCourses`)
         if(!courseListResponse.data.length>0){
           setErrorMessage("No courses available")
         }else {

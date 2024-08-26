@@ -24,7 +24,7 @@ export default function StudentMarkSheetView() {
     const getStudentGrade = async ()=>{
 
         try{
-            const gradeResponse =await axios.get(`http://localhost:9090/api/Student/getGradesForPublishedMarksSheet/${selectedMarkSheet.level}/${selectedMarkSheet.semester}/${selectedMarkSheet.department}/${selectedMarkSheet.academic_year}`);
+            const gradeResponse =await axios.get(`http://192.248.50.155:9090/api/Student/getGradesForPublishedMarksSheet/${selectedMarkSheet.level}/${selectedMarkSheet.semester}/${selectedMarkSheet.department}/${selectedMarkSheet.academic_year}`);
             
             setStudentGrades(gradeResponse.data);
 
@@ -35,11 +35,11 @@ export default function StudentMarkSheetView() {
             setUniqueCourses(uniqueCourseArr);
 
             //call api to get studentGPA
-            const gpaResponse = await axios.get(`http://localhost:9090/api/Student/getGpaListForPublishedMarksSheet/${selectedMarkSheet.department}/${selectedMarkSheet.academic_year}/${selectedMarkSheet.level}/${selectedMarkSheet.semester}`);
+            const gpaResponse = await axios.get(`http://192.248.50.155:9090/api/Student/getGpaListForPublishedMarksSheet/${selectedMarkSheet.department}/${selectedMarkSheet.academic_year}/${selectedMarkSheet.level}/${selectedMarkSheet.semester}`);
             
             setStudentGpa(gpaResponse.data);
 
-            const courseDetailsResponse = await axios.get(`http://localhost:9090/api/Student/getCourseDetailsForPublishedMarkSheet/${selectedMarkSheet.level}/${selectedMarkSheet.semester}/${selectedMarkSheet.department}/${selectedMarkSheet.academic_year}`);
+            const courseDetailsResponse = await axios.get(`http://192.248.50.155:9090/api/Student/getCourseDetailsForPublishedMarkSheet/${selectedMarkSheet.level}/${selectedMarkSheet.semester}/${selectedMarkSheet.department}/${selectedMarkSheet.academic_year}`);
             setCourseDetails(courseDetailsResponse.data);
             
         }catch(error){
