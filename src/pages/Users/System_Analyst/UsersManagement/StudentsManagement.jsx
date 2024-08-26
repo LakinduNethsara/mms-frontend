@@ -6,13 +6,15 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditStudentModal from './EditStudentModal';
 
+
 export default function StudentsManagement() {
     const [data, setData] = useState([]);
     const [studentsData, setStudentsData] = useState([]);
     const history = useHistory();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
-
+    const [clearButtonClicked, setClearButtonClicked] = useState(false);
+    const [loader, setLoader] = useState(false);
     const expectedKeys = ["user_id", "full_name", "name_with_initials", "email","password","registered_year","role","department_id","is_deleted"];
 
 
@@ -24,6 +26,7 @@ export default function StudentsManagement() {
         try {
             const response = await axios.get("http://192.248.50.155:9090/api/studentdetails/getallstudentsdetails");
             setStudentsData(response.data.content);
+            setLoader(false);
         } catch (error) {
             console.error("Error fetching data from API:", error);
         }
@@ -33,6 +36,12 @@ export default function StudentsManagement() {
         await axios.delete(`http://192.248.50.155:9090/api/lecreg/delete/deleteById/${id}`);
         toast.success("Student deleted successfully!");
         fetchData();
+    };
+
+    const handleClearData = () => {
+        setData([]);
+        toast.info("Data cleared successfully!");
+        setClearButtonClicked(false); // Reset the clear button state
     };
 
     const handleFileUpload = (e) => {
@@ -78,8 +87,8 @@ export default function StudentsManagement() {
             alert("Data submitted successfully!");
             window.location.reload();
         } catch (error) {
-            console.error("Error submitting data:", error);
-            alert("Error submitting data. Please try again.");
+            // console.error("Error submitting data:", error);
+            toast.error("Error submitting data. some users are exists!");
         }
     };
 
@@ -113,6 +122,7 @@ export default function StudentsManagement() {
 };
     return (
         <div className='container'>
+            
             <div className='py-4'>
                 <div className="h2 ">Students Registraion</div>
                 <div className=' my-2' style={{float:"right"}}>
@@ -141,11 +151,32 @@ export default function StudentsManagement() {
                         </tbody>
                     </table>
                     )}
-                    <button type='submit' className='btn btn-outline-success btn-sm my-1'>Submit</button>
+                    <button style={{width:"100px"}} type='submit' className='btn btn-outline-success btn-sm my-1' disabled={clearButtonClicked}>Submit</button>
+                    <button 
+                            type='button'
+                            style={{width:"100px",marginLeft:"10px"}}
+                            className={`btn btn-outline-danger btn-sm my-1 ${clearButtonClicked ? 'disabled' : ''}`}
+                            onClick={() => handleClearData()}
+                        >
+                            Clear
+                    </button>
                 </form>
                 </div>
             </div>
             <div>
+            {loader ? ( 
+
+                    
+                <div style={{margin:"100px",display:"flex"}}>
+
+                    <div class="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+                </div>
+
+
+                ) : (<>
                 <div className="h2 mt-lg-5">Students Details</div>
                 <table className='table table-hover'>
                     <thead>
@@ -178,11 +209,14 @@ export default function StudentsManagement() {
                         ))}
                     </tbody>
                 </table>
+              </>)}  
+
             </div>
                 {isModalOpen && editingUser && (
                     <EditStudentModal row={editingUser} onSubmit={handleEditSubmit} onClose={closeEditModal} />
                 )}
             <ToastContainer />
+
         </div>
     )
 }

@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function StudentRegCourses() {
     const [data, setData] = useState([]);
   const [medicalData, setMedicalData] = useState([]);
-  const expectedKeys = ["student_id", "course_id", "academic_year"];
+  const expectedKeys = ["student_id", "course_id", "academic_year","repeat"];
 
   useEffect(() => {
     fetchData();
@@ -76,8 +76,8 @@ export default function StudentRegCourses() {
     const wb = XLSX.utils.book_new();
     // Create a new worksheet with the specified column headers
     const ws = XLSX.utils.json_to_sheet([
-      { student_id: "", course_id: "", academic_year: "" }
-    ], { header: ["student_id", "course_id", "academic_year"], skipHeader: false });
+      { student_id: "", course_id: "", academic_year: "" ,repeat:""}
+    ], { header: ["student_id", "course_id", "academic_year","repeat"], skipHeader: false });
     // Add the worksheet to the workbook
     XLSX.utils.book_append_sheet(wb, ws, "Students_Courses_Registration");
     // Write the workbook to a file and download it

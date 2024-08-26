@@ -9,6 +9,7 @@ export default function LecRelatedCoursesFA() {
     const storedData = localStorage.getItem('user');
     const [email,setEmail] =useState(); 
     const history = useHistory();
+    const [loader, setLoader] = useState(false);
 
 
     useEffect(() => {
@@ -28,9 +29,23 @@ export default function LecRelatedCoursesFA() {
     const fetchCourses = async () => {
         const res = await axios.get(`http://192.248.50.155:9090/api/courses/getccregcourses/${email}`)
         setCourses(res.data.content);
+        setLoader(false);
     }
   return (
     <div>
+        {loader ? ( 
+
+                    
+<div style={{margin:"100px",display:"flex"}}>
+
+    <div class="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+    </div>
+    <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+</div>
+
+
+) : (<>
         <div className='container' style={{marginTop:"70px"}}>
             <h2>Related Courses</h2>
             <div className='row g-3 my-4'>
@@ -46,6 +61,7 @@ export default function LecRelatedCoursesFA() {
                 ))}
             </div>
         </div>
+        </>)} 
     </div>
   )
 }

@@ -7,6 +7,7 @@ function LoginPage(){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const el = useRef(null);
+    const [loader, setLoader] = useState(false);
 
     useEffect(() => {
         const typed = new Typed(el.current, {
@@ -59,6 +60,7 @@ function LoginPage(){
                 
                 window.location.href = "/";
             }
+            setLoader(false);
         }catch(error){
             toast.error("Invalid User Credentials");
             console.log(error);
@@ -79,10 +81,10 @@ function LoginPage(){
                         <img src="src/assets/LOGO_OF_RUHUNA-removebg-preview.png" className="img-fluid" alt="UOR logo"/>
                     </div>
                     <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-                    <h2 className="fw-bold">
+                    <h4 className="fw-bold">
                     {" "}
                         <span ref={el} />{" "}
-                    </h2>
+                    </h4>
                         <h1 className="fw-bold mb-3 pb-3">LOGIN</h1>
 
                         <form onSubmit={handleSubmit}>
@@ -97,7 +99,15 @@ function LoginPage(){
 
                         {/* <!-- Submit button --> */}
                         <div className=' mt-3'>
-                            <button type="submit" className="btn btn-outline-dark btn-sm " style={{width:"100PX"}}>LOGIN</button>
+                            {loader ? ( 
+
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                                </div>
+                            ) : (
+                                    <button type="submit" className="btn btn-outline-dark btn-sm " style={{width:"100PX"}}>LOGIN</button>
+                                )}
+                            
                             <button type="button" className="btn btn-outline-danger btn-sm mx-3" style={{width:"100PX"}} onClick={handleCancle}>CANCLE</button>
                         </div>
 
