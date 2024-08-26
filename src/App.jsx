@@ -56,7 +56,7 @@ import AddFAMarksByLec from './pages/Users/Lecturer/AddFAMarksByLec';
 import LecRelatedCoursesFA from './components/Users/Lecturer/LecRelatedCoursesFA';
 import GradeMargingChange from './pages/Users/HOD/GradeMargingChange';
 import CCAssignedResultSheet from './pages/Users/CC/CCAssignedResultSheet';
-import AddRelatedDept from './pages/Users/System_Analyst/CourseModule/AddRelatedDept';
+
 
 
 
@@ -196,13 +196,10 @@ function App() {
             <Route exact path="/pendingVCCertifyMarksheet" 
               render={(props) => <CertifyMarksheet {...props}  approved_level={"Dean"}/>} 
             />
-            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level" 
+            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level/:student_id/:academic_year/:repeat" 
               render={() => <MarksCheckingForm/>} 
             />
 
-            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level" 
-              render={() => <MarksCheckingForm/>} 
-            />
 
             <Route exact path="/changesGradeMargin">
               <GradeMargingChange/>
@@ -272,9 +269,7 @@ function App() {
 
             </Route>
 
-            <Route path="/relateddeptreq">
-              <AddRelatedDept />
-            </Route>
+    
 
             <Route path="/fa_addby_lec/:course_id/:course_name">
               <AddFAMarksByLec />
