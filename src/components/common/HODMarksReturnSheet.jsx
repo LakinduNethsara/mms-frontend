@@ -9,6 +9,7 @@ import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal }
 import { ToastContainer, toast } from 'react-toastify';
 import DateObject from 'react-date-object';
 import { useRef } from 'react';
+import BackButton from '../Users/AR/BackButton/BackButton';
 
 
 
@@ -480,6 +481,7 @@ useEffect(() => {
                 <>
                 <div id="marks-return-sheet" style={{ width:"95%",marginLeft:"40px"}} className=' container'>
                 <ToastContainer/>
+                <BackButton/>
                         <div >
                         <div>
                             <div >

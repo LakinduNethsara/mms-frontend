@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
+import BackButton from '../Users/AR/BackButton/BackButton';
 
 export default function CertifyMarksheet(props) {
   const [user, setUser] = useState(null);
@@ -42,7 +43,9 @@ export default function CertifyMarksheet(props) {
 
   return (
     <>
+    <BackButton />
       <div className='certify-div-1'>
+        
         <div className='certify-div-2'>
           <table className='table table-striped certify-table'>
             <thead className='certify-table-head'>

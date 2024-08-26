@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import BackButton from '../../../components/Users/AR/BackButton/BackButton';
 
 export default function CCAssignedResultSheet() {
     const storedData = localStorage.getItem('user');
@@ -77,6 +78,7 @@ export default function CCAssignedResultSheet() {
 
     return (
         <div className="row">
+            <BackButton />
             {/* Render Final Mark Sheet Card */}
             <div className="col-md-4 mb-4">
                 <div className="card text-center functionCard" onClick={() => history.push(`/FinalMarkSheet/${level}/${semester}/${department}/${academic_year}`)}>

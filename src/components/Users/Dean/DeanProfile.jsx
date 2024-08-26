@@ -59,28 +59,28 @@ function DeanDashBoard() {
     <>
       <ToastContainer />
       {loading ? (
-        <div className="col mb-4">
-          <div className="card text-center functionCard">
-            <div className="card-body">
-              <h5 className="card-title">Loading...</h5>
-            </div>
-          </div>
+        <div className="d-flex justify-content-center">
+        <div className="spinner-border" role="status">
+            <span className="sr-only"></span>
+        </div>
         </div>
       ) : (
         <>
-          <div className="col mb-4">
-            <div className="card text-center functionCard">
-              <div className="card-body">
-                <a href="/pendingDeanCertifyMarksheet" className="btn btn-primary home-page-class-button">Certify Result Sheets</a>
-              </div>
-            </div>
-          </div>
+        <div className="d-flex mb-4" style={{ margin: "100px" }}>
+  <div className="col-md-3 mb-5" style={{ margin: "0 50px 0 0" }}>
+    <div className="card shadow m-4" style={{ width: "100%", height: "100%" }}>
+      <div className="card-body d-flex align-items-center justify-content-center">
+        <a href="/pendingDeanCertifyMarksheet" className="btn btn-primary home-page-class-button">
+          Certify Result Sheets
+        </a>
+      </div>
+    </div>
+  </div>
 
-          <div className="col mb-4">
-            <div className="card text-center functionCard">
-              <div className="card-body">
-                <br/><h5 className="card-title">Results Board</h5><br/>
-                
+  <div className="col-md-3 mb-3">
+    <div className="card shadow m-4" style={{ width: "80%", height: "80%" }}>
+      <div className="card-body text-center d-flex flex-column justify-content-center">
+                <h3>Results Board</h3>
                 <select className="form-select home-page-class-button marksheet-select-box-button" style={{backgroundColor:"#0d6efd",color:"white",marginLeft:"auto",marginRight:"auto",textAlign:"center",width:"max-content"}} value={department} onChange={(e)=>{handleChange(e.target.value)}}>
 
                   <option value={""} disabled style={{color:"rgb(100, 100,100)"}}>
@@ -102,6 +102,7 @@ function DeanDashBoard() {
                 </select>
               </div>
             </div>
+          </div>
           </div>
         </>
       )}

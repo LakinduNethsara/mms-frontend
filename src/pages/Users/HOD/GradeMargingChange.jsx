@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { fetchAcademicYear, saveAcademicYearToLocal } from '../../../components/common/AcademicYearManagerSingleton';
 import { ToastContainer,toast } from 'react-toastify';
+import BackButton from '../../../components/Users/AR/BackButton/BackButton';
 
 const getFuzzyMatches = (input, list) => {
   const lowerInput = input.toLowerCase();
@@ -177,12 +178,18 @@ export default function GradeMarginChange() {
 
     };
 
+
   return (
+    <>
+      <BackButton />
+    
     <div style={{ margin: '50px', textAlign: 'center' }}>
       <ToastContainer/>
-      <h1 style={{ marginBottom: '20px' }}>Adjust Grade</h1>
+      
 
-      <label style={{ marginRight: '10px' }}>Select Academic Year:</label>
+      <h1 style={{ marginBottom: '30px' }}> Grade Margin </h1>
+
+      <label style={{ marginRight: '10px',  marginBottom:'10px'}}>Select Academic Year:</label>
       <div>
         <input
           type="radio"
@@ -191,6 +198,9 @@ export default function GradeMarginChange() {
           value={academicDetails.current_academic_year}
           checked={academic_year === academicDetails.current_academic_year}
           onChange={(e) => setAcademicYear(e.target.value)}
+
+
+          style={{marginBottom:'10px'}}
         />
         <label htmlFor="current">Current {academicDetails.current_academic_year}</label>
         <input
@@ -200,6 +210,7 @@ export default function GradeMarginChange() {
           value={academicDetails.previous_academic_year}
           checked={academic_year === academicDetails.previous_academic_year}
           onChange={(e) => setAcademicYear(e.target.value)}
+          style={{marginLeft:'20px'}}
         />
         <label htmlFor="previous">Previous {academicDetails.previous_academic_year}</label>
       </div>
@@ -301,5 +312,7 @@ export default function GradeMarginChange() {
 
       <button onClick={saveMargin} style={{ marginLeft: '10px' }}>Update</button>
     </div>
+
+    </>
   );
 }

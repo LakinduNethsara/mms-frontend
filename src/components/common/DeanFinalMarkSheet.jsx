@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import SignatureForApproval from './SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from './AcademicYearManagerSingleton';
 import DateObject from 'react-date-object';
+import BackButton from '../Users/AR/BackButton/BackButton';
 
 export default function DeanFinalMarkSheet(props) {
   const [loading, setLoading] = useState(true);
@@ -198,7 +199,7 @@ export default function DeanFinalMarkSheet(props) {
     };
   
     fetchData();
-  }, [level, semester, approved_level, dept]);
+  }, [level, semester, dept, approved_level, academic_year]);
   
   // ... rest of the code remains the same
   
@@ -336,11 +337,11 @@ const alternateRowStyle = {
              </div>
             ) : (
               <>
-     
+      <BackButton />
       {finalResults.length > 0 ? (
 
         <>
-
+        
         {
         role == "dean" && approved_level == "HOD" ? (
           <button
@@ -638,7 +639,11 @@ const alternateRowStyle = {
                       {newSignature !== null?
 
                       <div>
-                      <img src={newSignature} style={{ width: '80px', height: '40px' }} />
+                      {/* <img src={newSignature} style={{ width: '80px', height: '40px' }} /> */}
+                      <div>
+
+
+                      </div>
                       <p></p>
                       <p>Vice Chancellor</p>
                       <p>Faculty of Technology</p>
@@ -651,10 +656,15 @@ const alternateRowStyle = {
             </div>
             
             <div className=' col-7'>
-              
-              {approved_level!="HOD"?<div >
+             
+              {approved_level!="HOD" && approved_level!="Dean"?<div >
               <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
               </div>:null}
+
+
+              
+             
+           
 
             </div>
           
