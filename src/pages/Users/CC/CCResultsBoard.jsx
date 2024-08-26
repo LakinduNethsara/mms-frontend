@@ -29,7 +29,7 @@ export default function CCResultsBoard() {
 
     const getResultBoard = async () => {
         try {
-            const response = await axios.get(`http://localhost:9090/api/results_board/getAvailableResultsBoardsforDeanCC/${department}`);
+            const response = await axios.get(`http://192.248.50.155:9090/api/results_board/getAvailableResultsBoardsforDeanCC/${department}`);
             setResultBoard(response.data.content);
         } catch (error) {
             console.error('Error fetching data:', error);

@@ -50,7 +50,7 @@ export default function GradeMarginChange() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('http://localhost:9090/api/courses/getallcourses');
+        const response = await axios.get('http://192.248.50.155:9090/api/courses/getallcourses');
         if (response.data.code === '00') {
           const courses = response.data.content;
           setCourseList(courses.map(course => ({
@@ -73,7 +73,7 @@ export default function GradeMarginChange() {
     const fetchGrades = async () => {
       if (selectedCourse && academic_year) {
         try {
-          const response = await axios.get(`http://localhost:9090/api/courses/getGradeMargin/${selectedCourse}/${academic_year}`);
+          const response = await axios.get(`http://192.248.50.155:9090/api/courses/getGradeMargin/${selectedCourse}/${academic_year}`);
           setGrades(response.data.content || []);
         } catch (error) {
           console.error('Error fetching grades:', error);
@@ -163,7 +163,7 @@ export default function GradeMarginChange() {
         }
     else{
         try {
-            const response = await axios.put(`http://localhost:9090/api/courses/updateGradeMargins/${selectedCourse}/${academic_year}/${selectedGrade}/${margin}`);
+            const response = await axios.put(`http://192.248.50.155:9090/api/courses/updateGradeMargins/${selectedCourse}/${academic_year}/${selectedGrade}/${margin}`);
     
             if (response.data.code === '00') {  
             toast.success('Grade margin updated successfully');

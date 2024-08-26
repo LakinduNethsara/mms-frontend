@@ -42,7 +42,7 @@ export default function AssignLecturerCourse() {
 
     const loadCids = async () => {
         try {
-            const response = await axios.get('http://localhost:9090/api/courses/allcoursesids');
+            const response = await axios.get('http://192.248.50.155:9090/api/courses/allcoursesids');
             console.log(response.data);
             if (Array.isArray(response.data.content)) {
                 setCids(response.data.content);
@@ -55,7 +55,7 @@ export default function AssignLecturerCourse() {
         }
 
         try {
-            const result = await axios.get('http://localhost:9090/api/lecreg/get/alllecturersdetails');
+            const result = await axios.get('http://192.248.50.155:9090/api/lecreg/get/alllecturersdetails');
             if (Array.isArray(result.data.content)) {
                 setCCoordinatorids(result.data.content);
                 console.log(result.data.content);
@@ -103,7 +103,7 @@ export default function AssignLecturerCourse() {
         console.log(selectedLecturerIds);
 
         try {
-            await axios.post('http://localhost:9090/api/ccmanage/insertacc', newCourseCoordinator);
+            await axios.post('http://192.248.50.155:9090/api/ccmanage/insertacc', newCourseCoordinator);
             toast.success("Course coordinator data inserted successfully.");
             handleClear();
         } catch (error) {

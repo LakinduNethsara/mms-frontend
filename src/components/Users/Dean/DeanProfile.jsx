@@ -22,7 +22,7 @@ function DeanDashBoard() {
         return;
       }
       setLoading(true);
-      const response = await axios.get(`http://localhost:9090/api/results_board/getAvailableResultsBoardsforDeanCC/${department}`);
+      const response = await axios.get(`http://192.248.50.155:9090/api/results_board/getAvailableResultsBoardsforDeanCC/${department}`);
       
       if (response.status !== 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
