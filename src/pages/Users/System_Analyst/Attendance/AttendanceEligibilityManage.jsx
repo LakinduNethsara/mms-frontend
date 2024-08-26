@@ -72,6 +72,7 @@ export default function AttendanceEligibilityManage() {
             await axios.post("http://localhost:9090/api/attendanceEligibility/insertbulkattendance", data);
             toast.success("Data submitted successfully!");
             fetchData();
+            window.location.reload();
         } catch (error) {
             console.error("Error submitting data:", error);
             toast.error("Error submitting data. Please try again.");
@@ -116,7 +117,7 @@ export default function AttendanceEligibilityManage() {
                                 </tbody>
                             </table>
                         )}
-                        <button type='submit' className='btn btn-outline-success btn-sm my-1'>Submit</button>
+                        <button type='submit' style={{width:"100px"}} className='btn btn-outline-success btn-sm my-1'>Submit</button>
                     </form>
                 </div>
             </div>
