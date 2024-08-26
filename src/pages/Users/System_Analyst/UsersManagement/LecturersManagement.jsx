@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditUserModal from './EditUserModal';
@@ -8,7 +8,7 @@ import EditUserModal from './EditUserModal';
 export default function LecturersManagement() {
     const [users, setUser] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingUser, setEditingUser] = useState('');
+    const [editingUser, setEditingUser] = useState(null);
     const [user, setUserDetails] = useState({
         user_id: "",
         full_name: "",
@@ -20,7 +20,6 @@ export default function LecturersManagement() {
         department_id: "",
         is_deleted: false
     });
-
 
     const [refreshKey, setRefreshKey] = useState(Date.now());
 
@@ -92,7 +91,7 @@ export default function LecturersManagement() {
 
     const closeEditModal = () => {
         setIsModalOpen(false);
-        setEditingUser('');
+        setEditingUser(null);
     };
 
     const handleEditSubmit = async (updatedUser) => {
@@ -123,8 +122,8 @@ export default function LecturersManagement() {
                             </div>
                             <div className='col-md-3'>
                                 <label htmlFor='role' className='form-label'>User Role</label>
-                                <select type={"text"} className=' form-select' placeholder='Choose User Role' name='role' value={user.role} onChange={(e) => onInputChange(e)} >
-                                    <option value="" disabled>Select Role</option>
+                                <select type={"text"} className=' form-select' placeholder='Enter User Role' name='role' value={user.role} onChange={(e) => onInputChange(e)} >
+                                    <option value="">Select Role</option>
                                     <option value="lecturer">Lecturer</option>
                                     <option value="dean">Dean</option>
                                     <option value="hod">HOD</option>
@@ -147,16 +146,7 @@ export default function LecturersManagement() {
 
                             <div className='col-md-3'>
                                 <label htmlFor='department_id' className='form-label'>Department</label>
-                                {/* <input type={"text"} className='form-control' placeholder='Enter Department' name='department_id' value={user.department_id} onChange={(e) => onInputChange(e)} /> */}
-                                <select type={"text"} className=' form-select' placeholder='Choose Department' name='department_id' value={user.department_id} onChange={(e) => onInputChange(e)} >
-                                    <option value="" disabled>Select Department</option>
-                                    <option value="ICT">ICT</option>
-                                    <option value="ET">ET</option>
-                                    <option value="BST">BST</option>
-                                    <option value="Multi_Disciplinary">Multi_Disciplinary</option>
-                                    <option value="academic">academic</option>
-                                    <option value="non-academic">non-academic</option>
-                                </select>
+                                <input type={"text"} className='form-control' placeholder='Enter Department' name='department_id' value={user.department_id} onChange={(e) => onInputChange(e)} />
                             </div>
 
                             <div className='col-md-3 d-flex align-items-end'>
