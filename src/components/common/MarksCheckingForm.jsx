@@ -62,8 +62,11 @@ const {course_id, course_name,approval_level,student_id,academic_year,repeat } =
 
 const fetchData = async () => {
   try {
+
     setLoading
-    const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/${repeat}/${academic_year}`);
+
+    const response = await axios.get(`http://192.248.50.155:9090/api/marksReturnSheet/getMarks/${course_id}/${repeat}/${academic_year}`);
+
     const data = response.data;
 
     // Filter the data based on student_id
@@ -131,8 +134,11 @@ const endMarks={
 
   const Eligi = async () => {
     try {
+
       setLoading(true);
-      const result = await axios.get(`http://localhost:9090/api/attendanceEligibility/getAttendanceEligibilityByStuIdCourseId/${course_id},${student_id}`);
+
+      const result = await axios.get(`http://192.248.50.155:9090/api/attendanceEligibility/getAttendanceEligibilityByStuIdCourseId/${course_id},${student_id}`);
+
       setAttendenceEligibility(result.data);
    
     } catch (error) {
@@ -164,7 +170,7 @@ const endMarks={
       };
 
       // Send the notification
-      const response = await axios.post(`http://localhost:9090/api/notifications/sendNotification`, notification);
+      const response = await axios.post(`http://192.248.50.155:9090/api/notifications/sendNotification`, notification);
       setText(''); // Clear the text area
      
       toast.success(response.data.message);
@@ -177,9 +183,12 @@ const endMarks={
   // Define the getCourseCoordinatorId function outside of handleSubmit
   const getCourseCoordinatorId = async (course_id) => {
     //API call to fetch course details
+
     setLoading(true);
-    const cc = await axios.get(`http://localhost:9090/api/ccmanage/getCCByCourse/${course_id}`);
+  
+    const cc = await axios.get(`http://192.248.50.155:9090/api/ccmanage/getCCByCourse/${course_id}`);
     setLoading(false);
+
     // Assuming the response includes the coordinator's ID
     return cc; // Return the response to be used in handleSubmit
   };
@@ -229,7 +238,7 @@ const endMarks={
   
         // Make the API request
         const response = await axios.put(
-          `http://localhost:9090/api/marksReturnSheet/updateMarks`,
+          `http://192.248.50.155:9090/api/marksReturnSheet/updateMarks`,
           combinedData
         );
         

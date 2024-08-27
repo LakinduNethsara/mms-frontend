@@ -20,7 +20,7 @@ export default function ABListPage() {
     const loadData = async() => {   //Function to load the student details havind E* from the backend
       
 
-        const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getABDetails/${previousApprovalLevel}`);   //Get all the course and student details having AB from the backend
+        const result = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getABDetails/${previousApprovalLevel}`);   //Get all the course and student details having AB from the backend
         setCourseList(result.data);    //Set the courseList state to the data received from the backend
         
         // await result.data.map((element)=>{    //Filter the courses and student details under AR approval

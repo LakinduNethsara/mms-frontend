@@ -31,10 +31,13 @@ export default function CCMarksApproval() {
 
     const fetchData = async (userEmail) => {
         try {
+
             setLoading(true); // Start loading
             
-            const response = await axios.get(`http://localhost:9090/api/courses/getcourseforcc/${userEmail}`);
-            if (response.data.code === '00') {
+            const response = await axios.get(`http://192.248.50.155:9090/api/courses/getcourseforcc/${userEmail}`);
+            if (response.data.code == '00') 
+            {
+
                 const data = response.data.content.map(course => ({
                     course_id: course[0],
                     course_name: course[1],
@@ -57,10 +60,16 @@ export default function CCMarksApproval() {
 
     const lecturerCertify = async (userEmail) => {
         try {
+
             setLoading(true); // Start loading
   
-            const response = await axios.get(`http://localhost:9090/api/courses/getCoursesforLectCertify/${userEmail}`);
-            if (response.data.code === '00') {
+
+
+
+            const response = await axios.get(`http://192.248.50.155:9090/api/courses/getCoursesforLectCertify/${userEmail}`);
+            if (response.data.code == '00') {
+             
+
                 const data = response.data.content.map(course => ({
                     course_id: course[0],
                     course_name: course[1],
@@ -83,7 +92,7 @@ export default function CCMarksApproval() {
 
     const fetchApprovalLevel = async (courseId, department) => {
         try {
-            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getApprovedLevel/${courseId}/${department}`);
+            const response = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getApprovedLevel/${courseId}/${department}`);
             const data = response.data;
             setApprovalLevel(data);
             return data;

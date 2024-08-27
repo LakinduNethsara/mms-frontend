@@ -21,7 +21,7 @@ function Navbar() {
     }
 
     return (
-        <nav className="navbar bg-body-tertiary">
+        <nav className="navbar bg-body-tertiary ">
             <div className="container-fluid">
                 {
                     user != null ? 
@@ -49,6 +49,12 @@ function Navbar() {
                                             <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/ar_profile">          {/*Link to the Assistant Registrar dashboard*/}
                                                 Dashboard
+                                                </a>
+                                            </li>
+
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
+                                                <a className="nav-link active" aria-current="page" href="/aruploadmedicals">            {/*Link to upload the medicals list*/}
+                                                Upload Medicals
                                                 </a>
                                             </li>
 
@@ -91,11 +97,7 @@ function Navbar() {
                                                         Department of BST
                                                         </a>
                                                     </li>
-                                                    <li>
-                                                        <a className="dropdown-item" href="/arviewmtdmarks">            {/*Link to the MTD department marks return sheet*/}
-                                                        Department of Multi Disciplinary
-                                                        </a>
-                                                    </li>
+                                                    
                                                 </ul>
                                             </li>
                                             {/* <hr></hr> */}

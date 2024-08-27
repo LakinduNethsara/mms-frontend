@@ -30,10 +30,10 @@ export default function CertifyMarksheet(props) {
     try {
       let response;
       if (approval_level === "AR" || approved_level === "Dean") {
-        response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approval_level}/${status}`);
+        response = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approval_level}/${status}`);
         setFinalMarksheetList(response.data);
       } else if (approval_level === "lecturer" && user?.department_id) {
-        response = await axios.get(`http://localhost:9090/api/approvalLevel/getMarksReturnSheetsForHODCertify/${user.department_id}`);
+        response = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getMarksReturnSheetsForHODCertify/${user.department_id}`);
         setFinalMarksheetList(response.data.content);
       }
     } catch (e) {

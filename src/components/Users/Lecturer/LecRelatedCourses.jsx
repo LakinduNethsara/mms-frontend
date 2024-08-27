@@ -34,7 +34,7 @@ export default function LecRelatedCourses() {
         setLoader(true);
         if
         (!email) return;
-        const res = await axios.get(`http://localhost:9090/api/courses/getccregcourses/${email}`)
+        const res = await axios.get(`http://192.248.50.155:9090/api/courses/getccregcourses/${email}`)
         setCourses(res.data.content);
         setLoader(false);
     }

@@ -100,7 +100,119 @@ export default function DeanFinalMarkSheet(props) {
     "signature": newSignature
   };
 
- 
+
+
+  const resultSheet = async () => {
+    try {
+      if (approved_level === "RB") {
+        setNextApprovedlevel("AR");
+      } else if (approved_level === "AR") {
+        setNextApprovedlevel("Dean");
+      } else if (approved_level === "Dean") {
+        setNextApprovedlevel("VC");
+      }
+      const result = await axios.get(`http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`);
+      const data = result.data.content;
+      
+      
+
+      const gpa = await axios.get(`http://192.248.50.155:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`);
+      const gpaData = gpa.data.content;
+      setStudentGPA(gpaData);
+
+    
+
+      const processedData = data.reduce((acc, curr) => {
+        const existingStudent = acc.find(student => student.student_id === curr.student_id);
+        const gpaInfo = gpaData.find(ele => ele.student_id === curr.student_id);
+        if (existingStudent) {
+          existingStudent.courses.push({
+            course_id: curr.course_id,
+            overall_score: curr.total_rounded_mark,
+            grade: curr.grade,
+          });
+        } else {
+          acc.push({
+            student_id: curr.student_id,
+            courses: [{
+              course_id: curr.course_id,
+              overall_score: curr.total_rounded_mark,
+              grade: curr.grade,
+            }]
+          });
+        }
+        return acc;
+      }, []);
+
+      setFinalResults(processedData);
+      const courseIdsSet = new Set();
+      processedData.forEach(student => {
+        student.courses.forEach(course => {
+          courseIdsSet.add(course.course_id);
+        });
+      });
+      setCourses(Array.from(courseIdsSet));
+
+      setStudents(processedData.map(student => student.student_id));
+
+
+      //--------For repeaters
+
+
+      const Repeatresult = await axios.get(`http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`);
+      const repeaterdata=Repeatresult.data.content;
+
+      const Repeatersgpa = await axios.get(`http://192.248.50.155:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`);
+      const RepeatersgpaData = gpa.data.content;
+      setRepeatStudentGPA(RepeatersgpaData);
+
+      const processedRepeatersData = repeaterdata.reduce((acc, curr) => {
+        const existingStudent = acc.find(student => student.student_id === curr.student_id);
+        const gpaInfo = RepeatersgpaData.find(ele => ele.student_id === curr.student_id);
+        if (existingStudent) {
+          existingStudent.courses.push({
+            course_id: curr.course_id,
+            overall_score: curr.total_rounded_mark,
+            grade: curr.grade,
+          });
+        } else {
+          acc.push({
+            student_id: curr.student_id,
+            courses: [{
+              course_id: curr.course_id,
+              overall_score: curr.total_rounded_mark,
+              grade: curr.grade,
+            }]
+          });
+        }
+        return acc;
+      }, []);
+
+      try {
+
+      } catch (error) {
+        console.error('Error fetching GPA data:', error.response || error.message);
+      }
+
+      setRepeatersFinalResults(processedRepeatersData);
+
+      const repeaterscourseIdsSet = new Set();
+      processedRepeatersData.forEach(student => {
+        student.courses.forEach(course => {
+          courseIdsSet.add(course.course_id);
+        });
+      });
+      setrepeatersCourses(Array.from(repeaterscourseIdsSet));
+
+      setrepeatStudents(processedRepeatersData.map(student => student.student_id));
+
+    } catch (error) {
+      console.error(error);
+      setError(error.message);
+    }
+  };
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -209,7 +321,7 @@ export default function DeanFinalMarkSheet(props) {
     try {
       console.log(approval.academic_year, approval.approval_level, approval.approved_user_id, approval.date_time, approval.department_id, approval.level, approval.semester, approval.signature);
       // Use the nextApprovedlevel variable directly in the network request
-      response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
+      response = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
 
       toast.success("Result sheet approved successfully");
 
@@ -235,13 +347,15 @@ export default function DeanFinalMarkSheet(props) {
 
   const fetchSignature = async () => {
     try {
+
       setLoading(true);
 
-      const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
+      const ARSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
+
       setARSign(ARSign.data.content);
-      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
+      const DeanSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
       setDeanSign(DeanSign.data.content);
-      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
+      const VCSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
       setVCSign(VCSign.data.content);
 
       console.log(ARSign.data.content);
@@ -264,8 +378,11 @@ export default function DeanFinalMarkSheet(props) {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+
         setLoading(true);
-        const courses = await axios.get(`http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
+
+        const courses = await axios.get(`http://192.248.50.155:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
+
         setAllCourses(courses.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
