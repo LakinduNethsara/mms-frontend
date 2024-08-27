@@ -194,7 +194,7 @@ export default function HODMarksReturnSheet(props) {
         const fetchLecturers = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${user_department}`);
+                const response = await axios.get(`http://192.248.50.155:9090/api/lecreg/get/getAllLecurerDetails/${user_department}`);
                 if (response.data.code === '00') {
                     setLecturerList(response.data.content);
                     console.log("Lecturers fetched:", response.data.content);
