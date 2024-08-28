@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import BackButton from '../../../components/Users/AR/BackButton/BackButton';
 
 export default function CCResultsBoard() {
     const [resultBoard, setResultBoard] = useState([]);
@@ -52,6 +53,7 @@ export default function CCResultsBoard() {
 
     return (
         <div className='container'>
+            <BackButton/>
             <h2>Results Board</h2>
             <div className="row">
                 {resultBoard.map((board) => (

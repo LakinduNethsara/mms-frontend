@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
+import BackButton from '../Users/AR/BackButton/BackButton';
 
 export default function CertifyMarksheet(props) {
   const [user, setUser] = useState(null);
@@ -25,13 +26,14 @@ export default function CertifyMarksheet(props) {
     }
   }, [approved_level, user]);
 
-  const loadAvailableResultSheets = async (approval_level) => {
+  console.log(approved_level)
+  const loadAvailableResultSheets = async (approved_level) => {
     try {
       let response;
-      if (approval_level === "AR" || approved_level === "Dean") {
-        response = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approval_level}/${status}`);
+      if (approved_level === "AR" || approved_level === "Dean") {
+        response = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approved_level}/${status}`);
         setFinalMarksheetList(response.data);
-      } else if (approval_level === "lecturer" && user?.department_id) {
+      } else if (approved_level === "lecturer" && user?.department_id) {
         response = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getMarksReturnSheetsForHODCertify/${user.department_id}`);
         setFinalMarksheetList(response.data.content);
       }
@@ -42,7 +44,9 @@ export default function CertifyMarksheet(props) {
 
   return (
     <>
+    <BackButton />
       <div className='certify-div-1'>
+        
         <div className='certify-div-2'>
           <table className='table table-striped certify-table'>
             <thead className='certify-table-head'>

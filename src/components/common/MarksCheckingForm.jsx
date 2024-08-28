@@ -10,6 +10,7 @@ import DateObject from 'react-date-object';
 
 
 export default function MarksCheckingForm() {
+  const[loading,setLoading]=useState(false);
   const history = useHistory();
   const [text, setText] = useState('');
   const[noData,setNoData]=useState('')
@@ -61,7 +62,11 @@ const {course_id, course_name,approval_level,student_id,academic_year,repeat } =
 
 const fetchData = async () => {
   try {
+
+    setLoading
+
     const response = await axios.get(`http://192.248.50.155:9090/api/marksReturnSheet/getMarks/${course_id}/${repeat}/${academic_year}`);
+
     const data = response.data;
 
     // Filter the data based on student_id
@@ -92,6 +97,10 @@ const fetchData = async () => {
   } catch (error) {
 
     setNoData(true); // Set noData to true if there is an error
+  }
+  finally
+  {
+    setLoading(false);
   }
 };
 
@@ -125,7 +134,11 @@ const endMarks={
 
   const Eligi = async () => {
     try {
+
+      setLoading(true);
+
       const result = await axios.get(`http://192.248.50.155:9090/api/attendanceEligibility/getAttendanceEligibilityByStuIdCourseId/${course_id},${student_id}`);
+
       setAttendenceEligibility(result.data);
    
     } catch (error) {
@@ -133,6 +146,9 @@ const endMarks={
    
       }
      
+    }
+    finally{
+      setLoading(false);
     }
   };
 
@@ -167,7 +183,11 @@ const endMarks={
   // Define the getCourseCoordinatorId function outside of handleSubmit
   const getCourseCoordinatorId = async (course_id) => {
     //API call to fetch course details
+
+    setLoading(true);
+  
     const cc = await axios.get(`http://192.248.50.155:9090/api/ccmanage/getCCByCourse/${course_id}`);
+    setLoading(false);
 
     // Assuming the response includes the coordinator's ID
     return cc; // Return the response to be used in handleSubmit
@@ -260,6 +280,13 @@ const endMarks={
   return (
     <>
       <ToastContainer />
+      {loading ? (
+        <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+          <div className="spinner-border" role="status">
+            <span className="sr-only"></span>
+          </div>
+        </div>
+      ) :  (
       
       <div className=' bg-white' style={{marginTop:"70px"}}>
       <h2 style={{marginLeft:"30px"}}>{student_id} {marksSheet.student_name}</h2>
@@ -394,12 +421,14 @@ const endMarks={
         <div>
         </div>
       </div>
+      )}
         <EditValueModal
         isOpen={isModalOpen}
         onClose={closeModal}
         initialValue={editingItem?.value}
         onSubmit={(newValue, reason) => textOnChange(editingItem.key, newValue, reason)}
         />
+                              
         
 
     </>

@@ -61,6 +61,7 @@ import AddRelatedDept from './pages/Users/System_Analyst/CourseModule/AddRelated
 
 
 
+
 function App() {
   return (
     <Router>
@@ -103,11 +104,11 @@ function App() {
               </Route>
 
 
-              <Route path="/viewMarks/:course_id/:course_name/:department_id/:academicYear">   {/* Link to view marks remaining to approve page validations */}
+              <Route path="/viewMarks/:course_id/:course_name/:department_id">   {/* Link to view marks remaining to approve page validations */}
                 <ViewMarksTableValidations/>
               </Route>
 
-              <Route path="/ARMarksReturnSheet/:course_id/:course_name/:department/:academicYear">    {/* Link to view ar Marks certify sheet*/}
+              <Route path="/ARMarksReturnSheet/:course_id/:course_name/:department/:academic_year">    {/* Link to view ar Marks certify sheet*/}
                 <HODMarksReturnSheet approved_level={"HOD"}/>
               </Route>
 
@@ -196,8 +197,8 @@ function App() {
             <Route exact path="/pendingVCCertifyMarksheet" 
               render={(props) => <CertifyMarksheet {...props}  approved_level={"Dean"}/>} 
             />
-            <Route exact path="/pendingHODCertifyMarksheet" 
-              render={(props) => <CertifyMarksheet {...props}  approved_level={"lecturer"}/>} 
+            <Route exact path="/pendingHODCertifyMarksheet"
+              render={(props) => <CertifyMarksheet {...props}  approved_level={"lecturer"}/>}
             />
             <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level/:student_id/:academic_year/:repeat" 
               render={() => <MarksCheckingForm/>} 
@@ -246,8 +247,6 @@ function App() {
               <CCResultsBoard />
             </Route>
 
-            
-
             {/* System analyst */}
             <Route path="/managestaff">
               <LecturersManagement />
@@ -274,9 +273,13 @@ function App() {
 
             </Route>
 
+
+    
+
             <Route path="/relateddeptreq">
               <AddRelatedDept />
             </Route>
+
 
             <Route path="/fa_addby_lec/:course_id/:course_name">
               <AddFAMarksByLec />

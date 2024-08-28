@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../components/common/AcademicYearManagerSingleton';
 import axios from 'axios';
+import BackButton from '../AR/BackButton/BackButton';
 
 export default function HODProfile() {
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
@@ -72,6 +73,7 @@ export default function HODProfile() {
     return (
         <>
             <div className="container mt-4">
+               
                 
                 <div className="row">
                     <div className="col-md-3 mb-4">
@@ -101,34 +103,18 @@ export default function HODProfile() {
                     ))}
                 </div> */}
 
-                <h2>Results Board</h2>
+                
                 <div className="row">
-    {resultBoard.length > 0 ? (
-        resultBoard.map((board) => (
-            <div className="col-md-4 mb-4" key={board.id}>
-                <div className="card text-center functionCard">
-                    <div className="card-body">
-                        {/* Removed console.log for clarity */}
-                        <h5>{`Department: ${board.department}`}</h5>
-                        <p>{`Level: ${board.level}`}</p>
-                        <p>{`Semester: ${board.semester}`}</p>
-                        <p>{`Status: ${board.status}`}</p>
-                        {board.conducted_date_time && (
-                            <p>{`Conducted: ${new Date(board.conducted_date_time).toLocaleString()}`}</p>
-                        )}
-                        {board.status === "Started" ? (
-                            <a href={`/FinalMarkSheet/${board.level}/${board.semester}/${board.department}`} className="btn btn-primary">View</a>
-                        ) : null}
+                    <div className="col-md-3 mb-4">
+                        <div className="card text-center functionCard">
+                            <div className="card-body">
+                                <a href={`/ccresultsboard`} className="btn btn-primary home-page-class-button">
+                                    Result Board
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        ))
-    ) : (
-        <div className="col-md-12">
-            <h5>No results available.</h5>
-        </div>
-    )}
-</div>
             </div>
         </>
     );
