@@ -172,7 +172,7 @@ export default function HODMarksReturnSheet(props) {
         "department_id":department,
         "signature":newSignature
     }
-    
+    console.log(department)
     const lecturerCertifyAssign={
         "lecturer_id":selectedlec,
         "course_id": course_id,
@@ -347,6 +347,7 @@ useEffect(() => {
         else{
            
         try {
+            console.log(lecturerCertifyAssign)
             e.preventDefault();
             
             if(approval_level==="finalized"){
