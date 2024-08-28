@@ -378,9 +378,7 @@ export default function DeanFinalMarkSheet(props) {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-
         setLoading(true);
-
         const courses = await axios.get(`http://192.248.50.155:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
 
         setAllCourses(courses.data);
@@ -410,7 +408,7 @@ export default function DeanFinalMarkSheet(props) {
   
     window.addEventListener('beforeunload', handleBeforeUnload);
   
-    // Cleanup the event listener on component unmount
+  // Cleanup the event listener on component unmount
     return handleUnload;
   }, [newSignature]);
 
@@ -756,7 +754,7 @@ const alternateRowStyle = {
                       {newSignature !== null?
 
                       <div>
-                      {/* <img src={newSignature} style={{ width: '80px', height: '40px' }} /> */}
+                      
                       <div>
 
 
@@ -786,8 +784,9 @@ const alternateRowStyle = {
             </div>
           
           </div>
+     
 
-          {approved_level!="HOD"?  <form onSubmit={handleSubmit}>
+          {approved_level!="HOD" && approved_level!="Dean"?  <form onSubmit={handleSubmit}>
             <input
               to={``}
               type="submit"

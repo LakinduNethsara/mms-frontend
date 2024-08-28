@@ -429,13 +429,13 @@ useEffect(() => {
       };
 
     
-      useEffect(() => {
+    
         const handleClickOutside = (e) => {
           if (dropdownRef.current && !dropdownRef.current.contains(e.target) && !inputRef.current.contains(e.target)) {
             setFilteredLecturers([]);
             }
         };
-      }, []);
+   
 
     useEffect(() => {
         const fetchData = async () => {
@@ -453,10 +453,15 @@ useEffect(() => {
       }, []);
 
       useEffect(() => {
-        const matches = getFuzzyMatches(searchTerm, lecturerList);
-        setFilteredLecturers(matches);
-        console.log(matches)
-    }, [searchTerm,lecturerList]);
+        if (searchTerm.trim()) { // Check if the search term is not empty
+            const matches = getFuzzyMatches(searchTerm, lecturerList);
+            setFilteredLecturers(matches);
+            console.log(matches);
+        } else {
+            setFilteredLecturers([]); // Clear the list if the search term is empty
+        }
+    }, [searchTerm, lecturerList]);
+    
       
     
     const handleSearchChange = (e) => {
@@ -926,107 +931,107 @@ const handleLecturerSelect = (lecturer) => {
                         <div>
                             <hr />
                             <div style={{ marginBottom: '20px', position: 'relative', display: 'inline-block', width: '300px' }}>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="Search Lecturer"
-          style={{
-            padding: '10px',
-            borderRadius: '4px',
-            border: '1px solid #ccc',
-            width: '100%'
-          }}
-          ref={inputRef}
-        />
-        {console.log(filteredLecturers)}
-        {filteredLecturers.length > 0 && (
-          <ul
-            ref={dropdownRef}
-            style={{
-              listStyleType: 'none',
-              padding: '0',
-              margin: '0',
-              position: 'absolute',
-              top: '100%',
-              left: '0',
-              right: '0',
-              backgroundColor: 'white',
-              border: '1px solid #ccc',
-              borderTop: 'none',
-              borderRadius: '0 0 4px 4px',
-              maxHeight: '150px',
-              overflowY: 'auto',
-              zIndex: '1000'
-            }}
-          >
-            {filteredLecturers.map((lecturer) => (
-              <li
-                key={lecturer.id}
-                onClick={() => handleLecturerSelect(lecturer)}
-                style={{
-                  padding: '8px',
-                  cursor: 'pointer',
-                  backgroundColor: 'white',
-                  borderBottom: '1px solid #ddd'
-                }}
-              >
-                {lecturer.name_with_initials}
-                
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-                        </div>
-                        :
-                        null
+                        <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        placeholder="Search Lecturer"
+                        style={{
+                            padding: '10px',
+                            borderRadius: '4px',
+                            border: '1px solid #ccc',
+                            width: '100%'
+                        }}
+                        ref={inputRef}
+                        />
+       
+                {filteredLecturers.length > 0 && (
+                <ul
+                    ref={dropdownRef}
+                    style={{
+                    listStyleType: 'none',
+                    padding: '0',
+                    margin: '0',
+                    position: 'absolute',
+                    top: '100%',
+                    left: '0',
+                    right: '0',
+                    backgroundColor: 'white',
+                    border: '1px solid #ccc',
+                    borderTop: 'none',
+                    borderRadius: '0 0 4px 4px',
+                    maxHeight: '150px',
+                    overflowY: 'auto',
+                    zIndex: '1000'
+                    }}
+                >
+                    {filteredLecturers.map((lecturer) => (
+                    <li
+                        key={lecturer.id}
+                        onClick={() => handleLecturerSelect(lecturer)}
+                        style={{
+                        padding: '8px',
+                        cursor: 'pointer',
+                        backgroundColor: 'white',
+                        borderBottom: '1px solid #ddd'
+                        }}
+                    >
+                        {lecturer.name_with_initials}
+                        
+                    </li>
+                    ))}
+                </ul>
+                )}
+            </div>
+                                </div>
+                                :
+                                null
+                                    
+                            }
+                        <hr />
+                            <div style={{marginTop:"10px",float:"right"}}>
                             
-                    }
-                  <hr />
-                    <div style={{marginTop:"10px",float:"right"}}>
-                    
 
-                    {
-                    approval_level === "finalized" ||
-                    approval_level === "course_coordinator" ||
-                    approval_level === "lecturer" ? (
-                        <form onSubmit={handleSubmit}>
-                       
-                             <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}} disabled={!newSignature}/> <br /><br />
-                        </form>
-                    ) : null
-                    }
+                            {
+                            approval_level === "finalized" ||
+                            approval_level === "course_coordinator" ||
+                            approval_level === "lecturer" ? (
+                                <form onSubmit={handleSubmit}>
+                            
+                                    <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}} disabled={!newSignature}/> <br /><br />
+                                </form>
+                            ) : null
+                            }
                         
                        
 
 
                     </div>
 
-              </div>
-              <div className=' col-5' style={{marginTop:"50px"}}>
-                {
-                    approval_level === "finalized" ||
-                    approval_level === "course_coordinator" ||
-                    approval_level === "lecturer" ? (
-                        <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
-                    ) : null}
-            </div>
-            
-            </div>
-            </div>         
-            </div>
-             </div>
+                        </div>
+                        <div className=' col-5' style={{marginTop:"50px"}}>
+                            {
+                                approval_level === "finalized" ||
+                                approval_level === "course_coordinator" ||
+                                approval_level === "lecturer" ? (
+                                    <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
+                                ) : null}
+                        </div>
+                        
+                        </div>
+                        </div>         
+                        </div>
+                        </div>
 
-                
-              
-            
-          </div>
+                            
+                        
+                        
+                    </div>
 
-          
-                </>
-            )}
-        </>
-    )
+                    
+                            </>
+                        )}
+                    </>
+                )
     
 }
