@@ -81,10 +81,10 @@ function LoginPage(){
                         <img src="src/assets/LOGO_OF_RUHUNA-removebg-preview.png" className="img-fluid" alt="UOR logo"/>
                     </div>
                     <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-                    <h3 className="fw-bold">
+                    <h4 className="fw-bold">
                     {" "}
                         <span ref={el} />{" "}
-                    </h3>
+                    </h4>
                         <h1 className="fw-bold mb-3 pb-3">LOGIN</h1>
 
                         <form onSubmit={handleSubmit}>
