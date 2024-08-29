@@ -104,11 +104,11 @@ function App() {
               </Route>
 
 
-              <Route path="/viewMarks/:course_id/:course_name/:department_id">   {/* Link to view marks remaining to approve page validations */}
+              <Route path="/viewMarks/:course_id/:course_name/:department_id/:academicYear">   {/* Link to view marks remaining to approve page validations */}
                 <ViewMarksTableValidations/>
               </Route>
 
-              <Route path="/ARMarksReturnSheet/:course_id/:course_name/:department/:academic_year">    {/* Link to view ar Marks certify sheet*/}
+              <Route path="/ARMarksReturnSheet/:course_id/:course_name/:department/:academicYear">    {/* Link to view ar Marks certify sheet*/}
                 <HODMarksReturnSheet approved_level={"HOD"}/>
               </Route>
 

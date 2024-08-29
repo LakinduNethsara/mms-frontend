@@ -19,7 +19,7 @@ export default function ARJoinResultBoard() {
 
     const getStudentGrade = async ()=>{
         try{
-            const gradeResponse =await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getGradesForResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
+            const gradeResponse =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGradesForResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
             
             setStudentGrades(gradeResponse.data);
 
@@ -30,11 +30,11 @@ export default function ARJoinResultBoard() {
             setUniqueCourses(uniqueCourseArr);
 
             //call api to get studentGPA
-            const gpaResponse = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getGpaListForResultBoard/${selectedResultBoard.department}/${selectedResultBoard.academic_year}/${selectedResultBoard.level}/${selectedResultBoard.semester}`);
+            const gpaResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGpaListForResultBoard/${selectedResultBoard.department}/${selectedResultBoard.academic_year}/${selectedResultBoard.level}/${selectedResultBoard.semester}`);
             
             setStudentGpa(gpaResponse.data);
 
-            const courseDetailsResponse = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCourseDetailsForMarkSheet/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
+            const courseDetailsResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCourseDetailsForMarkSheet/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
             setCourseDetails(courseDetailsResponse.data);
             
         }catch(error){

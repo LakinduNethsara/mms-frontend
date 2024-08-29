@@ -60,10 +60,10 @@ export default function CourseCriteriaByCC() {
       console.log("fect function : " + email);
       
         try{
-            const result1  = await axios.get(`http://192.248.50.155:9090/api/astylist/get/allassessmenttypes`);
+            const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`);
           // console.log(result1.data.content);
             setAssessmentTypesData(result1.data.content);
-            const result2  = await axios.get(`http://192.248.50.155:9090/api/ccmanage/getAllCidToCourseCriteria/${email}`);
+            const result2  = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${email}`);
           // console.log(result2.data.content);
             setCidsData(result2.data.content);
         }catch(error){
@@ -219,9 +219,9 @@ export default function CourseCriteriaByCC() {
             
         
             // Call the first API to insert criteria-name data
-            await axios.post("http://192.248.50.155:9090/api/evaluationCriteriaName/insertcriterianame", criteria_name);
+            await axios.post("http://localhost:9090/api/evaluationCriteriaName/insertcriterianame", criteria_name);
             // Now, call the second API to insert criteria data
-            await axios.post("http://192.248.50.155:9090/api/evaluationCriteria/insertcriteria", criteriaData);
+            await axios.post("http://localhost:9090/api/evaluationCriteria/insertcriteria", criteriaData);
       
             setCriteriaData([]);
             setCriteria_name([]);
@@ -246,7 +246,7 @@ export default function CourseCriteriaByCC() {
             // console.log("New Assessment Type : " + newValue.popupInputValue);
             // console.log("New Assessment Type : " + newValue.selectedType);
 
-            await axios.post("http://192.248.50.155:9090/api/astylist/savenewasty", { assessment_type_name: newValue.popupInputValue,ca_mid_end: newValue.selectedType} );
+            await axios.post("http://localhost:9090/api/astylist/savenewasty", { assessment_type_name: newValue.popupInputValue,ca_mid_end: newValue.selectedType} );
             toast.success("New assessment type saved successfully!");
             setReloadButton(prevState =>!prevState);
             setSelectedAssessmentType(newValue);
