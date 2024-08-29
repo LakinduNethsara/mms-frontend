@@ -65,7 +65,7 @@ const fetchData = async () => {
 
     setLoading
 
-    const response = await axios.get(`http://192.248.50.155:9090/api/marksReturnSheet/getMarks/${course_id}/${repeat}/${academic_year}`);
+    const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/${repeat}/${academic_year}`);
 
     const data = response.data;
 
@@ -137,7 +137,7 @@ const endMarks={
 
       setLoading(true);
 
-      const result = await axios.get(`http://192.248.50.155:9090/api/attendanceEligibility/getAttendanceEligibilityByStuIdCourseId/${course_id},${student_id}`);
+      const result = await axios.get(`http://localhost:9090/api/attendanceEligibility/getAttendanceEligibilityByStuIdCourseId/${course_id},${student_id}`);
 
       setAttendenceEligibility(result.data);
    
@@ -170,7 +170,7 @@ const endMarks={
       };
 
       // Send the notification
-      const response = await axios.post(`http://192.248.50.155:9090/api/notifications/sendNotification`, notification);
+      const response = await axios.post(`http://localhost:9090/api/notifications/sendNotification`, notification);
       setText(''); // Clear the text area
      
       toast.success(response.data.message);
@@ -186,7 +186,7 @@ const endMarks={
 
     setLoading(true);
   
-    const cc = await axios.get(`http://192.248.50.155:9090/api/ccmanage/getCCByCourse/${course_id}`);
+    const cc = await axios.get(`http://localhost:9090/api/ccmanage/getCCByCourse/${course_id}`);
     setLoading(false);
 
     // Assuming the response includes the coordinator's ID
@@ -238,7 +238,7 @@ const endMarks={
   
         // Make the API request
         const response = await axios.put(
-          `http://192.248.50.155:9090/api/marksReturnSheet/updateMarks`,
+          `http://localhost:9090/api/marksReturnSheet/updateMarks`,
           combinedData
         );
         

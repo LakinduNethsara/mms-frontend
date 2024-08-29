@@ -23,9 +23,9 @@ export default function StudentViewCourseCriteria() {
     
     const loadCourseCriteriaList = async () => {
       try{
-        const courseCriteriaResponse = await axios.get(`http://192.248.50.155:9090/api/Student/getEvaluationCriteriaByCourseId/${course.course_id}`)
+        const courseCriteriaResponse = await axios.get(`http://localhost:9090/api/Student/getEvaluationCriteriaByCourseId/${course.course_id}`)
         setCourseCriteriaList(courseCriteriaResponse.data);
-        const creditResponse = await axios.get(`http://192.248.50.155:9090/api/Student/get_course_credits/${course.course_id}`)
+        const creditResponse = await axios.get(`http://localhost:9090/api/Student/get_course_credits/${course.course_id}`)
         console.log(creditResponse.data);
         setCourseCreditList(creditResponse.data);
       }catch(err){
