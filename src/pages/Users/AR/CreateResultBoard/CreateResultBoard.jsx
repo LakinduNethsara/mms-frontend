@@ -85,7 +85,7 @@ export default function CreateResultBoard() {
 
 
     const loadAcademicYear = async () => {                  // load the current academic year
-        const academicYearDetails =await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAcademicYearDetails`);      // get the academic year details
+        const academicYearDetails =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`);      // get the academic year details
         setAcademicYearList([]);                                                                                                // clear the academic year list
         setAcademicYearList(academicYearList=>[...academicYearList,academicYearDetails.data[0].previous_academic_year]);          // set previous academic year to the list
         setAcademicYearList(academicYearList=>[...academicYearList,academicYearDetails.data[0].current_academic_year]);        // set current academic year to the list
@@ -105,7 +105,7 @@ export default function CreateResultBoard() {
             
 
             try{
-                const result = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/isResultBoardAvailable/${selectedDepartment}/${selectedLevel}/${selectedSemester}/${selectedAcademicYear}`)    //Call api to check the result board availability
+                const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/isResultBoardAvailable/${selectedDepartment}/${selectedLevel}/${selectedSemester}/${selectedAcademicYear}`)    //Call api to check the result board availability
                 
                 if(result.data){
                     toast.error("Selected Result Board is existing! ",{autoClose:2000});   //Display error message if result board is already created
@@ -137,7 +137,7 @@ export default function CreateResultBoard() {
 
     const loadCreatedResultBoardList = async () => {    //Load the created result board list
         try{
-            const result = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCreatedResultBoardList`);    //Call api to get the created result board list
+            const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCreatedResultBoardList`);    //Call api to get the created result board list
             setCreatedResultBoardList(result.data);    //Set the created result board list
         }
         catch(e){
@@ -151,7 +151,7 @@ export default function CreateResultBoard() {
 
         try{
 
-            const notApprovedList = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/HOD/${academicYear}/${department}`);    //Call api to get the not approved course list
+            const notApprovedList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/HOD/${academicYear}/${department}`);    //Call api to get the not approved course list
             
             if(notApprovedList.data.length>0){    //Check whether there are not approved courses
                 
@@ -163,7 +163,7 @@ export default function CreateResultBoard() {
 
                 try{
 
-                    const abList = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/isABStudentAvailable/${academicYear}/${semester}/${level}/${department}`);    //Call api to check the AB student availability
+                    const abList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/isABStudentAvailable/${academicYear}/${semester}/${level}/${department}`);    //Call api to check the AB student availability
                     
                     if(abList.data){            //If there are absent students
 
@@ -179,7 +179,7 @@ export default function CreateResultBoard() {
                             console.log(formattedDateTime)
                             newResultBoard.created_date_time = formattedDateTime;    //Set the formatted date and time to the new result board object
 
-                            await axios.post(`http://192.248.50.155:9090/api/AssistantRegistrar/saveResultBoard`,newResultBoard);    //Call api to create the result board
+                            await axios.post(`http://localhost:9090/api/AssistantRegistrar/saveResultBoard`,newResultBoard);    //Call api to create the result board
                             toast.success("Result board is created successfully");    //Display success message if the result board is created successfully
                             setButtonClicked(true);    //Set the button clicked status to true
                             setErrorMessageColor('blue')        //Set the error message colour to blue

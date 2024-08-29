@@ -19,11 +19,13 @@ export default function CourseSelection(props) {
     const previousRole = "HOD";     // Role of the previous user
     const [academicYearList, setAcademicYearList] = useState([]);
     const [academicYear, setAcademicYear] = useState(0);       //store selected academic year
+    const [loading, setLoading] = useState(false);
 
 
-    const loadCourseData = async()=>{       // Function to fetch course data
+    const loadCourseData = async(academic_year)=>{       // Function to fetch course data
         try{
-          const result=await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getViewMarksCourseList/${level}/${semester}/${department_id}`);     // API call to fetch course data
+          setLoading(true);       // Setting the loading state to true
+          const result=await axios.get(`http://localhost:9090/api/AssistantRegistrar/getViewMarksCourseList/${level}/${semester}/${department_id}/${academic_year}`);     // API call to fetch course data
 
           if(result.data.length>0){
             setCoursesAvailability(true);       // Setting the availability of courses to true
@@ -36,6 +38,7 @@ export default function CourseSelection(props) {
           }
 
 
+          setLoading(false);    // Setting the loading state to false after data is loaded
           
           
         }catch(error){
@@ -46,10 +49,14 @@ export default function CourseSelection(props) {
     const loadAcademicYear = async () => {                  // Load academic years list
 
       try{
-        const academicYearDetails= await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllAcademicYearList`)          //Api to get academic year list
+        setLoading(true);       // Setting the loading state to true  
+        const academicYearDetails= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllAcademicYearList`)          //Api to get academic year list
         setAcademicYearList([]);
         setAcademicYearList(academicYearDetails.data);
         setAcademicYear(academicYearDetails.data[0]);
+        loadCourseData(academicYearDetails.data[0]);
+
+        setLoading(false);    // Setting the loading state to false after data is loaded
 
       }catch(error){
         console.log(error); // Logging error
@@ -60,11 +67,28 @@ export default function CourseSelection(props) {
 
     const handleAcademicYear = async (academicYear) => {          // handle the academic year selection
       setAcademicYear(academicYear.target.value);        // set the selected academic year
+      loadCourseData(academicYear.target.value); 
       
   }
 
+  const [user, setUser] = useState({});   //Use state to store user data
+  const storedData = localStorage.getItem('user');    //Get user data from local storage
+
+
     useEffect(() => {       // UseEffect to fetch course data
-        loadCourseData();
+
+      if(storedData){   //Check if user is logged in
+        setUser(JSON.parse(storedData));      //Set user data
+        
+        if(JSON.parse(storedData).role != "ar"){     //Check if user is not a valid type one
+          localStorage.removeItem('user');        //Remove user data and re direct to login page
+        }
+        
+      }else{                          //If user is not logged in
+        history.push('/login');       //Redirect to login page
+      }
+
+        loadCourseData(academicYear);
         loadAcademicYear();
     }, []);
 
@@ -80,7 +104,16 @@ export default function CourseSelection(props) {
     <div>
 
       {
-        coursesAvailability ? (
+
+        loading ? (
+          <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
+              <div className="spinner-border" role="status">
+                <span className="sr-only"></span>
+              </div>
+              <label style={{marginLeft:"10px"}}> Loading data</label>
+            </div>
+        ):(
+
           <>
 
             <div className="d-flex justify-content-between">
@@ -88,7 +121,7 @@ export default function CourseSelection(props) {
 
 
 
-              <select className='selection' style={{width:"200px",height:"35px",borderRadius:"5px",fontSize:"15px",textAlign:"center",lineHeight:"50px",marginTop:"20px",marginRight:"50px"}}  value={academicYear} onChange={handleAcademicYear}>                   {/* selection for semester */}
+              <select className='selection' style={{width:"200px",height:"35px",borderRadius:"5px",fontSize:"15px",textAlign:"center",lineHeight:"50px",marginTop:"0px",marginRight:"50px"}}  value={academicYear} onChange={handleAcademicYear}>                   {/* selection for semester */}
                 <option value='0' disabled>Academic Year</option>
                 {
                   academicYearList.map((element, index)=>(
@@ -100,42 +133,57 @@ export default function CourseSelection(props) {
               
             </div>
 
+            {
+              coursesAvailability ? (
+                <>
 
-          <table className="table">
-            
-            <thead>
-                <tr>
-                <th scope="col"></th>
-                <th scope="col">Course Code</th>
-                <th scope="col">Course Name</th>
-                <th scope="col">Course Type</th>
-                <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-              {
-                courseData.map((course, index) => (
-                  <tr className="clickable-row" key={index} onClick={()=>{history.push(`/viewMarks/${course.course_id}/${course.course_name}/${department_id}/${academicYear}`)}}>
-                    <th scope="row" key={index}>{index+1}</th>
-                    <td>{course.course_id}</td>
-                    <td>{course.course_name}</td>
-                    <td>{course.type}</td>
-                    <td>
-                      {/* <button className="btn btn-primary btn-sm"  role="button" aria-disabled="true">View Marks</button> */}
-                    </td>  
-                </tr>
-                ))
-              }
-                
-            </tbody>
-          </table>
+                  
+
+
+                <table className="table">
+                  
+                  <thead>
+                      <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Course Code</th>
+                      <th scope="col">Course Name</th>
+                      <th scope="col">Course Type</th>
+                      <th scope="col"></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      courseData.map((course, index) => (
+                        <tr className="clickable-row" key={index} onClick={()=>{history.push(`/viewMarks/${course.course_id}/${course.course_name}/${department_id}/${academicYear}`)}}>
+                          <th scope="row" key={index}>{index+1}</th>
+                          <td>{course.course_id}</td>
+                          <td>{course.course_name}</td>
+                          <td>{course.type}</td>
+                          <td>
+                            {/* <button className="btn btn-primary btn-sm"  role="button" aria-disabled="true">View Marks</button> */}
+                          </td>  
+                      </tr>
+                      ))
+                    }
+                      
+                  </tbody>
+                </table>
+                </>
+              ):(
+                <div className="alert alert-danger" role="alert" style={{marginTop:"70px",textAlign:"center"}}>
+                  <h5>No courses found </h5>
+                </div>
+              )
+            }
+
+
           </>
-        ):(
-          <div className="alert alert-danger" role="alert" style={{marginTop:"70px",textAlign:"center"}}>
-            <h5>No courses Registered for this semester</h5>
-          </div>
+
         )
+
       }
+
+      
         <div className='row'>
           <div className='col'>
 

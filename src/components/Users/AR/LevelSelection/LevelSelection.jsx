@@ -85,7 +85,7 @@ export default function LevelSelection(props) {
   return (
     <form>
 
-    <div className="shadow" style={{marginTop:20,marginLeft:20,marginRight:20,}}>
+    <div className="shadow" style={{marginTop:60,marginLeft:20,marginRight:20,}}>
         <nav >
             <div className="nav nav-tabs" id="level-selection-tab" role="tablist" style={{backgroundColor:"rgba(0, 0, 0, 0.1)"}}>
                 <button className="nav-link levels " style={{width:"auto",height:"auto",fontSize:"14px",backgroundColor:button1BgColor,color:button1FontColor}} id="nav-level1-tab" data-bs-toggle="tab" data-bs-target="#nav-level1" type="button" role="tab" aria-controls="nav-level1" aria-selected="true" onClick={() => callSemester(1)}> LEVEL 1</button>
