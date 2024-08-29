@@ -81,10 +81,10 @@ function LoginPage(){
                         <img src="src/assets/LOGO_OF_RUHUNA-removebg-preview.png" className="img-fluid" alt="UOR logo"/>
                     </div>
                     <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-                    <h4 className="fw-bold">
+                    <h3 className="fw-bold">
                     {" "}
                         <span ref={el} />{" "}
-                    </h4>
+                    </h3>
                         <h1 className="fw-bold mb-3 pb-3">LOGIN</h1>
 
                         <form onSubmit={handleSubmit}>
@@ -108,7 +108,7 @@ function LoginPage(){
                                     <button type="submit" className="btn btn-outline-dark btn-sm " style={{width:"100PX"}}>LOGIN</button>
                                 )}
                             
-                            <button type="button" className="btn btn-outline-danger btn-sm mx-3" style={{width:"100PX"}} onClick={handleCancle}>CANCLE</button>
+                            <button type="button" className="btn btn-outline-danger btn-sm mx-3" style={{width:"100PX"}} onClick={handleCancle}>CANCEL</button>
                         </div>
 
                         </form>
