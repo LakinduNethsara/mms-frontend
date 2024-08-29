@@ -79,20 +79,18 @@ const handleChange = (link) => {
                   </option>
 
                   <option value='/arviewictmarks'>
-                    ICT
+                    Dep. of ICT
                   </option>
 
                   <option value='/arviewetmarks'>
-                    ET
+                    Dep. of ET
                   </option>
 
                   <option value='/arviewbstmarks'>
-                    BST
+                    Dep. of BST
                   </option>
 
-                  <option value='/arviewmtdmarks'>
-                   Multi Disciplinary
-                  </option>
+                  
                 
                 </select>
               </div>
