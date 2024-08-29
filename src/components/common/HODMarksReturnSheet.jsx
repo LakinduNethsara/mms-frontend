@@ -519,7 +519,7 @@ const handleLecturerSelect = (lecturer) => {
                                 <div className='h2 mt-lg-5'>Mark Return Sheet</div>
                                     <table>
                                         {/* <tr>
-                                            <td class=""><h2>Mark Return Sheet:</h2></td>
+                                            <td className=""><h2>Mark Return Sheet:</h2></td>
                                             
                                         </tr> */}
                                              <tr>

@@ -101,8 +101,8 @@ function LoginPage(){
                         <div className=' mt-3'>
                             {loader ? ( 
 
-                                <div class="spinner-border spinner-border-sm" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                                <div className="spinner-border spinner-border-sm" role="status">
+                                <span className="visually-hidden">Loading...</span>
                                 </div>
                             ) : (
                                     <button type="submit" className="btn btn-outline-dark btn-sm " style={{width:"100PX"}}>LOGIN</button>

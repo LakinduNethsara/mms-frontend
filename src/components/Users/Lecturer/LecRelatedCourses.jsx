@@ -45,7 +45,7 @@ export default function LecRelatedCourses() {
                     
         <div style={{margin:"100px",display:"flex"}}>
 
-            <div class="spinner-border" role="status">
+            <div className="spinner-border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </div>
             <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
