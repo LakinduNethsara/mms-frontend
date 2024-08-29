@@ -392,7 +392,7 @@ export default function ResultBoardMarksSheetAssign() {
 
 
     return (
-        <div className='marksheet-assign-body container' style={{marginTop:"25px",minWidth:"100%",paddingLeft:"50px",paddingRight:"50px",height:"100%"}}>
+        <div className='marksheet-assign-body container' style={{marginTop:"70px",minWidth:"100%",paddingLeft:"50px",paddingRight:"50px",height:"100%"}}>
             
             <div className='row justify-content-between'>
 
