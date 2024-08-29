@@ -29,7 +29,7 @@ export default function CourseCriteriaByCC() {
     const [endSequence, setEndSequence] = useState(1); // Initialize endSequence in state
     const storedData = localStorage.getItem('user');
     const [email,setEmail] =useState();
-    const [userData, setUserData] = useState([]);
+    // const [userData, setUserData] = useState([]);
 
     const [noOfConducted, setNoOfConducted] = useState('');
     const [noOfTaken, setNoOfTaken] = useState('');
@@ -38,13 +38,16 @@ export default function CourseCriteriaByCC() {
     const [userSelectedMidType, setUserSelectedMidType] = useState('');
     const [selectedMainAssessmentValue, setSelectedMainAssessmentValue] = useState('');
 
+    console.log(email);
+
     
 
     useEffect(() => {
         if(storedData){
 
-          setUserData(JSON.parse(storedData));
+          // setUserData(JSON.parse(storedData));
           fetchData(JSON.parse(storedData).email);
+          setEmail(JSON.parse(storedData).email);
         }else{
 
           setUserData(null);
@@ -53,6 +56,8 @@ export default function CourseCriteriaByCC() {
     }, [email]);
 
     const fetchData = async (email)=>{
+
+      console.log("fect function : " + email);
       
         try{
             const result1  = await axios.get(`http://192.248.50.155:9090/api/astylist/get/allassessmenttypes`);
@@ -62,7 +67,7 @@ export default function CourseCriteriaByCC() {
           // console.log(result2.data.content);
             setCidsData(result2.data.content);
         }catch(error){
-            console.log(error);
+            // console.log(error);
         }
 
         }
