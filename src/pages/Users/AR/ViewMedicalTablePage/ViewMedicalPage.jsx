@@ -15,7 +15,8 @@ export default function ViewMedicalPage() {
   const [medicalAvailability,setMedicalAvailability] = useState(true);        // state to check the availability of medical submissions
   const [medicalSubmissions,setMedicalSubmissions] = useState([]);            // state to store the medical submissions
   const [uniqueYears,setUniqueYears] = useState([]);                          // state to store the unique academic years
-  const selectedOption = "All Years";                                         // default selected option
+  const selectedOption = "All Years";    
+  const [loading,setLoading] = useState(false);                                     // default selected option
 
 
   const handleSelectedValue = (value) => {            // handle the selected value from the select box
@@ -23,6 +24,8 @@ export default function ViewMedicalPage() {
   };
 
     const fetchData = async (value)=>{                                // function to fetch the data according to the selected value
+
+      setLoading(true);                                     // set loading to true before fetching data
 
       if(value==='All Years'){                                        // if the selected value is 'All Years'
 
@@ -41,6 +44,10 @@ export default function ViewMedicalPage() {
             
             setMedicalAvailability(false);          // set medical availability to false
           }
+          
+          
+          setLoading(false);         // set loading to false after fetching data
+
         }catch(err){
           toast.error("Error fetching data",{autoClose:3000});
         }
@@ -63,6 +70,8 @@ export default function ViewMedicalPage() {
             
             setMedicalAvailability(false);      // set medical availability to false
           }
+
+          setLoading(false);         // set loading to false after fetching data
         }catch(err){
           toast.error("Error fetching data",{autoClose:3000});      // show error message
         }
@@ -102,7 +111,15 @@ export default function ViewMedicalPage() {
       
         <div style={{width:"97%",marginLeft:"auto",marginRight:"auto",marginTop:"10px"}}>
 
-          {
+          {loading ? (
+            <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
+              <div className="spinner-border" role="status">
+                <span className="sr-only"></span>
+              </div>
+              <label style={{marginLeft:"10px"}}> Loading data</label>
+            </div>
+          ):(
+            
             medicalAvailability ? (
 
 
@@ -175,7 +192,15 @@ export default function ViewMedicalPage() {
             ):(
               toast.error("No medical submissions available",{autoClose:3000})
             )
-          }
+
+          )
+          
+        }
+
+
+          
+           
+          
           <div className='right-aligned-div back-button-div' style={{textAlign:"right",marginBottom:"10px",position:"sticky"}}>
             <br/><BackButton/> <br/>&nbsp;
           </div>

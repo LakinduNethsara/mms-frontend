@@ -14,12 +14,14 @@ export default function ABListPage() {
     const previousApprovalLevel='HOD';    //Approval level required to view the students having AB grades
     const [courseList,setCourseList]=useState([]);    //Use state to store the courses and student details under AR approval
     const history = useHistory(); // Initialize useHistory hook to navigate to different pages
-
+    const [loading,setLoading] = useState(false); // Use state to store loading status to show spinner
     
 
     const loadData = async() => {   //Function to load the student details havind E* from the backend
       
+      setLoading(true); // Set loading
 
+      try{
         const result = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getABDetails/${previousApprovalLevel}`);   //Get all the course and student details having AB from the backend
         setCourseList(result.data);    //Set the courseList state to the data received from the backend
         
@@ -28,6 +30,13 @@ export default function ABListPage() {
         //     setCourseList(courseList=>[...courseList,element])  //Add the courses and student details under AR approval to the courseList state
         //   }
         // })
+
+        setLoading(false);    //Set loading status to false after data is loaded
+      }catch(e){
+        console.log(e.message);
+      }
+
+        
 
     };
 
@@ -69,7 +78,16 @@ export default function ABListPage() {
         
         
 
-        {courseList.length===0 ?(   //If there are no absent students under AR approval, display the following message
+        {loading ? (
+          <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
+            <div className="spinner-border" role="status">
+              <span className="sr-only"></span>
+            </div>
+            <label style={{marginLeft:"10px"}}> Loading data</label>
+          </div>
+        )
+        :
+        (courseList.length===0 ?(   //If there are no absent students under AR approval, display the following message
 
           <div className="alert alert-danger" role="alert" style={{marginTop:'100px',textAlign:'center',width:'80%',marginLeft:'auto',marginRight:'auto'}}>
             <h5>There are no absent students for exams under your approval</h5>
@@ -125,7 +143,8 @@ export default function ABListPage() {
             
           </div>
 
-        )}
+        ))
+        }
         <div className='right-aligned-div back-button-div' style={{textAlign:"right",marginBottom:"10px",position:"sticky"}}>
           <BackButton/> <br/>&nbsp;
         </div>
