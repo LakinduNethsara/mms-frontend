@@ -46,7 +46,7 @@ export default function CourseSelection(props) {
     const loadAcademicYear = async () => {                  // Load academic years list
 
       try{
-        const academicYearDetails= await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllAcademicYearList`)
+        const academicYearDetails= await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllAcademicYearList`)          //Api to get academic year list
         setAcademicYearList([]);
         setAcademicYearList(academicYearDetails.data);
         setAcademicYear(academicYearDetails.data[0]);
