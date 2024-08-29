@@ -126,6 +126,15 @@ const handleChange = (link) => {
             </div>
           </div>
 
+          <div className="col mb-4"> 
+            <div className="card text-center functionCard">
+              <div className="card-body">
+                <br/><h5 className="card-title">Download  Marks Sheets</h5><br/>
+                <a href="/pendingVCCertifyMarksheet" className="btn btn-primary home-page-class-button">View</a>
+              </div>
+            </div>
+          </div>
+
           
           
         </div>

@@ -5,8 +5,10 @@ import { useHistory, useParams } from 'react-router-dom';
 import SignatureForApproval from './SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from './AcademicYearManagerSingleton';
 import DateObject from 'react-date-object';
+import BackButton from '../Users/AR/BackButton/BackButton';
 
 export default function DeanFinalMarkSheet(props) {
+  const [loading, setLoading] = useState(true);
   const [finalResults, setFinalResults] = useState([]);
   const [repeatersfinalResults, setRepeatersFinalResults] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -97,6 +99,7 @@ export default function DeanFinalMarkSheet(props) {
     "department_id": dept,
     "signature": newSignature
   };
+
 
 
   const resultSheet = async () => {
@@ -209,10 +212,109 @@ export default function DeanFinalMarkSheet(props) {
     }
   };
 
-  useEffect(() => {
-    resultSheet();
-  }, [level, semester, approved_level,dept]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const nextLevelMap = {
+          "RB": "AR",
+          "AR": "Dean",
+          "Dean": "VC"
+        };
+        setNextApprovedlevel(nextLevelMap[approved_level] || "");
+  
+        // Fetch final results
+        const finalResultsResponse = await axios.get(
+          `http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`
+        );
+        const finalResultsData = finalResultsResponse.data.content;
+  
+        // Process final results
+        const processedFinalResults = finalResultsData.reduce((acc, curr) => {
+          const existingStudent = acc.find(student => student.student_id === curr.student_id);
+          if (existingStudent) {
+            existingStudent.courses.push({
+              course_id: curr.course_id,
+              overall_score: curr.total_rounded_mark,
+              grade: curr.grade,
+            });
+          } else {
+            acc.push({
+              student_id: curr.student_id,
+              courses: [
+                {
+                  course_id: curr.course_id,
+                  overall_score: curr.total_rounded_mark,
+                  grade: curr.grade,
+                },
+              ],
+            });
+          }
+          return acc;
+        }, []);
+  
+        setFinalResults(processedFinalResults);
+  
+        // Fetch courses
+        const coursesResponse = await axios.get(
+          `http://192.248.50.155:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`
+        );
+        setAllCourses(coursesResponse.data);
+  
+        // Fetch GPA
+        const gpaResponse = await axios.get(
+          `http://192.248.50.155:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`
+        );
+        setStudentGPA(gpaResponse.data.content);
+  
+        // Fetch repeaters data
+        const repeatersResponse = await axios.get(
+          `http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`
+        );
+        const repeaterData = repeatersResponse.data.content;
+  
+        // Process repeaters data
+        const processedRepeaterData = repeaterData.reduce((acc, curr) => {
+          const existingStudent = acc.find(student => student.student_id === curr.student_id);
+          if (existingStudent) {
+            existingStudent.courses.push({
+              course_id: curr.course_id,
+              overall_score: curr.total_rounded_mark,
+              grade: curr.grade,
+            });
+          } else {
+            acc.push({
+              student_id: curr.student_id,
+              courses: [
+                {
+                  course_id: curr.course_id,
+                  overall_score: curr.total_rounded_mark,
+                  grade: curr.grade,
+                },
+              ],
+            });
+          }
+          return acc;
+        }, []);
+  
+        setRepeatersFinalResults(processedRepeaterData);
+  
+        // Fetch signatures
+        await fetchSignature();
+  
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch data');
+      }
+    };
+  
+    fetchData();
+  }, [level, semester, dept, approved_level, academic_year]);
+  
+  // ... rest of the code remains the same
+  
   const handleSubmit = async (e) => {
     let response = null;
     e.preventDefault();
@@ -245,7 +347,11 @@ export default function DeanFinalMarkSheet(props) {
 
   const fetchSignature = async () => {
     try {
+
+      setLoading(true);
+
       const ARSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
+
       setARSign(ARSign.data.content);
       const DeanSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
       setDeanSign(DeanSign.data.content);
@@ -258,9 +364,11 @@ export default function DeanFinalMarkSheet(props) {
 
     } catch (error) {
       console.error('Error fetching signature data:', error.response || error.message);
-    }
+    }finally{
+      setLoading(false);}
   };
 
+  console.log(level, semester, dept, approved_level, academic_year);
   useEffect(() => {
     fetchSignature();
   }, [level, semester, dept, approved_level, academic_year]);
@@ -270,10 +378,14 @@ export default function DeanFinalMarkSheet(props) {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+        setLoading(true);
         const courses = await axios.get(`http://192.248.50.155:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
+
         setAllCourses(courses.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
+      }finally{
+        setLoading(false);
       }
     };
   
@@ -296,7 +408,7 @@ export default function DeanFinalMarkSheet(props) {
   
     window.addEventListener('beforeunload', handleBeforeUnload);
   
-    // Cleanup the event listener on component unmount
+  // Cleanup the event listener on component unmount
     return handleUnload;
   }, [newSignature]);
 
@@ -332,12 +444,19 @@ const alternateRowStyle = {
   return (
     <div className="container" style={{marginTop:'70px'}}>
       <ToastContainer/>
-      
-     
+      {loading ? (
+                 <div className="d-flex justify-content-center">
+                 <div className="spinner-border" role="status">
+                     <span className="sr-only"></span>
+                 </div>
+             </div>
+            ) : (
+              <>
+      <BackButton />
       {finalResults.length > 0 ? (
 
         <>
-
+        
         {
         role == "dean" && approved_level == "HOD" ? (
           <button
@@ -635,7 +754,11 @@ const alternateRowStyle = {
                       {newSignature !== null?
 
                       <div>
-                      <img src={newSignature} style={{ width: '80px', height: '40px' }} />
+                      
+                      <div>
+
+
+                      </div>
                       <p></p>
                       <p>Vice Chancellor</p>
                       <p>Faculty of Technology</p>
@@ -648,16 +771,22 @@ const alternateRowStyle = {
             </div>
             
             <div className=' col-7'>
-              
-              {approved_level!="HOD"?<div >
+             
+              {approved_level!="HOD" && approved_level!="Dean"?<div >
               <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
               </div>:null}
+
+
+              
+             
+           
 
             </div>
           
           </div>
+     
 
-          {approved_level!="HOD"?  <form onSubmit={handleSubmit}>
+          {approved_level!="HOD" && approved_level!="Dean"?  <form onSubmit={handleSubmit}>
             <input
               to={``}
               type="submit"
@@ -682,7 +811,11 @@ const alternateRowStyle = {
 
           </div>
        
-      )}
+      )
+    }
+      </>
+)}  
+
     </div>
   );
 }
