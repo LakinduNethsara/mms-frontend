@@ -108,7 +108,7 @@ function LoginPage(){
                                     <button type="submit" className="btn btn-outline-dark btn-sm " style={{width:"100PX"}}>LOGIN</button>
                                 )}
                             
-                            <button type="button" className="btn btn-outline-danger btn-sm mx-3" style={{width:"100PX"}} onClick={handleCancle}>CANCLE</button>
+                            <button type="button" className="btn btn-outline-danger btn-sm mx-3" style={{width:"100PX"}} onClick={handleCancle}>CANCEL</button>
                         </div>
 
                         </form>

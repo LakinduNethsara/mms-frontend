@@ -509,7 +509,7 @@ export default function AddFAMarksByLec() {
                 <>
 
 
-            <div className='container' style={{ marginTop: "50px" }}>
+            <div className='container' style={{ marginTop: "70px" }}>
                 <h4>Final Assessment Marks Entry : <span style={{ color: "maroon" }}>{course_name} - {course_id}</span></h4>
                 <br />
                 {/* <h4>Level: {level}</h4>
