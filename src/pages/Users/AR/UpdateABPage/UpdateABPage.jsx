@@ -121,6 +121,8 @@ export default function UpdateABPage() {
         }
 
         
+
+        
     };
 
     
@@ -205,7 +207,7 @@ export default function UpdateABPage() {
                 
                     /*---------------------------------------------------------------------Scenario for a propper student---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
                         
-                    if (studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){                   //Condition to check whether the exam is a mid exam
+                    if (studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){                   //Condition to check whether the exam is a mid exam      - proper batch
                         if(newScore.toLowerCase()==="F".toLowerCase()){             //condition to check whether the new grade is F
                                 existingGrade.ca_eligibility="Not eligible";     //Set the ca eligibility to not eligible
                                 existingGrade.grade="F";     //Set the grade to F
@@ -250,7 +252,7 @@ export default function UpdateABPage() {
                         }
 
                         
-                    } else if(studentDetails.midORend.toLowerCase()=="End".toLowerCase()){           //Condition to check whether the exam is a end exam
+                    } else if(studentDetails.midORend.toLowerCase()=="End".toLowerCase()){           //Condition to check whether the exam is a end exam - proper batch
 
                         var isMidAB = false;            //Store mid Absent status
                         
@@ -263,13 +265,12 @@ export default function UpdateABPage() {
 
                                 setLoading(false);
                                 
-                                console.log(midExamMarksList);
                             
                                 if((!midExamMarksList.data.length>0) && existingGrade.ca_eligibility.toLocaleLowerCase() !=="Not eligible".toLocaleLowerCase()){    //condition if student don not have mid exam and have MC for end exam and ca eligibility is eligible
                                     
-                                    if(updateMarksTableOject.new_score.toLowerCase() === 'F'.toLowerCase()){
-                                        existingGrade.grade = "E*";                 //Set Grade to E*
-                                    }else if(updateMarksTableOject.new_score.toLowerCase() === 'MC'.toLowerCase()){
+                                    if(updateMarksTableOject.new_score.toLowerCase() === 'F'.toLowerCase()){        //Check whether medical not approved (new score F )
+                                        existingGrade.grade = "E*";                 //Set Grade to E*       
+                                    }else if(updateMarksTableOject.new_score.toLowerCase() === 'MC'.toLowerCase()){             //Check whether medical approved (new score MC)
                                         existingGrade.grade="MC";                   //Set the grade to WH
 
                                     }
@@ -300,10 +301,10 @@ export default function UpdateABPage() {
     
                                     if(isMidFail == false){                     //Condition to check whether the student has passed the mid exam
 
-                                        if(updateMarksTableOject.new_score.toLowerCase()==="MC".toLowerCase()){
+                                        if(updateMarksTableOject.new_score.toLowerCase()==="MC".toLowerCase()){         //Check if the medical is accepted (new score MC)
                                             existingGrade.grade="MC";                   //Set the grade to WH
-                                        }else if (updateMarksTableOject.new_score.toLowerCase()==="F".toLowerCase()){
-                                            existingGrade.grade="E*";
+                                        }else if (updateMarksTableOject.new_score.toLowerCase()==="F".toLowerCase()){               //Check if the medical is not accepted (new score F)
+                                            existingGrade.grade="E*";                   //Set the grade to E*
                                         }
 
                                     }
@@ -339,8 +340,10 @@ export default function UpdateABPage() {
                             
                         // }
 
-                        if(isMidAB==true){
+                        if(isMidAB==true){                  //If there is any AB mid exam existing and try to update end exam status, alert is desplay and not going to change grade and mark
+                           
                             toast.error("This student has absent for the mid exam also. Please first check the medical for that exam.")
+                        
                         }else{
 
                             try{
@@ -379,12 +382,47 @@ export default function UpdateABPage() {
                 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     
-                }else if(repeatStatus.data[0].repeat==1){                                           //condition to check whether the selected student has marks in previous academic year (meanse the student is a repeated student or a student who has a WH grade)
+                }else if(repeatStatus.data[0].repeat==1){  
+                    //condition to check whether the selected student has marks in previous academic year (meanse the student is a repeated student or a student who has a WH grade)
 
                 /*---------------------------------------------------------------------Scenario for a repeated or WH student---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
                     
                     var decrementedAcYear = decrementACYear(studentDetails.academic_year);    //Get the previous academic year of the selected student
+
+                    
+                    //-----------------------------------------------------------------------------New Start
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    //-----------------------------------------------------------------------------New End
+                    
+                    
+                    var isMidAB = false;            //Store mid Absent status
 
                 
                     if(studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){         //Scenario for repeat student mid exam
@@ -392,32 +430,35 @@ export default function UpdateABPage() {
                         setLoading(true);
                         const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/Mid`);   //Get the selected student previous mid exam marks 
                         setLoading(false);
+
                     
                         if((!previousMidExamResult.data.length>0) && existingGrade.grade=="MC" && newScore=="F"){    //condition if student do not have mid exams and previous grade is WH and new medical is rejected
                         
-                            if (studentDetails.midORend.toLowerCase()=="End".toLowerCase()){
+                            if (studentDetails.midORend.toLowerCase()=="End".toLowerCase()){            //Check if the exam is a End exam
                                 existingGrade.grade="E*";        //Set the grade to F
-                            } else if (studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){
-                                existingGrade.grade="F";
-                                existingGrade.ca_eligibility="Not eligible";
+                            } else if (studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){             //Check if the exam is a Mid exam
+                                existingGrade.grade="F";            //Set the grade to F
+                                existingGrade.ca_eligibility="Not eligible";            //Set CA eligibility to not eligible
                             }
+                            console.log(decrementedAcYear)
+                            console.log(previousMidExamResult.data.length);
+                            console.log(existingGrade.grade)
 
+
+                        }else if(previousMidExamResult.data.length>0 && existingGrade.grade=="MC"){             //If there areprevious mid exams results and eprevious grade is MC
                             
-
-                        }else if(previousMidExamResult.data.length>0 && existingGrade.grade=="MC"){
-
                             var isMidMC =true;
-                            previousMidExamResult.data.map((element)=>{                      //Map the mid exam marks list
-                                if(element.assignment_score.toLowerCase() != "MC".toLocaleLowerCase()){
-                                    isMidMC=false;
+                            previousMidExamResult.data.map((element)=>{                      //Map the mid exam marks list and ensure all mid exams are not equal to MC
+                                if(element.assignment_score.toLowerCase() != "MC".toLocaleLowerCase()){             //If any previousMidExamResult is equal to MC
+                                    isMidMC=false;                                  // set mid exam mc status false
                                 }
                             })
 
 
-                            if(studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){
-                                if(newScore=="MC" && isMidMC==true){
-                                    existingGrade.grade="MC";
-                                }else if (newScore=="F" && isMidMC==false){
+                            if(studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){             //If exam is mid exam
+                                if(newScore=="MC" && isMidMC==true){            //If new score is MC and all previous mid exams have MC
+                                    existingGrade.grade="MC";               //Set new Grade to MC
+                                }else if (newScore=="F" && isMidMC==false){             //If new score is F and any previous mid exam has F
                                     existingGrade.grade="E*";        //Set the grade to F
                                 }
 
@@ -428,41 +469,56 @@ export default function UpdateABPage() {
                             
 
                         }
-                    }else if(studentDetails.midORend.toLowerCase()=="End".toLowerCase()){       //Scenario for end exam
+                    }else if(studentDetails.midORend.toLowerCase()=="End".toLowerCase()){       //Scenario for end exam repeat students
+
+                        
+                        const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/Mid`);   //Get the mid  exam results of the student in the current academic year
+
+
+                        if(midExamMarksList.data.length > 0){       // IF there are mid exam marks
+                            midExamMarksList.data.map((element)=>{                      //Map the mid exam marks list
+                                if(element.assignment_score.toLowerCase() === "AB".toLowerCase()){                   //Condition to check whether the student has a F grade in the mid exam
+                                    isMidAB = true;       //Set the mid AB status to true
+                                }
+                            })
+                        }
+
+                        
+
+
                         
                         setLoading(true);
-                        const previousEndExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/End`);   //Get the selected student previous mid exam marks 
+                        const previousEndExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/End`);   //Get the selected student previous End exam marks 
                         setLoading(false);
 
-                        if((!previousEndExamResult.data.length>0) && existingGrade.grade=="MC" && newScore=="F"){    //condition if student do not have mid exams and previous grade is WH and new medical is rejected
+                        if((!previousEndExamResult.data.length>0) && existingGrade.grade=="MC" && newScore=="F"){    //condition if student do not have End exams and previous grade is WH and new medical is rejected
                         
-                            if (studentDetails.midORend.toLowerCase()=="End".toLowerCase()){
+                            if (studentDetails.midORend.toLowerCase()=="End".toLowerCase()){        //If exam is a end exam
                                 existingGrade.grade="E*";        //Set the grade to F
-                            } else if (studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){
-                                existingGrade.grade="F";
-                                existingGrade.ca_eligibility="Not eligible";
+                            } else if (studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){             //If exam is a mid exam
+                                existingGrade.grade="F";                //Set the grade to F
+                                existingGrade.ca_eligibility="Not eligible";        //Set CA eligibility to  not eligible
                             }
 
                             
 
-                        }else if(previousEndExamResult.data.length>0 && existingGrade.grade=="MC"){
+                        }else if(previousEndExamResult.data.length>0 && existingGrade.grade=="MC"){             //If there are end exams and new previous grade is MC
 
                             var isEndMC =true;
-                            previousEndExamResult.data.map((element)=>{                      //Map the mid exam marks list
-                                if(element.assignment_score.toLowerCase() != "MC".toLocaleLowerCase()){
-                                    isEndMC=false;
+                            previousEndExamResult.data.map((element)=>{                      //Map the mid exam marks list      
+                                if(element.assignment_score.toLowerCase() != "MC".toLocaleLowerCase()){             //If previous mid exam is not MC
+                                    isEndMC=false;              //Set end MC to false
                                 }
                             })
 
 
-                            if(studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){
-                                if (newScore=="F" && isEndMC==false){
+                            if(studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){         //If exam type is MID
+                                if (newScore=="F" && isEndMC==false){       //If new score is F and previous mis is mot MC
                                     existingGrade.grade="E*";        //Set the grade to F
                                 }
 
                             }
 
-                            //---------------------------------------------------------
 
                             
 
@@ -470,36 +526,41 @@ export default function UpdateABPage() {
 
                     }
 
+                    if(isMidAB==true){                  //If there is any AB mid exam existing and try to update end exam status, alert is desplay and not going to change grade and mark
+                           
+                        toast.error("This student has absent for the mid exam also. Please first check the medical for that exam.")
+                    
+                    }else{
+                        
+                        try{
 
-                    try{
-                        setLoading(true);
-                        const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a repeated or WH student with the new grade and other details in theory exam scenario
-                        setLoading(false);
-                        toast.success('Final grade updated successfully',{autoClose:2000});             //Show a toast message
+                            setLoading(true);
 
-                    }
-                    catch(error){
-                        toast.error(error,{autoClose:2000});        //Show a toast message
-                    }
-
-                    //-------------------------------------------- old
-
-    /*                    if(((!previousMidExamResult.data.length>0) || previousMidExamResult.data[0].assignment_score=="MC") && existingGrade.grade=="MC" && newScore=="F"){       //Condition to check whether the student has a WH grade and the new grade is F
-                            existingGrade.grade="F";        //Set the grade to F
-                            existingGrade.ca_eligibility="Not eligible";    //Set the ca eligibility to not eligible
-
-                            try{
-                                const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a repeated or WH student with the new grade and other details in theory exam scenario
-                                toast.success('Final grade updated successfully',{autoClose:2000});             //Show a toast message
-
+                            const update = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
+                            if(update.data<0){     //condition to check is there a error with updating the grade
+                                toast.error('Error with updating AB score with new score',{autoClose:2000}); 
+                            }else{
+                                toast.success('New score updated successfully',{autoClose:2000});
                             }
-                            catch(error){
-                                toast.error(error,{autoClose:2000});        //Show a toast message
-                            }
+                            setLoading(false);
                         }
-    */
+                        catch(error){
+                            toast.error(error,{autoClose:2000});
+                            console.log(error);
+                        }
 
-                    //------------------------------------------- Old
+                        try{
+                            setLoading(true);
+                            const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a propper student with the new grade and other details in End exam scenario
+                            toast.success('Final grade updated successfully',{autoClose:2000});             //Show a toast message
+                            setLoading(false);
+                        }
+                        catch(error){
+                            toast.error("Error occured while updating Grade of this student");        //Show a toast message
+                            console.log(error);
+
+                        }
+                    }
                 
 
                 }
@@ -528,6 +589,32 @@ export default function UpdateABPage() {
     const [user, setUser] = useState({});   //Use state to store user data
     const storedData = localStorage.getItem('user');    //Get user data from local storage
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     useEffect(()=>{
