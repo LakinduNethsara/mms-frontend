@@ -37,6 +37,7 @@ export default function CourseCriteriaByCC() {
     const [isMidSelected, setIsMidSelected] = useState(false);
     const [userSelectedMidType, setUserSelectedMidType] = useState('');
     const [selectedMainAssessmentValue, setSelectedMainAssessmentValue] = useState('');
+    const [loader, setLoader] = useState(false);
 
     console.log(email);
 
@@ -60,12 +61,16 @@ export default function CourseCriteriaByCC() {
       console.log("fect function : " + email);
       
         try{
+
+          setLoader(true);
             const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`);
           // console.log(result1.data.content);
             setAssessmentTypesData(result1.data.content);
             const result2  = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${email}`);
           // console.log(result2.data.content);
             setCidsData(result2.data.content);
+
+            setLoader(false);
         }catch(error){
             // console.log(error);
         }
@@ -295,6 +300,16 @@ export default function CourseCriteriaByCC() {
   return (
     <div>
         <div className=' container' >
+
+        {loader ? ( 
+                    <div style={{margin:"100px",display:"flex"}}>
+                        <div className="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+                    </div>
+                ) : (<>
+
           <div className='h3' style={{marginTop:"70px",color:'maroon'}}>Evaluation Criteria Creation</div>
           <div className=' row ' style={{marginLeft:"auto",marginRight:"auto"}}>
             <div className=' col-9 mt-3 shadow p-5' >
@@ -444,6 +459,8 @@ export default function CourseCriteriaByCC() {
               <button className=' btn btn-primary sm m-4' id='ctc' onClick={saveData}>Create The Criteria</button>
             </div>
           </div>
+
+          </>)} 
 
       </div>
       <ToastContainer />

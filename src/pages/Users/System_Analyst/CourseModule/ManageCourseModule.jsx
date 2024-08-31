@@ -114,7 +114,7 @@ export default function ManageCourseModule() {
     };
 
     return (
-    <div className='container'>
+    <div className='container' style={{marginTop:"70px"}}>
         <ToastContainer/>
         <div className=' mt-2 mb-5'>
         <div className='h2 mt-lg-2'>Manage Course Module</div>

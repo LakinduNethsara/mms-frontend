@@ -1,14 +1,23 @@
 import React from 'react'
+import { useState } from "react";
+import SetAcademicYear from './SetAcademicYear/SetAcademicYear';
 
 export default function SAProfile() {
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
   return (
     <div className=' container' style={{marginTop:"70px"}}>
             <div className=' py-4'>
               
-                <div style={{display:"flex"}}>
-                </div> 
+                <div style={{float:"right"}}>
+                  <button className=' btn btn-dark btn-sm' onClick={()=> setIsPopupVisible(true)}>Set Academic Year</button>
+                </div>
+                <SetAcademicYear 
+                  isVisible={isPopupVisible} 
+                  onClose={() => setIsPopupVisible(false)} 
+                />
             </div>
-            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh',marginTop:"40px"}}>
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh',marginTop:"100px"}}>
             <div className=' center' >
               <div className='row g-3'>
 
@@ -72,14 +81,6 @@ export default function SAProfile() {
                     <h5 className="card-title py-2">Students Courses Registration</h5>
                     {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
                     <a href="/screg"  className="btn btn-primary btn-sm mt-2">To Manage</a>
-                  </div>
-                </div>
-
-                <div className="card shadow m-4" style={{width: "18rem"}}>
-                  <div className="card-body ">
-                    <h5 className="card-title py-2">Set Current Academic Year</h5>
-                    {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
-                    <a  className="btn btn-primary btn-sm mt-2">To Manage</a>
                   </div>
                 </div>
 

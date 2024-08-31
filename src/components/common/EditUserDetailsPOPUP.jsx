@@ -1,30 +1,13 @@
 import React, { useEffect } from 'react';
 import { useState } from "react";
 import axios from 'axios';
-import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../common/AcademicYearManagerSingleton';
 
-
-export default function SetAcademicYear({ isVisible, onClose }) {
+export default function EditUserDetailsPOPUP() {
     const [popupInputValue, setPopupInputValue] = useState('');
     const [selectedType, setSelectedType] = useState('');
-    const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
-    const [academicYear, setAcademicYear] = useState('');
-    const [cSemester, setCSemester] = useState('');
 
-    console.log(academicDetails);
-
-    console.log(academicYear);
 
     useEffect(() => {
-        const fetchAndSaveYear = async () => {
-            const details = await fetchAcademicYear();
-            if (details) {
-                saveAcademicYearToLocal(details);
-                setAcademicDetails(details);
-                setAcademicYear(details.current_academic_year);
-                setCSemester(details.current_semester);
-            }
-        };
 
         fetchAndSaveYear();
     }, []);
@@ -33,12 +16,7 @@ export default function SetAcademicYear({ isVisible, onClose }) {
 
     const saveData = async () => {
         try {
-            const response = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateAcademicYearDetailsBySA", {
-                previous_academic_year: academicYear,
-                current_academic_year: popupInputValue,
-                current_semester: selectedType
-            });
-            console.log(response);
+            
 
         } catch (error) {
             console.error("Error fetching data from API:", error);
@@ -48,10 +26,10 @@ export default function SetAcademicYear({ isVisible, onClose }) {
 
     const handleSave = () => {
         if (!popupInputValue.trim() || !selectedType) {
-            alert("Please enter a values");
+            alert("Please enter a value and select an assessment type");
             return;
         }
-        saveData();
+        onSave({ popupInputValue, selectedType });
         onClose();
     };
 
@@ -65,13 +43,13 @@ export default function SetAcademicYear({ isVisible, onClose }) {
 
     return (
         <div className="modal-backdrop" style={{ display: 'block', position: 'fixed', zIndex: 1, left: 0, top: 0, width: '100%', height: '100%', overflow: 'auto', backgroundColor: 'rgba(0,0,0,0.4)' }}>
-            <div className="modal-content" style={{ backgroundColor: '#fefefe', padding: '20px', border: '1px solid #888', width: '600px', maxWidth: '100%', transform: 'translate(-50%, -50%)', top: '50%', left: '50%', position: 'absolute' }}>
-                <div className=" h4">Set Current Academic Year & Semester</div>
+            <div className="modal-content" style={{ backgroundColor: '#fefefe', padding: '20px', border: '1px solid #888', width: '700px', maxWidth: '100%', transform: 'translate(-50%, -50%)', top: '50%', left: '50%', position: 'absolute' }}>
+                <div className=" h5">Profile Details</div>
 
-                <label htmlFor="" className=" form-label mt-3 text-danger">Enter Current Academic Year</label>
+                <label htmlFor="" className=" form-label mt-3 text-danger">Enter Old Password</label>
 
                 <input
-                    className=" form-control "
+                    className=" form-control mt-2"
                     type="text"
                     value={popupInputValue}
                     onChange={(e) => setPopupInputValue(e.target.value)}
@@ -81,12 +59,27 @@ export default function SetAcademicYear({ isVisible, onClose }) {
                     }}
                 />
 
-                <label htmlFor="" className=" form-label mt-3 text-danger">Enter Current Semester</label>
+                <label htmlFor="" className=" form-label mt-3 text-danger">Enter New Password</label>
 
                 <input
-                    className=" form-control"
+                    className=" form-control mt-2"
                     type="number"
-                    value={selectedType}
+                    value={popupInputValue}
+                    onChange={(e) => setSelectedType(e.target.value)}
+                    placeholder="Type New Semester Here"
+                    style={{
+                        width: '100%', marginBottom: '10px',
+                    }}
+                    max={2}
+                    min={1}
+                />
+
+                <label htmlFor="" className=" form-label mt-3 text-danger">Confirm New Password</label>
+
+                <input
+                    className=" form-control mt-2"
+                    type="number"
+                    value={popupInputValue}
                     onChange={(e) => setSelectedType(e.target.value)}
                     placeholder="Type New Semester Here"
                     style={{

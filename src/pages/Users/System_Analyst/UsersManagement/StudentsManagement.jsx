@@ -121,7 +121,7 @@ export default function StudentsManagement() {
         fetchData();
 };
     return (
-        <div className='container'>
+        <div className='container' style={{marginTop:"70px"}}>
             
             <div className='py-4'>
                 <div className="h2 ">Students Registraion</div>
