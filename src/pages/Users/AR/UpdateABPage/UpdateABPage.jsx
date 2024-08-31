@@ -292,22 +292,29 @@ export default function UpdateABPage() {
 
 
                                     var isMidFail = false;      //Variable to store mid fail pass status
+                                    var isMidMC = false; //Variable
                                 
                                     midExamMarksList.data.map((element)=>{                      //Map the mid exam marks list
                                         if(element.assignment_score.toLowerCase() === "F".toLowerCase()){                   //Condition to check whether the student has a F grade in the mid exam
                                             isMidFail = true;       //Set the mid fail status to true
                                         }
+                                        if(element.assignment_score.toLowerCase() === "MC".toLowerCase()){                   //Condition to check whether the student has a F grade in the mid exam
+                                            isMidMC = true;       //Set the mid fail status to true
+                                        }
                                     })
     
-                                    if(isMidFail == false){                     //Condition to check whether the student has passed the mid exam
+                                    if(isMidMC==false){
+                                        if(isMidFail == false){                     //Condition to check whether the student has passed the mid exam
 
-                                        if(updateMarksTableOject.new_score.toLowerCase()==="MC".toLowerCase()){         //Check if the medical is accepted (new score MC)
-                                            existingGrade.grade="MC";                   //Set the grade to WH
-                                        }else if (updateMarksTableOject.new_score.toLowerCase()==="F".toLowerCase()){               //Check if the medical is not accepted (new score F)
-                                            existingGrade.grade="E*";                   //Set the grade to E*
+                                            if(updateMarksTableOject.new_score.toLowerCase()==="MC".toLowerCase()){         //Check if the medical is accepted (new score MC)
+                                                existingGrade.grade="MC";                   //Set the grade to WH
+                                            }else if (updateMarksTableOject.new_score.toLowerCase()==="F".toLowerCase()){               //Check if the medical is not accepted (new score F)
+                                                existingGrade.grade="E*";                   //Set the grade to E*
+                                            }
+    
                                         }
-
                                     }
+                                    
         
                                     
 
@@ -376,13 +383,12 @@ export default function UpdateABPage() {
 
 
                     
-                }else if(repeatStatus.data[0].repeat==1){  
+                }else if(repeatStatus.data[0].repeat==1){
                     //condition to check whether the selected student has marks in previous academic year (meanse the student is a repeated student or a student who has a WH grade)
 
                 /*---------------------------------------------------------------------Scenario for a repeated or WH student---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
                     
                     var decrementedAcYear = decrementACYear(studentDetails.academic_year);    //Get the previous academic year of the selected student
-
                     
                     //-----------------------------------------------------------------------------New Start
 

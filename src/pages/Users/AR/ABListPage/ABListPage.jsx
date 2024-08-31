@@ -74,7 +74,7 @@ export default function ABListPage() {
 
 
   return (
-    <div style={{width:"96%",marginLeft:"auto",marginRight:"auto"}}>
+    <div style={{width:"96%",marginLeft:"auto",marginRight:"auto",marginTop:"70px"}}>
         
         
 
