@@ -27,7 +27,7 @@ export default function CCMarksApproval() {
             setEmail(null);
             setError('User data not found in local storage.');
         }
-    }, []);
+    }, [email]);
 
     const fetchData = async (userEmail) => {
         try {
