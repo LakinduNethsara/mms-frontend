@@ -397,8 +397,9 @@ export default function UpdateABPage() {
                     if(studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){             // If exam is a mid exam for repeat student
 
                         //Get previous mid result
+                        setLoading(true);
                         const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/Mid`);   //Get the selected student previous mid exam marks 
-                        
+                        setLoading(false);
                         if(previousMidExamResult.data.length >0){       //If there are previous mid result
 
                             var isMidMC =true;
@@ -462,9 +463,11 @@ export default function UpdateABPage() {
                         var AbMidAvailability = false;          //If students have AB for Mid exam it becomes true otherwise false
                         var midMarkMCAvailability = false; //If students have
 
+                        setLoading(true);
                         //Get mid exam marks of the same subject
                         const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/Mid`);   //Get the mid  exam results of the student in the current academic year
-                        
+                        setLoading(false);
+
                         if(midExamMarksList.data.length > 0){       // IF there are mid exam marks
                             midExamMarksList.data.map((element)=>{                      //Map the mid exam marks list
                                 if(element.assignment_score.toLowerCase() === "AB".toLowerCase()){                   //Condition to check whether the student has a AB score in the mid exam
@@ -479,9 +482,10 @@ export default function UpdateABPage() {
                             })
                         }
 
-
+                        setLoading(true);
                         const previousEndExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/End`);   //Get the selected student previous end exam marks 
-                        
+                        setLoading(false);
+
                         if(previousEndExamResult.data.length >0 ){
                             var isEndMC =true;
                             previousEndExamResult.data.map((element)=>{                      //Map the mid exam marks list and ensure all mid exams are not equal to MC
@@ -528,6 +532,7 @@ export default function UpdateABPage() {
                                 }
                                 setLoading(false);
                             }
+                            
                             catch(error){
                                 toast.error(error,{autoClose:2000});
                                 console.log(error);
