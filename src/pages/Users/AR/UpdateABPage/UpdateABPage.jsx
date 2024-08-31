@@ -394,7 +394,7 @@ export default function UpdateABPage() {
 
 
 
-                    if(studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){             // If exam is a mid exam
+                    if(studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){             // If exam is a mid exam for repeat student
 
                         //Get previous mid result
                         const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/Mid`);   //Get the selected student previous mid exam marks 
@@ -457,7 +457,7 @@ export default function UpdateABPage() {
 
                         
                         
-                    }else if(studentDetails.midORend.toLowerCase()=="End".toLowerCase()){               //If exam is a end exam
+                    }else if(studentDetails.midORend.toLowerCase()=="End".toLowerCase()){               //If exam is a end exam for repeat student
 
                         var AbMidAvailability = false;          //If students have AB for Mid exam it becomes true otherwise false
                         var midMarkMCAvailability = false; //If students have
