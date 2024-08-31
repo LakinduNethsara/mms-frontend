@@ -14,7 +14,7 @@ export default function CAEligibility() {
 
     const results = async () => {
     try {
-            const response = await axios.get(`http://192.248.50.155:9090/api/CAEligibility/ofstudents/${course_id}`);
+            const response = await axios.get(`http://localhost:9090/api/CAEligibility/ofstudents/${course_id}`);
             if (response.data.code !== '00') {
             throw new Error('Network response was not ok');
             }

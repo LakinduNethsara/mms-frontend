@@ -30,7 +30,7 @@ function LoginPage(){
         };
 
         try{
-            const response = await axios.post('http://192.248.50.155:9090/api/user/login',credentials);
+            const response = await axios.post('http://localhost:9090/api/user/login',credentials);
             
             console.log(response.data.content);
 
@@ -101,14 +101,14 @@ function LoginPage(){
                         <div className=' mt-3'>
                             {loader ? ( 
 
-                                <div class="spinner-border spinner-border-sm" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                                <div className="spinner-border spinner-border-sm" role="status">
+                                <span className="visually-hidden">Loading...</span>
                                 </div>
                             ) : (
                                     <button type="submit" className="btn btn-outline-dark btn-sm " style={{width:"100PX"}}>LOGIN</button>
                                 )}
                             
-                            <button type="button" className="btn btn-outline-danger btn-sm mx-3" style={{width:"100PX"}} onClick={handleCancle}>CANCLE</button>
+                            <button type="button" className="btn btn-outline-danger btn-sm mx-3" style={{width:"100PX"}} onClick={handleCancle}>CANCEL</button>
                         </div>
 
                         </form>

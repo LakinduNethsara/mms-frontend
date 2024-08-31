@@ -16,7 +16,7 @@ export default function AttendanceEligibilityManage() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get("http://192.248.50.155:9090/api/attendanceEligibility/getallattendance");
+            const response = await axios.get("http://localhost:9090/api/attendanceEligibility/getallattendance");
             setAttendanceData(response.data.content);
         } catch (error) {
             console.error("Error fetching data from API:", error);
@@ -69,7 +69,7 @@ export default function AttendanceEligibilityManage() {
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://192.248.50.155:9090/api/attendanceEligibility/insertbulkattendance", data);
+            await axios.post("http://localhost:9090/api/attendanceEligibility/insertbulkattendance", data);
             toast.success("Data submitted successfully!");
             fetchData();
             window.location.reload();

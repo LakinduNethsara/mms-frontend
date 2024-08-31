@@ -34,7 +34,7 @@ export default function LecRelatedCourses() {
         setLoader(true);
         if
         (!email) return;
-        const res = await axios.get(`http://192.248.50.155:9090/api/courses/getccregcourses/${email}`)
+        const res = await axios.get(`http://localhost:9090/api/courses/getccregcourses/${email}`)
         setCourses(res.data.content);
         setLoader(false);
     }
@@ -45,7 +45,7 @@ export default function LecRelatedCourses() {
                     
         <div style={{margin:"100px",display:"flex"}}>
 
-            <div class="spinner-border" role="status">
+            <div className="spinner-border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </div>
             <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>

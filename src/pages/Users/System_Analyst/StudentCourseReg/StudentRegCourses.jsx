@@ -5,9 +5,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function StudentRegCourses() {
-    const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [medicalData, setMedicalData] = useState([]);
   const expectedKeys = ["student_id", "course_id", "academic_year","repeat"];
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -15,8 +16,10 @@ export default function StudentRegCourses() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://192.248.50.155:9090/api/studentRegCourses/getallRegisteredStudents");
+      setLoader(true);
+      const response = await axios.get("http://localhost:9090/api/studentRegCourses/getallRegisteredStudents");
       setMedicalData(response.data.content);
+      setLoader(false);
     } catch (error) {
       console.error("Error fetching data from API:", error);
     }
@@ -62,7 +65,7 @@ export default function StudentRegCourses() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://192.248.50.155:9090/api/studentRegCourses/insert_allRegisteredStudents", data);
+      await axios.post("http://localhost:9090/api/studentRegCourses/insert_allRegisteredStudents", data);
       toast.success("Data submitted successfully!");
       fetchData();
     } catch (error) {
@@ -119,6 +122,15 @@ export default function StudentRegCourses() {
       </div>
       <ToastContainer />
       <div>
+      {loader ? ( 
+                    <div style={{margin:"100px",display:"flex"}}>
+                        <div className="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+                    </div>
+                ) : (<>
+        
         <div className="h2 mt-lg-5">Students Courses Registered Details</div>
         {medicalData.length > 0 && (
           <table className='table'>
@@ -140,6 +152,9 @@ export default function StudentRegCourses() {
             </tbody>
           </table>
         )}
+
+        </>)}   
+
       </div>
     </div>
   )

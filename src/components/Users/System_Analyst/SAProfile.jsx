@@ -74,6 +74,15 @@ export default function SAProfile() {
                     <a href="/screg"  className="btn btn-primary btn-sm mt-2">To Manage</a>
                   </div>
                 </div>
+
+                <div className="card shadow m-4" style={{width: "18rem"}}>
+                  <div className="card-body ">
+                    <h5 className="card-title py-2">Set Current Academic Year</h5>
+                    {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
+                    <a  className="btn btn-primary btn-sm mt-2">To Manage</a>
+                  </div>
+                </div>
+
               </div>
             </div>
             </div>

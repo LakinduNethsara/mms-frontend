@@ -279,9 +279,9 @@ export default function AddCAMarksByLec() {
 
 
     const handleCACalculation = async () => {
-        const CAELi = await axios.get(`http://192.248.50.155:9090/api/ca/calculate/${course_id}`);
+        const CAELi = await axios.get(`http://localhost:9090/api/ca/calculate/${course_id}`);
 
-        // http://192.248.50.155:9090/api/ca/calculate/ICT1112
+        // http://localhost:9090/api/ca/calculate/ICT1112
     };
 
     // const handleCACalculation = async () => {
@@ -446,7 +446,7 @@ export default function AddCAMarksByLec() {
                     
 <div style={{margin:"100px",display:"flex"}}>
 
-    <div class="spinner-border" role="status">
+    <div className="spinner-border" role="status">
         <span className="visually-hidden">Loading...</span>
     </div>
     <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>

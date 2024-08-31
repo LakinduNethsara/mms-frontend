@@ -29,6 +29,8 @@ export default function CreateResultBoard() {
     const [errorMessageColor, setErrorMessageColor] = useState('');    //store the error message color
     const [buttonClicked, setButtonClicked] = useState(false);    //store the button clicked status
     const [buttonColour, setButtonColour] = useState('gray');    //store the button colour
+
+    const [loading,setLoading] = useState(false); //store the loading
     
 
     let newResultBoard = {                  // Object to store the new result board details
@@ -85,10 +87,19 @@ export default function CreateResultBoard() {
 
 
     const loadAcademicYear = async () => {                  // load the current academic year
-        const academicYearDetails =await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAcademicYearDetails`);      // get the academic year details
-        setAcademicYearList([]);                                                                                                // clear the academic year list
-        setAcademicYearList(academicYearList=>[...academicYearList,academicYearDetails.data[0].previous_academic_year]);          // set previous academic year to the list
-        setAcademicYearList(academicYearList=>[...academicYearList,academicYearDetails.data[0].current_academic_year]);        // set current academic year to the list
+
+        try{
+            setLoading(true);                                                                                            // set loading to true
+            const academicYearDetails =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`);      // get the academic year details
+            setAcademicYearList([]);                                                                                                // clear the academic year list
+            setAcademicYearList(academicYearList=>[...academicYearList,academicYearDetails.data[0].previous_academic_year]);          // set previous academic year to the list
+            setAcademicYearList(academicYearList=>[...academicYearList,academicYearDetails.data[0].current_academic_year]);        // set current academic year to the list
+
+            setLoading(false);
+        }catch(e){
+            console.log(e.message);
+        }
+        
     }   
 
 
@@ -105,7 +116,10 @@ export default function CreateResultBoard() {
             
 
             try{
-                const result = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/isResultBoardAvailable/${selectedDepartment}/${selectedLevel}/${selectedSemester}/${selectedAcademicYear}`)    //Call api to check the result board availability
+
+                setLoading(true);                                                                                            // set loading to true
+
+                const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/isResultBoardAvailable/${selectedDepartment}/${selectedLevel}/${selectedSemester}/${selectedAcademicYear}`)    //Call api to check the result board availability
                 
                 if(result.data){
                     toast.error("Selected Result Board is existing! ",{autoClose:2000});   //Display error message if result board is already created
@@ -120,6 +134,8 @@ export default function CreateResultBoard() {
                     setButtonAvailability(true);                //Enable the button
                     setButtonColour();                    //Set the button colour to blue
                 }
+
+                setLoading(false);
 
             }catch(e){
                 toast.error("Error in checking the result board availability",{autoClose:2000});   //Display error message if there is an error in checking the result board availability
@@ -137,8 +153,13 @@ export default function CreateResultBoard() {
 
     const loadCreatedResultBoardList = async () => {    //Load the created result board list
         try{
-            const result = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCreatedResultBoardList`);    //Call api to get the created result board list
+
+            setLoading(true);                                                                                            // set loading to true
+
+            const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCreatedResultBoardList`);    //Call api to get the created result board list
             setCreatedResultBoardList(result.data);    //Set the created result board list
+
+            setLoading(false);                                                                                            // set loading to false
         }
         catch(e){
             toast.error("Error in loading the created result board list",{autoClose:2000});    //Display error message if there is an error in loading the created result board list
@@ -151,7 +172,9 @@ export default function CreateResultBoard() {
 
         try{
 
-            const notApprovedList = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/HOD/${academicYear}/${department}`);    //Call api to get the not approved course list
+            setLoading(true);                                                                                            // set loading to true
+
+            const notApprovedList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getNotApprovedCoursesByLevelSemester/${level}/${semester}/HOD/${academicYear}/${department}`);    //Call api to get the not approved course list
             
             if(notApprovedList.data.length>0){    //Check whether there are not approved courses
                 
@@ -163,7 +186,9 @@ export default function CreateResultBoard() {
 
                 try{
 
-                    const abList = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/isABStudentAvailable/${academicYear}/${semester}/${level}/${department}`);    //Call api to check the AB student availability
+                    setLoading(true);
+
+                    const abList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/isABStudentAvailable/${academicYear}/${semester}/${level}/${department}`);    //Call api to check the AB student availability
                     
                     if(abList.data){            //If there are absent students
 
@@ -174,12 +199,14 @@ export default function CreateResultBoard() {
 
                         try{
 
+                            setLoading(true);
+
                             const currentDateAndTime = new Date();  //Get the current date and time
                             const formattedDateTime = String(currentDateAndTime.getFullYear() + '-' + (currentDateAndTime.getMonth()+1) + '-' + currentDateAndTime.getDate() +' ' +  currentDateAndTime.getHours()+ ':'+ currentDateAndTime.getMinutes() +':' + currentDateAndTime.getSeconds()); //Format the date and time
                             console.log(formattedDateTime)
                             newResultBoard.created_date_time = formattedDateTime;    //Set the formatted date and time to the new result board object
 
-                            await axios.post(`http://192.248.50.155:9090/api/AssistantRegistrar/saveResultBoard`,newResultBoard);    //Call api to create the result board
+                            await axios.post(`http://localhost:9090/api/AssistantRegistrar/saveResultBoard`,newResultBoard);    //Call api to create the result board
                             toast.success("Result board is created successfully");    //Display success message if the result board is created successfully
                             setButtonClicked(true);    //Set the button clicked status to true
                             setErrorMessageColor('blue')        //Set the error message colour to blue
@@ -187,6 +214,8 @@ export default function CreateResultBoard() {
 
                             setButtonColour('gray');    //Set the button colour to gray
                             setButtonAvailability(false);    //Disable the button
+
+                            setLoading(false);
 
                         }catch(e){
 
@@ -196,6 +225,8 @@ export default function CreateResultBoard() {
 
                     }
 
+                    setLoading(false);
+
                 }catch(e){
 
                     toast.error("Error with getting not approved course details",{autoClose:2000});    //Display error message if there is an error with getting not approved course details
@@ -203,6 +234,8 @@ export default function CreateResultBoard() {
                 }
 
             }
+
+            setLoading(false)
 
         }catch(e){
             toast.error("Error with getting not approved course details",{autoClose:2000});    //Display error message if there is an error with getting not approved course details
@@ -246,118 +279,135 @@ export default function CreateResultBoard() {
     },[academicYear,department,level,semester,buttonClicked])
 
   return (
-    <div className='div-body container' style={{marginTop:"20px",minWidth:"100%",paddingRight:"50px",paddingLeft:"50px",height:"100%"}}>
+    <div className='div-body container' style={{marginTop:"70px",minWidth:"100%",paddingRight:"50px",paddingLeft:"50px",height:"100%"}}>
 
-        <div className='row justify-content-between'>
-
-            <div className='col-4 sub-div1' style={{width:"100%",minWidth:"450px",minHeight:"80px",boxShadow:"0 0 10px 0 rgba(0, 0, 0, 0.4)",borderRadius:"5px",marginBottom:"20px",overflowX:"auto" }}>
-
-                <div className="row justify-content-between">
-                <div className="col">
-                        <select className='selection' style={{width:"180px",borderRadius:"5px",fontSize:"15px",textAlign:"center",lineHeight:"50px",marginTop:"20px"}} value={academicYear} onChange={handleAcademicYear}>                   {/* selection for semester */}
-                            <option value='0' disabled>Academic Year</option>
-                            {
-                                academicYearList.map((element,index)=>(
-                                    <option key={index} value={element}>{element}</option>
-                                ))
-                            }
-                        </select>
+        {
+            loading ? (
+                <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only"></span>
                     </div>
-                    <div className="col">
-                        <select className='selection' style={{width:"180px",borderRadius:"5px",fontSize:"15px",textAlign:"center",lineHeight:"50px",marginTop:"20px"}} value={semester} onChange={handleSemester}>                   {/* selection for semester */}
-                            <option value='0' disabled>Select Semester</option>
-                            <option value='1'>Semester 1</option>
-                            <option value='2'>Semester 2</option>
-                        </select>
-                    </div>
-                    <div className="col">
-                        <select className='selection' style={{width:"180px",borderRadius:"5px",fontSize:"15px",textAlign:"center",lineHeight:"50px",marginTop:"20px"}} value={level} onChange={handleLevel}>                         {/* selection for level */}
-                            <option value='0' disabled>Select level</option>
-                            <option value='1'>Level 1</option>
-                            <option value='2'>Level 2</option>
-                            <option value='3'>Level 3</option>
-                            <option value='4'>Level 4</option>
-                        </select>
-                    </div>
-                    <div className="col">
-                        <select className='selection' style={{width:"180px",borderRadius:"5px",fontSize:"15px",textAlign:"center",lineHeight:"50px",marginTop:"20px"}} value={department} onChange={handleDepartment}>               {/* selection for department */}
-                            <option value='0' disabled>Select department</option>
-                            <option value='ICT'>ICT</option>
-                            <option value='ET'>ET</option>
-                            <option value='BST'>BST</option>
-                        </select>
-                    </div>
-                    <div className="col">
-                        <button className='btn btn-primary' style={{width:"Auto",height:"Auto",marginTop:"20px",backgroundColor:buttonColour,borderColor:buttonColour}} disabled={!buttonAvailability} onClick={createResultBoard}>Create Result Board</button>
-                        
-                        <ToastContainer/>
-                    </div>
-                    <div className="col">
-                        
-                    </div>
-            
-            
+                    <label style={{marginLeft:"10px"}}> Loading data</label>
                 </div>
+            ):(
+
+
                 <div className='row justify-content-between'>
-                    <div className="col">
-                        
-                        <label style={{color:errorMessageColor,marginTop:"10px",minWidth:"100%"}}>{errorMessage}</label>
-                        <BackButton/>
-                    </div>
+
+                    <div className='col-4 sub-div1' style={{width:"100%",minWidth:"450px",minHeight:"80px",boxShadow:"0 0 10px 0 rgba(0, 0, 0, 0.4)",borderRadius:"5px",marginBottom:"20px",overflowX:"auto" }}>
+
+                        <div className="row justify-content-between">
+                            <div className="col">
+                                <select className='selection' style={{width:"180px",borderRadius:"5px",fontSize:"15px",textAlign:"center",lineHeight:"50px",marginTop:"20px"}} value={academicYear} onChange={handleAcademicYear}>                   {/* selection for semester */}
+                                    <option value='0' disabled>Academic Year</option>
+                                    {
+                                        academicYearList.map((element,index)=>(
+                                            <option key={index} value={element}>{element}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                            <div className="col">
+                                <select className='selection' style={{width:"180px",borderRadius:"5px",fontSize:"15px",textAlign:"center",lineHeight:"50px",marginTop:"20px"}} value={semester} onChange={handleSemester}>                   {/* selection for semester */}
+                                    <option value='0' disabled>Select Semester</option>
+                                    <option value='1'>Semester 1</option>
+                                    <option value='2'>Semester 2</option>
+                                </select>
+                            </div>
+                            <div className="col">
+                                <select className='selection' style={{width:"180px",borderRadius:"5px",fontSize:"15px",textAlign:"center",lineHeight:"50px",marginTop:"20px"}} value={level} onChange={handleLevel}>                         {/* selection for level */}
+                                    <option value='0' disabled>Select level</option>
+                                    <option value='1'>Level 1</option>
+                                    <option value='2'>Level 2</option>
+                                    <option value='3'>Level 3</option>
+                                    <option value='4'>Level 4</option>
+                                </select>
+                            </div>
+                            <div className="col">
+                                <select className='selection' style={{width:"180px",borderRadius:"5px",fontSize:"15px",textAlign:"center",lineHeight:"50px",marginTop:"20px"}} value={department} onChange={handleDepartment}>               {/* selection for department */}
+                                    <option value='0' disabled>Select department</option>
+                                    <option value='ICT'>ICT</option>
+                                    <option value='ET'>ET</option>
+                                    <option value='BST'>BST</option>
+                                </select>
+                            </div>
+                            <div className="col">
+                                <button className='btn btn-primary' style={{width:"Auto",height:"Auto",marginTop:"20px",backgroundColor:buttonColour,borderColor:buttonColour}} disabled={!buttonAvailability} onClick={createResultBoard}>Create Result Board</button>
+                                
+                                <ToastContainer/>
+                            </div>
+                            <div className="col">
+                                
+                            </div>
                     
+                    
+                        </div>
+                        <div className='row justify-content-between'>
+                            <div className="col">
+                                
+                                <label style={{color:errorMessageColor,marginTop:"10px",minWidth:"100%"}}>{errorMessage}</label>
+                                <BackButton/>
+                            </div>
+                            
+                        </div>
+                        <hr style={{height:"3px", background:"blue"}}></hr>
+
+                        <div style={{marginLeft:"auto",marginRight:"auto",alignContent:'center'}}>
+                            <table className="table table-striped existing-result-board-table">
+                                <thead className='tableHead' style={{backgroundColor:"#ffffff",position:"sticky",top:"65px",zIndex:"1"}}>
+                                    <tr>
+                                        <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
+                                            Existing Result Boards <br/>
+                                        </th>
+                                    </tr>
+                                    <tr>              
+                                    <th scope="col">Academic Year</th>
+                                    <th scope="col">Semester</th>
+                                    <th scope="col">Level</th>
+                                    <th scope="col">Department</th>
+                                    <th scope="col">State</th>
+                                    <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {createdResultBoardList.map((element) => (
+                                        <tr className="clickable-row" key={element.id} onClick={()=>{ 
+                                            // if(element.status=="Ended"){                                          {/*Check whether the result board ended*/}
+                                            //     toast.error("This result board is finished");
+                                            // }else{
+                                                selectedResultBoard.id = element.id;
+                                                selectedResultBoard.department = element.department;
+                                                selectedResultBoard.level = element.level;
+                                                selectedResultBoard.semester = element.semester;
+                                                selectedResultBoard.academic_year = element.academic_year;
+                                                selectedResultBoard.status = element.status;
+                                                selectedResultBoard.created_date_time = element.created_date_time;
+                                                selectedResultBoard.conducted_date_time = element.conducted_date_time;
+                                                history.push({pathname:`/arViewResultsBoard`,state:selectedResultBoard}) }}      //Else direct to view result board page
+                                            // }
+                                        >
+                                            <td>{element.academic_year}</td>
+                                            <td>{element.semester}</td>
+                                            <td>{element.level}</td>
+                                            <td>{element.department}</td>
+                                            <td>{element.status}</td>
+                                            <td><button className="btn btn-primary btn-sm" disabled={false} >View Results Board</button></td>
+                                            
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
                 </div>
-                <hr style={{height:"3px", background:"blue"}}></hr>
 
-                <div style={{marginLeft:"auto",marginRight:"auto",alignContent:'center'}}>
-                    <table className="table table-striped existing-result-board-table">
-                        <thead className='tableHead' style={{backgroundColor:"#ffffff",position:"sticky",top:"65px",zIndex:"1"}}>
-                            <tr>
-                                <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
-                                    Existing Result Boards <br/>
-                                </th>
-                            </tr>
-                            <tr>              
-                            <th scope="col">Academic Year</th>
-                            <th scope="col">Semester</th>
-                            <th scope="col">Level</th>
-                            <th scope="col">Department</th>
-                            <th scope="col">State</th>
-                            <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {createdResultBoardList.map((element) => (
-                                <tr className="clickable-row" key={element.id} onClick={()=>{ 
-                                    // if(element.status=="Ended"){                                          {/*Check whether the result board ended*/}
-                                    //     toast.error("This result board is finished");
-                                    // }else{
-                                        selectedResultBoard.id = element.id;
-                                        selectedResultBoard.department = element.department;
-                                        selectedResultBoard.level = element.level;
-                                        selectedResultBoard.semester = element.semester;
-                                        selectedResultBoard.academic_year = element.academic_year;
-                                        selectedResultBoard.status = element.status;
-                                        selectedResultBoard.created_date_time = element.created_date_time;
-                                        selectedResultBoard.conducted_date_time = element.conducted_date_time;
-                                        history.push({pathname:`/arViewResultsBoard`,state:selectedResultBoard}) }}      //Else direct to view result board page
-                                    // }
-                                >
-                                    <td>{element.academic_year}</td>
-                                    <td>{element.semester}</td>
-                                    <td>{element.level}</td>
-                                    <td>{element.department}</td>
-                                    <td>{element.status}</td>
-                                    <td><button className="btn btn-primary btn-sm" disabled={false} >View Results Board</button></td>
-                                    
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
 
-            </div>
+            )
+        }
 
-        </div>
+        
         
 
         
