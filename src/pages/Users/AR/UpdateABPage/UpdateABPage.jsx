@@ -251,6 +251,10 @@ export default function UpdateABPage() {
                             console.log(error);
                         }
 
+                        setTimeout(() => {
+                            history.goBack();     //Back to the previous page
+                        }, 2000);
+
                         
                     } else if(studentDetails.midORend.toLowerCase()=="End".toLowerCase()){           //Condition to check whether the exam is a end exam - proper batch
 
@@ -361,6 +365,10 @@ export default function UpdateABPage() {
     
                             }
 
+                            setTimeout(() => {
+                                history.goBack();     //Back to the previous page
+                            }, 2000);
+
                         }
 
                         
@@ -454,6 +462,10 @@ export default function UpdateABPage() {
                             toast.error(error,{autoClose:2000});        //Show a toast message
                             console.log(error);
                         }
+
+                        setTimeout(() => {
+                            history.goBack();     //Back to the previous page
+                        }, 2000);
 
 
                         
@@ -549,6 +561,10 @@ export default function UpdateABPage() {
                                 console.log(error);
     
                             }
+
+                            setTimeout(() => {
+                                history.goBack();     //Back to the previous page
+                            }, 2000);
 
                         }
 
@@ -722,9 +738,9 @@ export default function UpdateABPage() {
 
 
 
-        setTimeout(() => {
-            history.goBack();     //Back to the previous page
-        }, 3000);
+        // setTimeout(() => {
+        //     history.goBack();     //Back to the previous page
+        // }, 2000);
 
     };
 

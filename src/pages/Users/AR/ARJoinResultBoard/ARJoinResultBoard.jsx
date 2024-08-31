@@ -22,7 +22,6 @@ export default function ARJoinResultBoard() {
             const gradeResponse =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGradesForResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
             
             setStudentGrades(gradeResponse.data);
-
             const uniqueStudentArr = [...new Set(gradeResponse.data.map((item)=>item.student_id))].sort();                                     // get unique academic years
             setUniqueStudents(uniqueStudentArr); 
 
@@ -61,7 +60,9 @@ export default function ARJoinResultBoard() {
         </h5>
         <h6 style={{color:"blue",textAlign:"center"}}>Level {selectedResultBoard.level} Semester {selectedResultBoard.semester} (Academic year {selectedResultBoard.academic_year})</h6>
         
+        
         {
+            
             uniqueCourses != null ? (
                 <>
                     <hr/>
