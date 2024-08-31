@@ -74,7 +74,7 @@ export default function ABListPage() {
 
 
   return (
-    <div style={{width:"96%",marginLeft:"auto",marginRight:"auto"}}>
+    <div style={{width:"96%",marginLeft:"auto",marginRight:"auto",marginTop:"70px"}}>
         
         
 
@@ -98,7 +98,7 @@ export default function ABListPage() {
           <div style={{marginLeft:"auto",marginRight:"auto",marginTop:"10px",alignContent:'center'}}>
             <table className="table table-striped">
 
-              <thead className='tableHead' style={{position:"sticky",backgroundColor:"#ffffff",top:"65px",zIndex:"1"}}>
+              <thead className='tableHead' style={{position:"sticky",backgroundColor:"#ffffff",top:"50px",zIndex:"1"}}>
                 <tr>
                   <th colSpan={100} style={{textAlign:"center",backgroundColor:'#ebe8e8',textAlignLast:"center"}}>
                     Update students grades with medical submissions <br/>
@@ -136,7 +136,8 @@ export default function ABListPage() {
                     <td>{element[9]}</td>           
                   </tr>
                 ))}
-              </tbody>
+
+      </tbody>
               
             </table>
 

@@ -13,6 +13,7 @@ export default function ViewMarksTableValidations() {
 
     const course_variables = useParams();   // get the course variables from the url
     const [interrupt, setInterrupt] = useState(false);      // state to store the interrupt status
+    const [loading,setLoading]= useState(false);
     const history = useHistory();    // get the history object
     const requiredApprovedLevel1 = "HOD";
     const requiredApprovedLevel2 = "RB";
@@ -24,13 +25,16 @@ export default function ViewMarksTableValidations() {
 
     const fetchData = async ()=>{
       try{
-
+        setLoading(true);
         const academicYear = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAcademicYearDetails`);      // get the academic year details
+        setLoading(false);
         setInterrupt(false);   // set the interrupt state to false
+
         try{
-          
+          setLoading(true);
           const approvedLevel= await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getMarksApprovalLevelBySelectedCourseAndAcademicYear/${course_variables.course_id}/${course_variables.academicYear}`);    // get the approved level for the course
-          
+          setLoading(false);
+
           setInterrupt(false);   // set the interrupt state to false
           
           if(approvedLevel.data.length>0){      // check whether there are approved levels
@@ -43,7 +47,10 @@ export default function ViewMarksTableValidations() {
 
               try{
 
+                setLoading(true);
                 const ABStudents = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getABDetailsByCourseId/${course_variables.course_id}/${course_variables.academicYear}`);    // get the students having AB for relevent exams
+                setLoading(false);
+
                 setInterrupt(false);   // set the interrupt state to false
 
                 if(ABStudents.data.length>0){       //if there are student having AB scores
@@ -54,8 +61,9 @@ export default function ViewMarksTableValidations() {
                   setInterrupt(false);
 
                   try{
+                    setLoading(true);
                     const allStudents = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/findAllStudentsGrade/${course_variables.course_id}`);   // get all the students grades for the course
-
+                    setLoading(false);
                     if(allStudents.data.length>0){     // check whether there are students
 
                       setInterrupt(false);   // set the interrupt state to false
@@ -129,19 +137,30 @@ export default function ViewMarksTableValidations() {
   return (
     <div>
       {
-        interrupt===false ? (
-          null
-        ) : (
-          <>
-          <div className='alert alert-danger error-message' role='alert' style={{marginTop:"10%",textAlign:"center",height:"100px",width:"70%",marginLeft:"auto",marginRight:"auto",paddingTop:"30px"}}>
-              <h5>{interrupt}</h5>
-              
-          </div>
-          <div style={{textAlign:"right",paddingRight:"30px"}}>
-            <BackButton/>
-          </div>
-          </>
+        loading ? (
+          <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
+              <div className="spinner-border" role="status">
+                <span className="sr-only"></span>
+              </div>
+              <label style={{marginLeft:"10px"}}> Loading data</label>
+            </div>
+        ):(
+          interrupt===false ? (
+            null
+          ) : (
+            <>
+            <div className='alert alert-danger error-message' role='alert' style={{marginTop:"10%",textAlign:"center",height:"100px",width:"70%",marginLeft:"auto",marginRight:"auto",paddingTop:"30px"}}>
+                <h5>{interrupt}</h5>
+                
+            </div>
+            <div style={{textAlign:"right",paddingRight:"30px"}}>
+              <BackButton/>
+            </div>
+            </>
+          )
         )
+
+        
       }
       
           
