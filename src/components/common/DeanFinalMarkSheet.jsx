@@ -122,9 +122,12 @@ export default function DeanFinalMarkSheet(props) {
 
     
 
-      const processedData = data.reduce((acc, curr) => {
+      const processedFinalResults = finalResultsData.reduce((acc, curr) => {
+        if (!Array.isArray(acc)) {
+          acc = []; // Ensure acc is an array
+        }
+      
         const existingStudent = acc.find(student => student.student_id === curr.student_id);
-        const gpaInfo = gpaData.find(ele => ele.student_id === curr.student_id);
         if (existingStudent) {
           existingStudent.courses.push({
             course_id: curr.course_id,
@@ -134,15 +137,18 @@ export default function DeanFinalMarkSheet(props) {
         } else {
           acc.push({
             student_id: curr.student_id,
-            courses: [{
-              course_id: curr.course_id,
-              overall_score: curr.total_rounded_mark,
-              grade: curr.grade,
-            }]
+            courses: [
+              {
+                course_id: curr.course_id,
+                overall_score: curr.total_rounded_mark,
+                grade: curr.grade,
+              },
+            ],
           });
         }
         return acc;
-      }, []);
+      }, []); 
+      
 
       setFinalResults(processedData);
       const courseIdsSet = new Set();
@@ -167,26 +173,32 @@ export default function DeanFinalMarkSheet(props) {
       setRepeatStudentGPA(RepeatersgpaData);
 
       const processedRepeatersData = repeaterdata.reduce((acc, curr) => {
-        const existingStudent = acc.find(student => student.student_id === curr.student_id);
-        const gpaInfo = RepeatersgpaData.find(ele => ele.student_id === curr.student_id);
-        if (existingStudent) {
-          existingStudent.courses.push({
-            course_id: curr.course_id,
-            overall_score: curr.total_rounded_mark,
-            grade: curr.grade,
-          });
-        } else {
-          acc.push({
-            student_id: curr.student_id,
-            courses: [{
+          if (!Array.isArray(acc)) {
+            acc = []; // Ensure acc is an array
+          }
+        
+          const existingStudent = acc.find(student => student.student_id === curr.student_id);
+          if (existingStudent) {
+            existingStudent.courses.push({
               course_id: curr.course_id,
               overall_score: curr.total_rounded_mark,
               grade: curr.grade,
-            }]
-          });
-        }
-        return acc;
-      }, []);
+            });
+          } else {
+            acc.push({
+              student_id: curr.student_id,
+              courses: [
+                {
+                  course_id: curr.course_id,
+                  overall_score: curr.total_rounded_mark,
+                  grade: curr.grade,
+                },
+              ],
+            });
+          }
+          return acc;
+        }, []); // Initialize acc as an empty array here
+        
 
       try {
 
@@ -230,8 +242,11 @@ export default function DeanFinalMarkSheet(props) {
         );
         const finalResultsData = finalResultsResponse.data.content;
   
-        // Process final results
         const processedFinalResults = finalResultsData.reduce((acc, curr) => {
+          if (!Array.isArray(acc)) {
+            acc = []; // Ensure acc is an array
+          }
+        
           const existingStudent = acc.find(student => student.student_id === curr.student_id);
           if (existingStudent) {
             existingStudent.courses.push({
@@ -252,7 +267,8 @@ export default function DeanFinalMarkSheet(props) {
             });
           }
           return acc;
-        }, []);
+        }, []); // Initialize acc as an empty array here
+        
   
         setFinalResults(processedFinalResults);
   
@@ -273,30 +289,36 @@ export default function DeanFinalMarkSheet(props) {
           `http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`
         );
         const repeaterData = repeatersResponse.data.content;
+        setRepeatStudentGPA(repeaterData);
   
         // Process repeaters data
         const processedRepeaterData = repeaterData.reduce((acc, curr) => {
-          const existingStudent = acc.find(student => student.student_id === curr.student_id);
-          if (existingStudent) {
-            existingStudent.courses.push({
-              course_id: curr.course_id,
-              overall_score: curr.total_rounded_mark,
-              grade: curr.grade,
-            });
-          } else {
-            acc.push({
-              student_id: curr.student_id,
-              courses: [
-                {
-                  course_id: curr.course_id,
-                  overall_score: curr.total_rounded_mark,
-                  grade: curr.grade,
-                },
-              ],
-            });
-          }
-          return acc;
-        }, []);
+            if (!Array.isArray(acc)) {
+              acc = []; // Ensure acc is an array
+            }
+          
+            const existingStudent = acc.find(student => student.student_id === curr.student_id);
+            if (existingStudent) {
+              existingStudent.courses.push({
+                course_id: curr.course_id,
+                overall_score: curr.total_rounded_mark,
+                grade: curr.grade,
+              });
+            } else {
+              acc.push({
+                student_id: curr.student_id,
+                courses: [
+                  {
+                    course_id: curr.course_id,
+                    overall_score: curr.total_rounded_mark,
+                    grade: curr.grade,
+                  },
+                ],
+              });
+            }
+            return acc;
+          }, []); // Initialize acc as an empty array here
+          
   
         setRepeatersFinalResults(processedRepeaterData);
   
@@ -368,7 +390,6 @@ export default function DeanFinalMarkSheet(props) {
       setLoading(false);}
   };
 
-  console.log(level, semester, dept, approved_level, academic_year);
   useEffect(() => {
     fetchSignature();
   }, [level, semester, dept, approved_level, academic_year]);
@@ -453,7 +474,7 @@ const alternateRowStyle = {
             ) : (
               <>
       <BackButton />
-      {finalResults.length > 0 ? (
+      {(finalResults.length > 0 ||repeatersfinalResults.length>0) ? (
 
         <>
         
@@ -590,6 +611,8 @@ const alternateRowStyle = {
 
 
         </div>
+    
+        {finalResults.length > 0  && (
 
           <div className="">
             <table className="overflow-x-scroll table border shadow table-hover" style={{ marginTop: "60px" }}>
@@ -634,6 +657,7 @@ const alternateRowStyle = {
               </tbody>
             </table>
           </div>
+        )}
 
           {repeatersfinalResults.length>0 ?
 

@@ -351,9 +351,15 @@ useEffect(() => {
             e.preventDefault();
             
             if(approval_level==="finalized"){
+
+                setLoading(true);
                 const lecturerAssign = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/assignCertifyLecturer`,lecturerCertifyAssign);
+                setLoading(false);
             }
+            setLoading(true);
             const response = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/updateApprovalLevel`,approval);
+            setLoading(false);
+
             if (response.status === 200) {
               
                 setApprovalLevel(nextApprovedlevel)
@@ -376,6 +382,8 @@ useEffect(() => {
 
         
         try {
+
+            setLoading(true);
             const response = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/return`,Returnapproval);
             if (response.status === 200) {
                 toast.success("Result sheet approved successfully");
@@ -387,6 +395,7 @@ useEffect(() => {
                 console.error("Failed to update approval level");
                 toast.error('Error Returning Marks Sheet');
             }
+            setLoading(false);
         } catch (error) {
             console.error("Error updating approval level: ", error);
         }
@@ -424,7 +433,7 @@ useEffect(() => {
   
     
 
-      const getFuzzyMatches = (input, list) => {
+    const getFuzzyMatches = (input, list) => {
         const lowerInput = input.toLowerCase();  // Convert search input to lowercase
         return list.filter(lecturer => lecturer.name_with_initials.toLowerCase().includes(lowerInput));  // Filter list based on input
       };
@@ -451,7 +460,7 @@ useEffect(() => {
       
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-      }, []);
+      }, [department,filteredLecturers]);
 
       useEffect(() => {
         if (searchTerm.trim()) { // Check if the search term is not empty
@@ -475,15 +484,21 @@ useEffect(() => {
 const handleLecturerSelect = (lecturer) => {
     setSelectedEmail(lecturer.email);
     setSearchTerm(lecturer.name_with_initials);
-    setFilteredLecturers([]);
+    //setFilteredLecturers([]);
 };
+if(loading){
+    return (
+        <div className="d-flex justify-content-center">
+            <div className="spinner-border" role="status">
+                <span className="sr-only"></span>
+            </div>
+        </div>
+    );
+}
+
     
     return (
         <>
-            
-           
-          
-            
             
             {loading ? (
                  <div className="d-flex justify-content-center">
@@ -492,7 +507,11 @@ const handleLecturerSelect = (lecturer) => {
                  </div>
              </div>
             ) : (
+                
                 <>
+                {marksSheet.length > 0 || repeatMarksSheet.length > 0 ? (
+                            <>
+                                {
                 <div id="marks-return-sheet" style={{ width:"95%",marginLeft:"40px"}} className=' container'>
                 <ToastContainer/>
                 <BackButton/>
@@ -773,39 +792,26 @@ const handleLecturerSelect = (lecturer) => {
 
 
 
-                
-                <div className=' m-5'></div>
-            <div className=' row shadow-lg' style={{width:"1500px",height:'320px', padding:'10px'}}>
-                <div className=' col-5' style={{float:"left",marginTop:"50px",marginLeft:'20px'}}>
-                            
-                    <div>
+                        
+                    <div className=' m-5'></div>
+                    <div className=' row shadow-lg' style={{width:"1500px",height:'320px', padding:'10px'}}>
+                        <div className=' col-5' style={{float:"left",marginTop:"50px",marginLeft:'20px'}}>
+                            <div>
                         <table>
-                            
-                                
-                                
-                                    {
-                                         nextApprovedlevel == "course_coordinator" && newSignature != null ?
+                             {  nextApprovedlevel == "course_coordinator" && newSignature != null ?
                                          <>
                                             <tr><td >Coordinator/ Examinar :</td></tr>
                                             <tr>
                                             <td>Sign:</td>
                                             <td> <img src={newSignature} style={{ width: '80px', height: '40px' }} /> </td>
                                             </tr>
-                                            
                                          </>
                                          :
                                          null
-                                          
-                                    }
+                              } 
 
-                               
-                                
-                          
-                            
-                                
-                                    {nextApprovedlevel == "lecturer" &&
-                                    isCClevel.signature != null ?
-                                    <>
+                             {nextApprovedlevel == "lecturer" && isCClevel.signature != null ?
+                                 <>
                                             <tr>
                                                 <td >Coordinator/ Examinar :</td>
                                                 <td></td>
@@ -824,215 +830,195 @@ const handleLecturerSelect = (lecturer) => {
                                             <img src={newSignature} style={{ width: '80px', height: '40px' }} /> 
                                             </tr>:null
                                             }
-                                            
-                                    </>
-                                    :null
-                                    }
-
-                                
-                                    {
-                                    nextApprovedlevel == "HOD" &&
-                                    isCClevel.signature != null && isLeclevel.signature!=null ? 
-                                    <>
-                                    {isCClevel.signature != null || isCClevel.signature != ""?
-                                    <tr>
-                                    <td>Coordinator/ Examinar :</td>
-                                    <td></td>
-                                    <td>Sign:</td>
-                                    <td> <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> </td>
-                                    <td>Date:</td>
-                                    <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
-                            </tr>:null}
-                                    
-                                    <tr>
-                                        {isLeclevel!=null?
-                                        <>
-                                        <td>Checked by :</td>
-
-                                        <td></td>
-                                        <td>Sign:</td>
-                                        
-                                        <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> 
-                                        <td>Date:</td>
-                                        <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td>
-                                        </>
-                                        :null
-                                        }
-                                            
-                                    </tr>
-                                    <tr>{newSignature != null ?
-                                        <>
-                                                                <td>Head of the Department : </td>
-                                                                <td></td>
-                                                                <td>Sign:</td>
-                                                                <img src={newSignature} style={{ width: '80px', height: '40px' }} /> 
-                                                                
-                                                                
-                                        </>
-                                        :null
-                                }
-                                        
-                                    </tr> 
-                                    </>:null
-                                    }                                 
-                                    {
-                                        approved_level=="AssignedRB" || nextApprovedlevel == "RB" || nextApprovedlevel == "AR"  ? 
-                                        <>
-                                        <tr>
-                                                <td>Coordinator/ Examinar :</td>
-                                                <td></td>
-                                                <td>Sign:</td>
-                                                <td> <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> </td>
-                                                <td>Date:</td>
-                                                <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
-                                        </tr>
-                                        <tr>
-                                            {isLeclevel!=null?
-                                            <>
-                                            <td>Checked by :</td>
-    
-                                            <td></td>
-                                            <td>Sign:</td>
-                                            <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> 
-                                            <td>Date:</td>
-                                            <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td>
                                             </>
                                             :null
                                             }
-                                                
-                                        </tr>
-                                        <tr>{isHODlevel.signature != null ?
-                                            <>
-                                                                    <td>Head of the Department : </td>
-                                                                    <td></td>
-                                                                    <td>Sign:</td>
-                                                                    <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> 
-                                                                    <td>Date:</td>
-                                                                    <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>: 
-                                                                    
-                                            </>
-                                            :null
-                                    }
-                                            
-                                        </tr> 
-                                        </>:null
-                                    }
-            
-                            
+
                                 
-                               
-                               
+                                            {
+                                            nextApprovedlevel == "HOD" &&
+                                            isCClevel.signature != null && isLeclevel.signature!=null ? 
+                                            <>
+                                            {isCClevel.signature != null || isCClevel.signature != ""?
+                                            <tr>
+                                            <td>Coordinator/ Examinar :</td>
+                                            <td></td>
+                                            <td>Sign:</td>
+                                            <td> <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> </td>
+                                            <td>Date:</td>
+                                            <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
+                                            </tr>:null}
+                                            
+                                            <tr>
+                                                {isLeclevel!=null?
+                                                <>
+                                                <td>Checked by :</td>
 
-                        </table>
+                                                <td></td>
+                                                <td>Sign:</td>
+                                                
+                                                <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> 
+                                                <td>Date:</td>
+                                                <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td>
+                                                </>
+                                                :null
+                                                }
+                                                    
+                                            </tr>
+                                            <tr>{newSignature != null ?
+                                                <>
+                                                    <td>Head of the Department : </td>
+                                                    <td></td>
+                                                    <td>Sign:</td>
+                                                    <img src={newSignature} style={{ width: '80px', height: '40px' }} />                      
+                                                </>
+                                                :null
+                                            }
+                                                
+                                            </tr> 
+                                            </>:null
+                                            }                                 
+                                            {
+                                                approved_level=="AssignedRB" || nextApprovedlevel == "RB" || nextApprovedlevel == "AR"  ? 
+                                                <>
+                                                <tr>
+                                                        <td>Coordinator/ Examinar :</td>
+                                                        <td></td>
+                                                        <td>Sign:</td>
+                                                        <td> <img src={isCClevel.signature} style={{ width: '80px', height: '40px' }} /> </td>
+                                                        <td>Date:</td>
+                                                        <td>{isCClevel.date_time != null ? isCClevel.date_time:null}</td>
+                                                </tr>
+                                                <tr>
+                                                        {isLeclevel!=null?
+                                                        <>
+                                                        <td>Checked by :</td>
+                
+                                                        <td></td>
+                                                        <td>Sign:</td>
+                                                        <img src={isLeclevel.signature} style={{ width: '80px', height: '40px' }} /> 
+                                                        <td>Date:</td>
+                                                        <td>{isLeclevel.date_time != null ? isLeclevel.date_time:null}</td>
+                                                        </>
+                                                        :null
+                                                        }       
+                                                </tr>
+                                                <tr>{isHODlevel.signature != null ?
+                                                    <>
+                                                       <td>Head of the Department : </td>
+                                                       <td></td>
+                                                       <td>Sign:</td>
+                                                       <img src={isHODlevel.signature} style={{ width: '80px', height: '40px' }} /> 
+                                                       <td>Date:</td>
+                                                       <td>{isHODlevel.date_time != null ? isHODlevel.date_time:null}</td>:             
+                                                    </>
+                                                    :null
+                                                 }  
+                                                </tr> 
+                                                </>:null
+                                            }    
 
-                    </div>
+                                      </table>
+
+                                     </div>
                     
-                    {
-                        nextApprovedlevel === "course_coordinator" ? 
-                        <div>
-                            <hr />
-                            <div style={{ marginBottom: '20px', position: 'relative', display: 'inline-block', width: '300px' }}>
-                        <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        placeholder="Search Lecturer"
-                        style={{
-                            padding: '10px',
-                            borderRadius: '4px',
-                            border: '1px solid #ccc',
-                            width: '100%'
-                        }}
-                        ref={inputRef}
-                        />
-       
-                {filteredLecturers.length > 0 && (
-                <ul
-                    ref={dropdownRef}
-                    style={{
-                    listStyleType: 'none',
-                    padding: '0',
-                    margin: '0',
-                    position: 'absolute',
-                    top: '100%',
-                    left: '0',
-                    right: '0',
-                    backgroundColor: 'white',
-                    border: '1px solid #ccc',
-                    borderTop: 'none',
-                    borderRadius: '0 0 4px 4px',
-                    maxHeight: '150px',
-                    overflowY: 'auto',
-                    zIndex: '1000'
-                    }}
-                >
-                    {filteredLecturers.map((lecturer) => (
-                    <li
-                        key={lecturer.id}
-                        onClick={() => handleLecturerSelect(lecturer)}
-                        style={{
-                        padding: '8px',
-                        cursor: 'pointer',
-                        backgroundColor: 'white',
-                        borderBottom: '1px solid #ddd'
-                        }}
-                    >
-                        {lecturer.name_with_initials}
-                        
-                    </li>
-                    ))}
-                </ul>
-                )}
-            </div>
-                                </div>
-                                :
-                                null
-                                    
-                            }
-                        <hr />
-                            <div style={{marginTop:"10px",float:"right"}}>
+                                            {
+                                             nextApprovedlevel === "course_coordinator" ? 
+                                            <div>
+                                                <hr/>
+                                                <div style={{ marginBottom: '20px', position: 'relative', display: 'inline-block', width: '300px' }}>
+                                                <input
+                                                type="text"
+                                                value={searchTerm}
+                                                onChange={handleSearchChange}
+                                                placeholder="Search Lecturer"
+                                                style={{
+                                                    padding: '10px',
+                                                    borderRadius: '4px',
+                                                    border: '1px solid #ccc',
+                                                    width: '100%'
+                                                }}
+                                                ref={inputRef}
+                                                />
                             
+                                                 {filteredLecturers.length > 0 && (
+                                                    <ul
+                                                         ref={dropdownRef}
+                                                         style={{
+                                                         listStyleType: 'none',
+                                                         padding: '0',
+                                                         margin: '0',
+                                                         position: 'absolute',
+                                                         top: '100%',
+                                                         left: '0',
+                                                         right: '0',
+                                                         backgroundColor: 'white',
+                                                         border: '1px solid #ccc',
+                                                         borderTop: 'none',
+                                                         borderRadius: '0 0 4px 4px',
+                                                         maxHeight: '150px',
+                                                         overflowY: 'auto',
+                                                         zIndex: '1000'
+                                                        }}
+                                                    >
+                                                    {filteredLecturers.map((lecturer) => (
+                                                        <li
+                                                            key={lecturer.id}
+                                                            onClick={() => handleLecturerSelect(lecturer)}
+                                                            style={{
+                                                            padding: '8px',
+                                                            cursor: 'pointer',
+                                                            backgroundColor: 'white',
+                                                            borderBottom: '1px solid #ddd'
+                                                            }}
+                                                        >
+                                                        {lecturer.name_with_initials}
+                                                        </li>
+                                                        ))}
+                                                     </ul>
+                                                        )}
+                                                </div>
+                                                </div>:null}
+                                                <hr />
 
-                            {
-                            approval_level === "finalized" ||
-                            approval_level === "course_coordinator" ||
-                            approval_level === "lecturer" ? (
-                                <form onSubmit={handleSubmit}>
-                            
-                                    <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}} disabled={!newSignature}/> <br /><br />
-                                </form>
-                            ) : null
-                            }
+                                                <div style={{marginTop:"10px",float:"right"}}>
+                                                
+
+                                                {
+                                                approval_level === "finalized" ||
+                                                approval_level === "course_coordinator" ||
+                                                approval_level === "lecturer" ? (
+                                                    <form onSubmit={handleSubmit}>
+                                                
+                                                        <input to={``} type="submit" value="Send" className="btn btn-outline-success btn-sm"  id="submitbtn" style={{ width: '100px'}} disabled={!newSignature}/> <br /><br />
+                                                    </form>
+                                                ) : null
+                                                }
                         
-                       
+                                             </div>
 
-
-                    </div>
-
-                        </div>
-                        <div className=' col-5' style={{marginTop:"50px"}}>
-                            {
-                                approval_level === "finalized" ||
-                                approval_level === "course_coordinator" ||
-                                approval_level === "lecturer" ? (
-                                    <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
-                                ) : null}
-                        </div>
+                                             </div>
+                                            <div className=' col-5' style={{marginTop:"50px"}}>
+                                                    {
+                                                        approval_level === "finalized" ||
+                                                        approval_level === "course_coordinator" ||
+                                                        approval_level === "lecturer" ? (
+                                                            <SignatureForApproval saveDigitalSignature={saveDigitalSignature} />
+                                                        ) : null}
+                                             </div>
                         
                         </div>
                         </div>         
                         </div>
                         </div>
+                        </div>
 
-                            
-                        
-                        
-                    </div>
-
-                    
-                            </>
-                        )}
-                    </>
-                )
+        }
+        </>
+        ) : null}
+                </>
+                )}
+            </>
+            )
     
 }

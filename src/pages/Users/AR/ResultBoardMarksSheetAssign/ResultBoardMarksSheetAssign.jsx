@@ -134,7 +134,6 @@ export default function ResultBoardMarksSheetAssign() {
 
         try {
             const examinerList = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllCourseCoordinatorsBySelectedAcademicYearDepartmentLevelSemester/${selectedResultBoard.academic_year}/${selectedResultBoard.department}/${selectedResultBoard.level}/${selectedResultBoard.semester}`); //Get the course coordinator list from the database
-
             setAvailableExaminerList(examinerList.data); //Set the course coordinator list
         } catch (err) {
             toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs

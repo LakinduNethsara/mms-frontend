@@ -288,6 +288,8 @@ const endMarks={
         </div>
       ) :  (
       
+        marksSheet && marksSheet.student_id && marksSheet.course_id && marksSheet.ca && marksSheet.end && attendanceEligibility && (
+
       <div className=' bg-white' style={{marginTop:"70px"}}>
       <h2 style={{marginLeft:"30px"}}>{student_id} {marksSheet.student_name}</h2>
       <h3 style={{marginLeft:"30px"}}>{course_id} {course_name}</h3>
@@ -421,7 +423,11 @@ const endMarks={
         <div>
         </div>
       </div>
-      )}
+      )
+      )
+      }
+      {noData && <h1>No data found</h1>
+    }
         <EditValueModal
         isOpen={isModalOpen}
         onClose={closeModal}
