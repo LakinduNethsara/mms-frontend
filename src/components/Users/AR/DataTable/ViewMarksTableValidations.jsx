@@ -26,13 +26,13 @@ export default function ViewMarksTableValidations() {
     const fetchData = async ()=>{
       try{
         setLoading(true);
-        const academicYear = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`);      // get the academic year details
+        const academicYear = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAcademicYearDetails`);      // get the academic year details
         setLoading(false);
         setInterrupt(false);   // set the interrupt state to false
 
         try{
           setLoading(true);
-          const approvedLevel= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getMarksApprovalLevelBySelectedCourseAndAcademicYear/${course_variables.course_id}/${course_variables.academicYear}`);    // get the approved level for the course
+          const approvedLevel= await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getMarksApprovalLevelBySelectedCourseAndAcademicYear/${course_variables.course_id}/${course_variables.academicYear}`);    // get the approved level for the course
           setLoading(false);
 
           setInterrupt(false);   // set the interrupt state to false
@@ -48,7 +48,7 @@ export default function ViewMarksTableValidations() {
               try{
 
                 setLoading(true);
-                const ABStudents = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getABDetailsByCourseId/${course_variables.course_id}/${course_variables.academicYear}`);    // get the students having AB for relevent exams
+                const ABStudents = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getABDetailsByCourseId/${course_variables.course_id}/${course_variables.academicYear}`);    // get the students having AB for relevent exams
                 setLoading(false);
 
                 setInterrupt(false);   // set the interrupt state to false
@@ -62,7 +62,7 @@ export default function ViewMarksTableValidations() {
 
                   try{
                     setLoading(true);
-                    const allStudents = await axios.get(`http://localhost:9090/api/AssistantRegistrar/findAllStudentsGrade/${course_variables.course_id}`);   // get all the students grades for the course
+                    const allStudents = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/findAllStudentsGrade/${course_variables.course_id}`);   // get all the students grades for the course
                     setLoading(false);
                     if(allStudents.data.length>0){     // check whether there are students
 

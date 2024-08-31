@@ -31,7 +31,7 @@ export default function ViewMedicalPage() {
 
         try{                                                        // get all medical submissions
 
-          const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissions`);       // get all medical submissions
+          const response = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllMedicalSubmissions`);       // get all medical submissions
 
           if(response.data.length>0){                  // if medical submissions are available
 
@@ -55,14 +55,14 @@ export default function ViewMedicalPage() {
 
         try{                    // get medical submissions by the selected year
           const encodedValue = encodeURIComponent(value);       // encode the selected value
-          const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${value}`);       // get medical submissions by the selected year
+          const response = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${value}`);       // get medical submissions by the selected year
 
           if(response.data.length>0){       // if medical submissions are available
 
             setMedicalAvailability(true);       // set medical availability to true
             setMedicalSubmissions(response.data);       // set medical submissions
 
-            const allResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissions`);       // get all medical submissions go get unique years
+            const allResponse = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllMedicalSubmissions`);       // get all medical submissions go get unique years
             const uniqueArr = [...new Set(allResponse.data.map((item)=>item.academic_year))];                                     // get unique academic years
             setUniqueYears(uniqueArr);                                                                                // set unique academic years
             
