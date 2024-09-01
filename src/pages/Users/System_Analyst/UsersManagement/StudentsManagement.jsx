@@ -16,11 +16,11 @@ export default function StudentsManagement() {
     const [clearButtonClicked, setClearButtonClicked] = useState(false);
     const [loader, setLoader] = useState(false);
     const expectedKeys = ["user_id", "full_name", "name_with_initials", "email","password","registered_year","role","department_id","is_deleted"];
-
+    const [refreshKey, setRefreshKey] = useState(Date.now());
 
     useEffect(() => {
         fetchData();
-    }, [])
+    }, [refreshKey])
 
     const fetchData = async () => {
         try {
@@ -84,8 +84,10 @@ export default function StudentsManagement() {
         e.preventDefault();
         try {
             await axios.post("http://localhost:9090/api/lecreg/insertbulkusersdetails", data);
-            alert("Data submitted successfully!");
-            window.location.reload();
+            
+            setRefreshKey(Date.now());
+            toast.success("Data submitted successfully!");
+            
         } catch (error) {
             // console.error("Error submitting data:", error);
             toast.error("Error submitting data. some users are exists!");
@@ -117,8 +119,12 @@ export default function StudentsManagement() {
 
     const handleEditSubmit = async (updatedUser) => {
 
-        await axios.put(`http://localhost:9090/api/lecreg/savelecdetails`, updatedUser);
-        fetchData();
+        console.log(updatedUser);
+
+        await axios.put(`http://localhost:9090/api/lecreg/edit/alecdetails`, updatedUser); 
+        
+        setRefreshKey(Date.now());
+        toast.success("User details updated successfully!");
 };
     return (
         <div className='container' style={{marginTop:"70px"}}>

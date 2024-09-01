@@ -103,8 +103,11 @@ export default function AddFAMarksByLec() {
                 const studentArray = Array.from(uniqueStudentIds);
 
                 
-                
+                console.log('Student IDs:', studentArray);
+
                 setRegStudent(studentArray);
+
+                
                 
 
                 // Fetch all data of FA Marks
@@ -708,7 +711,9 @@ export default function AddFAMarksByLec() {
                             }
                         </tbody>
                     </table>
-                    <button className=' btn btn-dark btn-sm' disabled={eligbilityBtnDisable} onClick={handleCACalculation}>Calculate CA Eligibility</button>
+                    {/* <button className=' btn btn-dark btn-sm' disabled={eligbilityBtnDisable} onClick={handleCACalculation}>Calculate CA Eligibility</button> */}
+
+                    <button className=' btn btn-dark btn-sm' >Final Assessment Finalized</button>
                             
                 </div>
             </div>

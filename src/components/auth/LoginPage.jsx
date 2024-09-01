@@ -2,12 +2,14 @@ import axios from 'axios'
 import React, { useState, useEffect, useRef } from 'react'
 import Typed from 'typed.js';
 import { ToastContainer, toast } from 'react-toastify';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function LoginPage(){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const el = useRef(null);
     const [loader, setLoader] = useState(false);
+    const [showPassword, setShowPassword] = React.useState(false); // This is a state variable to toggle password visibility
 
     useEffect(() => {
         const typed = new Typed(el.current, {
@@ -73,6 +75,11 @@ function LoginPage(){
         setPassword('');
     }
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(prevState => !prevState);
+    };
+
+
     return(
         <div className="" style={{marginTop:"10%"}}>
             <div className="container py-5 h-100">
@@ -92,9 +99,37 @@ function LoginPage(){
                             <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" onChange={(e)=>setEmail(e.target.value)} value={email}/>
                         <label htmlFor="floatingInput">Email Address</label>
                         </div>
-                        <div className="form-floating">
+
+                        {/* <div className="form-floating">
                             <input type="password" className="form-control" id="floatingPassword" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
-                        <label htmlFor="floatingPassword">Password</label>
+                            <label htmlFor="floatingPassword">Password</label>
+                        </div> */}
+
+                        <div className="form-floating" style={{ position: 'relative' }}>
+                        
+                            <input
+                                className='form-control'
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                value={password}
+                                placeholder="Password"
+                                onChange={(e)=>setPassword(e.target.value)}
+                                size="30"
+                                id="floatingPassword"
+                            />
+                            <label htmlFor="floatingPassword">Password</label>
+                            <span
+                                onClick={togglePasswordVisibility}
+                                style={{
+                                    position: 'absolute',
+                                    top: '52%',
+                                    right: '20px',
+                                    transform: 'translateY(-50%)',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </span>
                         </div>
 
                         {/* <!-- Submit button --> */}

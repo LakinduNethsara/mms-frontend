@@ -75,7 +75,7 @@ export default function SetAcademicYear({ isVisible, onClose }) {
                     type="text"
                     value={popupInputValue}
                     onChange={(e) => setPopupInputValue(e.target.value)}
-                    placeholder="Type New Academic Year Here"
+                    placeholder={"Current Academic Year : "+academicYear}
                     style={{
                         width: '100%', marginBottom: '10px',
                     }}
@@ -88,7 +88,7 @@ export default function SetAcademicYear({ isVisible, onClose }) {
                     type="number"
                     value={selectedType}
                     onChange={(e) => setSelectedType(e.target.value)}
-                    placeholder="Type New Semester Here"
+                    placeholder={"Current Semester : "+cSemester}
                     style={{
                         width: '100%', marginBottom: '10px',
                     }}

@@ -4,8 +4,10 @@ import { Link, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditUserModal from './EditUserModal';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function LecturersManagement() {
+    const [showPassword, setShowPassword] = React.useState(false); // This is a state variable to toggle password visibility
     const [users, setUser] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
@@ -98,6 +100,13 @@ export default function LecturersManagement() {
 
             await axios.put(`http://localhost:9090/api/lecreg/edit/alecdetails`, updatedUser);
 
+            setRefreshKey(Date.now());
+            toast.success("User details updated successfully!");
+
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(prevState => !prevState);
     };
 
 
@@ -139,10 +148,35 @@ export default function LecturersManagement() {
                                 <input type={"text"} className='form-control' placeholder='Enter E-mail Address' name='email' value={user.email} onChange={(e) => onInputChange(e)} />
                             </div>
                             
-                            <div className='col-md-3'>
+                            {/* <div className='col-md-3'>
                                 <label htmlFor='password' className='form-label'>Password</label>
                                 <input type={"password"} className='form-control' placeholder='Enter Password' name='password' value={user.password} onChange={(e) => onInputChange(e)} />
+                            </div> */}
+
+                            <div className='col-md-3' style={{position:'relative'}}>
+                                <label className='form-label' htmlFor="password">Password</label>
+                                <input
+                                    className='form-control'
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    value={user.password}
+                                    onChange={(e) => onInputChange(e)}
+                                    
+                                />
+                                <span
+                                    onClick={togglePasswordVisibility}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '72%',
+                                        right: '30px',
+                                        transform: 'translateY(-50%)',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </span>
                             </div>
+
                             <div className='col-md-3'>
                                 {/* <label htmlFor='department_id' className='form-label'>Department</label>
                                 <input type={"text"} className='form-control' placeholder='Enter Department' name='department_id' value={user.department_id} onChange={(e) => onInputChange(e)} /> */}
