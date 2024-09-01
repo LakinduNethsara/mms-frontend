@@ -242,8 +242,10 @@ useEffect(() => {
             setLoading(true);
 
 
+
             const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/0/${academicYear}/${department}`);
             const Repeatresponse = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/1/${academicYear}/${department}`);
+
 
             setMarksSheet(response.data);
             setRepeatMarksSheet(Repeatresponse.data);
@@ -263,6 +265,7 @@ useEffect(() => {
             setLoading(true);
 
             const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignatures/${course_id}/${academicYear}/${department}`);
+
 
             const signatures = response.data.content; // Adjust this based on your actual response structure
     
@@ -286,6 +289,7 @@ useEffect(() => {
     useEffect(() => {
         SignFunc();
     }, [course_id, academicYear,department]);
+
     
  
         
@@ -326,12 +330,16 @@ useEffect(() => {
             e.preventDefault();
             
             if(approval_level==="finalized"){
+
+
+                setLoading(true);
                 const lecturerAssign = await axios.post(`http://localhost:9090/api/approvalLevel/assignCertifyLecturer`,lecturerCertifyAssign);
-             
+                setLoading(false);
             }
-          
+            setLoading(true);
             const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
-           
+            setLoading(false);
+
 
             if (response.status === 200) {
               

@@ -343,7 +343,46 @@ function Navbar() {
                             ):user.role=='dean'? (
                                 null            //Nave bar links for dean
                             ):user.role=='hod'? (
-                                null            //Nave bar links for hod
+                                <>
+                                    <div className="offcanvas-header">
+                                        <h5 className="offcanvas-title" id="offcanvasExampleLabel">Welcome {user.name_with_initials}</h5>
+                                        <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                    </div>
+
+                                    <hr/>
+    
+                                    <div className="offcanvas-body">
+    
+                                        <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
+                                                <a className="nav-link active" aria-current="page" href="/hod_profile">             
+                                                Dashboard
+                                                </a>
+                                            </li>
+
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
+                                                <a className="nav-link active" aria-current="page" href="/assignleccourse">        
+                                                Courses for Lecturers
+                                                </a>
+                                            </li>
+
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
+                                                <a className="nav-link active" aria-current="page" href="/pendingHODCertifyMarksheet">      
+                                                Certify Marks Return Sheet
+                                                </a>
+                                            </li>
+
+                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
+                                                <a className="nav-link active" aria-current="page" href="/ccresultsboard">      
+                                                Result Board
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                        
+                                    </div>
+                                </>
                             ):user.role=='vc'? (
                                 null            //Nave bar links for vc
                             ):(null)

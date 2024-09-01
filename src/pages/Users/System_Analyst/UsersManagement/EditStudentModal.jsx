@@ -54,7 +54,7 @@ export default function EditStudentModal({ row, onSubmit, onClose }) {
                                 <label className='form-label' htmlFor="email">Email</label>
                                 <input className='form-control' type="text" name="email" value={userDetails.email} onChange={handleInputChange} size="30" />
                             </div>
-                            <div>
+                            <div style={{display:"none"}}>
                                 <label className='form-label' htmlFor="password">Password</label>
                                 <input className='form-control' type="password" name="password" value={userDetails.password} onChange={handleInputChange} size="30" />
                             </div> 
@@ -70,11 +70,11 @@ export default function EditStudentModal({ row, onSubmit, onClose }) {
                             </div>
                             <div>
                                 <label className='form-label' htmlFor="department_id">Role</label>
-                                <input className='form-control' type="text" name="department_id" value={userDetails.role} onChange={handleInputChange} size="30" />
+                                <input className='form-control' type="text" name="department_id" value={userDetails.role} onChange={handleInputChange} size="30" disabled/>
                             </div>
                             <div>
                                 <label className='form-label' htmlFor="department_id">Is Deleted</label>
-                                <input className='form-control' type="text" name="department_id" value={userDetails.is_deleted} onChange={handleInputChange} size="30" />
+                                <input className='form-control' type="text" name="department_id" value={userDetails.is_deleted} onChange={handleInputChange} size="30" disabled/>
                             </div>
                         </div>
                         

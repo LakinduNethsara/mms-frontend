@@ -110,7 +110,6 @@ export default function DeanFinalMarkSheet(props) {
         fetchData();
         fetchSignature();
         fetchCourses();
-
       }
     }, [level, semester, dept,academic_year,approved_level]);
 
@@ -133,7 +132,6 @@ export default function DeanFinalMarkSheet(props) {
   
         // Fetch final results
         const finalResultsResponse = await axios.get(
-          
           `http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`
         );
         const finalResultsData = finalResultsResponse.data.content;
@@ -269,6 +267,7 @@ export default function DeanFinalMarkSheet(props) {
       `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`
     );
 
+
     if (ARSignatureResponse.status === 200) {
       const ARSignatureData = ARSignatureResponse.data.content;
       setARSign(ARSignatureData || {});
@@ -281,6 +280,15 @@ export default function DeanFinalMarkSheet(props) {
     const DeanSignatureResponse = await axios.get(
       `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`
     );
+
+      const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
+
+      setARSign(ARSign.data.content);
+      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
+      setDeanSign(DeanSign.data.content);
+      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
+      setVCSign(VCSign.data.content);
+
 
     if (DeanSignatureResponse.status === 200) {
       const DeanSignatureData = DeanSignatureResponse.data.content;

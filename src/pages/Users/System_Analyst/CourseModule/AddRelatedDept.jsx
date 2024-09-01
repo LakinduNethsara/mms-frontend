@@ -83,7 +83,7 @@ export default function AddRelatedDept() {
     };
 
     return (
-        <div className='container'>
+        <div className='container' style={{marginTop:"70px"}}>
             <div className='row'>
                 <div className='h3 mt-lg-5' style={{ color: "maroon" }}>Add Course to Related Departments</div>
                 <div className='h6 mt-lg-5 text-danger'>*Please Try To Use Only One Course At One Time</div>

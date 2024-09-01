@@ -42,6 +42,7 @@ export default function CertifyMarksheet(props) {
     try {
       setLoading(true);
       let response;
+
       if(approved_level=="finalized"){
         response=await axios.get(`http://localhost:9090/api/courses/getcourseforcc/${userEmail}`);
         setFinalMarksheetList(response.data.content);
@@ -53,6 +54,7 @@ export default function CertifyMarksheet(props) {
         console.log(response.data.content)
       }
       else if (approved_level === "AR" || approved_level === "Dean") {
+
         response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approved_level}/${status}`);
         setFinalMarksheetList(response.data);
       } else if (approved_level === "lecturer" && user?.department_id) {
