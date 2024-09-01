@@ -34,6 +34,26 @@ export default function HODMarksReturnSheet(props) {
  
   const [lecturerList, setLecturerList] = useState([]);
 
+  const [user, setUser] = useState({
+        
+  });
+
+  const storedData = localStorage.getItem('user');
+  useEffect(() => {
+      setLoading(true);
+      if(storedData){
+          
+          setUser(JSON.parse(storedData));
+      }else{
+          setUser(null);
+      }
+      setLoading(false);
+  }, []);
+  // const { oktaAuth, authState } = useOktaAuth();
+   const userNameAuth = user?.full_name;
+   const user_department = user?.department_id;
+   console.log(user_department)
+
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
     var date = new DateObject({
@@ -106,24 +126,7 @@ export default function HODMarksReturnSheet(props) {
         signature: ""
     }]);
 
-    const [user, setUser] = useState({
-        
-    });
-
-    const storedData = localStorage.getItem('user');
-    useEffect(() => {
-        setLoading(true);
-        if(storedData){
-            
-            setUser(JSON.parse(storedData));
-        }else{
-            setUser(null);
-        }
-        setLoading(false);
-    }, []);
-    // const { oktaAuth, authState } = useOktaAuth();
-     const userNameAuth = user?.full_name;
-     const user_department = user?.department_id;
+   
 
      
      
@@ -194,7 +197,7 @@ export default function HODMarksReturnSheet(props) {
         const fetchLecturers = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://192.248.50.155:9090/api/lecreg/get/getAllLecurerDetails/${user_department}`);
+                const response = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${user_department}`);
                 if (response.data.code === '00') {
                     setLecturerList(response.data.content);
                     console.log("Lecturers fetched:", response.data.content);
@@ -211,7 +214,7 @@ export default function HODMarksReturnSheet(props) {
         if (user_department) {
             fetchLecturers();
         } else {
-            console.warn('User department is not set, skipping fetchLecturers call.');
+            // console.warn('User department is not set, skipping fetchLecturers call.');
         }
     }, [user_department]);
     
@@ -230,8 +233,8 @@ useEffect(() => {
             setLoading(true);
 
 
-            const response = await axios.get(`http://192.248.50.155:9090/api/marksReturnSheet/getMarks/${course_id}/0/${academicYear}`);
-            const Repeatresponse = await axios.get(`http://192.248.50.155:9090/api/marksReturnSheet/getMarks/${course_id}/1/${academicYear}`);
+            const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/0/${academicYear}`);
+            const Repeatresponse = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/1/${academicYear}`);
 
             setMarksSheet(response.data);
             setRepeatMarksSheet(Repeatresponse.data);
@@ -250,7 +253,7 @@ useEffect(() => {
 
             setLoading(true);
 
-            const response = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${course_id}/${academicYear}`);
+            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/${academicYear}`);
 
             const signatures = response.data.content; // Adjust this based on your actual response structure
     
@@ -278,9 +281,11 @@ useEffect(() => {
 
 
     const SigFunc = async () => {
+        setLoading(true);
         const fetchCCLevel = async () => {
             try {
-                const response = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${course_id}/course_coordinator/${academicYear}`);
+                
+                const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/course_coordinator/${academicYear}`);
                 setISCClevel(response.data.content);
             } catch (error) {
                 console.error('Error fetching CC level data:', error);
@@ -289,7 +294,7 @@ useEffect(() => {
     
         const fetchLecLevel = async () => {
             try {
-                const response = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
+                const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/lecturer/${academicYear}`);
                 setISLeclevel(response.data.content);
             } catch (error) {
                 console.error('Error fetching Lecturer level data:', error);
@@ -298,7 +303,7 @@ useEffect(() => {
     
         const fetchHODLevel = async () => {
             try {
-                const response = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
+                const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${course_id}/HOD/${academicYear}`);
                 setISHODlevel(response.data.content);
             } catch (error) {
                 console.error('Error fetching HOD level data:', error);
@@ -309,6 +314,7 @@ useEffect(() => {
         fetchCCLevel();
         fetchLecLevel();
         fetchHODLevel();
+        setLoading(false);
     };
 
 
@@ -353,11 +359,11 @@ useEffect(() => {
             if(approval_level==="finalized"){
 
                 setLoading(true);
-                const lecturerAssign = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/assignCertifyLecturer`,lecturerCertifyAssign);
+                const lecturerAssign = await axios.post(`http://localhost:9090/api/approvalLevel/assignCertifyLecturer`,lecturerCertifyAssign);
                 setLoading(false);
             }
             setLoading(true);
-            const response = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/updateApprovalLevel`,approval);
+            const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
             setLoading(false);
 
             if (response.status === 200) {
@@ -384,7 +390,7 @@ useEffect(() => {
         try {
 
             setLoading(true);
-            const response = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/return`,Returnapproval);
+            const response = await axios.post(`http://localhost:9090/api/approvalLevel/return`,Returnapproval);
             if (response.status === 200) {
                 toast.success("Result sheet approved successfully");
                  
@@ -450,7 +456,7 @@ useEffect(() => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const result = await axios.get(`http://192.248.50.155:9090/api/lecreg/get/getAllLecurerDetails/${department}`);
+            const result = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${department}`);
             setData(result.data.content);
             setFilteredData(result.data.content); // Initially, all data is considered as filtered
           } catch (error) {
@@ -501,11 +507,11 @@ if(loading){
         <>
             
             {loading ? (
-                 <div className="d-flex justify-content-center">
-                 <div className="spinner-border" role="status">
-                     <span className="sr-only"></span>
-                 </div>
-             </div>
+            <div className="d-flex justify-content-center">
+                <div className="spinner-border" role="status">
+                <span className="sr-only">Loading...</span> 
+                </div>
+            </div>
             ) : (
                 
                 <>

@@ -33,7 +33,7 @@ export default function HomePageStudent() {
     if(studentEmail != null){       //Check if student email is not null
 
       try{
-        const studentDetailsResult = await axios.get(`http://192.248.50.155:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)    //Calll Api to get student data
+        const studentDetailsResult = await axios.get(`http://localhost:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)    //Calll Api to get student data
         setStudentId(studentDetailsResult.data.user_id);
         setStudentName(studentDetailsResult.data.name_with_initials);
         setStudentRegisteredYear(studentDetailsResult.data.registered_year);
@@ -56,7 +56,7 @@ export default function HomePageStudent() {
 
    const getStudentLevelSemester = async (StuID) => {         // load the student level and semester
     try{
-      const studentLevelSemester = await axios.get(`http://192.248.50.155:9090/api/Student/getStudentLevelAndSemester/${StuID}`)     //Call Api to get student level and semester
+      const studentLevelSemester = await axios.get(`http://localhost:9090/api/Student/getStudentLevelAndSemester/${StuID}`)     //Call Api to get student level and semester
       setStudentLevel(studentLevelSemester.data.level);
       setStudentSemester(studentLevelSemester.data.semester);
     }catch(error){
@@ -68,7 +68,7 @@ export default function HomePageStudent() {
   const getLatestGPA = async (StuID) => {         // load the latest GPA
     
     try{
-        const latestGPAResponse = await axios.get(`http://192.248.50.155:9090/api/Student/getLatestGPA/${StuID}`)        //Call Api to get latest GPA
+        const latestGPAResponse = await axios.get(`http://localhost:9090/api/Student/getLatestGPA/${StuID}`)        //Call Api to get latest GPA
         
         // setStudentSGPA(parseFloat(latestGPAResponse.data.sgpa).toFixed(2));
         // setStudentCGPA(parseFloat(latestGPAResponse.data.cgpa).toFixed(2));

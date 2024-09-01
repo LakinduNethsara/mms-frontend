@@ -24,7 +24,7 @@ export default function StudentsManagement() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get("http://192.248.50.155:9090/api/studentdetails/getallstudentsdetails");
+            const response = await axios.get("http://localhost:9090/api/studentdetails/getallstudentsdetails");
             setStudentsData(response.data.content);
             setLoader(false);
         } catch (error) {
@@ -33,7 +33,7 @@ export default function StudentsManagement() {
     };
 
     const deleteUser = async (id) => {
-        await axios.delete(`http://192.248.50.155:9090/api/lecreg/delete/deleteById/${id}`);
+        await axios.delete(`http://localhost:9090/api/lecreg/delete/deleteById/${id}`);
         toast.success("Student deleted successfully!");
         fetchData();
     };
@@ -83,7 +83,7 @@ export default function StudentsManagement() {
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://192.248.50.155:9090/api/lecreg/insertbulkusersdetails", data);
+            await axios.post("http://localhost:9090/api/lecreg/insertbulkusersdetails", data);
             alert("Data submitted successfully!");
             window.location.reload();
         } catch (error) {
@@ -117,7 +117,7 @@ export default function StudentsManagement() {
 
     const handleEditSubmit = async (updatedUser) => {
 
-        await axios.put(`http://192.248.50.155:9090/api/lecreg/savelecdetails`, updatedUser);
+        await axios.put(`http://localhost:9090/api/lecreg/savelecdetails`, updatedUser);
         fetchData();
 };
     return (

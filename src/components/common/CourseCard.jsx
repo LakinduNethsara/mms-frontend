@@ -19,12 +19,12 @@ export default function CourseCard(props) {
     const{level,semester,department}=useParams();
     const{approved_level}=props;
    
- 
+  console.log(level,semester,department,approved_level)
 
        useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://192.248.50.155:9090/api/courses/getcidcnamebyls/${level}/${semester}/${department}/${approved_level}`);
+                const response = await axios.get(`http://localhost:9090/api/courses/getcidcnamebyls/${level}/${semester}/${department}/${approved_level}`);
                 
                 if (response.data && response.data.content) {
                   const data = response.data.content.map(course => ({

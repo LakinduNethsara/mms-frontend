@@ -279,9 +279,9 @@ export default function AddCAMarksByLec() {
 
 
     const handleCACalculation = async () => {
-        const CAELi = await axios.get(`http://192.248.50.155:9090/api/ca/calculate/${course_id}`);
+        const CAELi = await axios.get(`http://localhost:9090/api/ca/calculate/${course_id}`);
 
-        // http://192.248.50.155:9090/api/ca/calculate/ICT1112
+        // http://localhost:9090/api/ca/calculate/ICT1112
     };
 
     // const handleCACalculation = async () => {

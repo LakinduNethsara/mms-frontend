@@ -35,6 +35,14 @@ export default function LecturerProfile() {
                             </div>
                             <div className="card shadow m-4" style={{width: "18rem"}}>
                                 <div className="card-body ">
+                                    <h5 className="card-title py-2">Certify Marks Return Sheet</h5>
+                                    <p className="card-text">Click this button to view Marks Return sheet for your certification</p>
+
+                                    <a href="/pendingLecCertifyMarksheet"  className="btn btn-primary btn-sm mt-2">To Marks Form</a>
+                                </div>
+                            </div>
+                            <div className="card shadow m-4" style={{width: "18rem"}}>
+                                <div className="card-body ">
                                     <h5 className="card-title py-2">Course Coordinate</h5>
                                     <p className="card-text">Click this button for access to the Course Coordinate Page </p>
 
