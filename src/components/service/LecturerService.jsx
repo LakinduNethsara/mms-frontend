@@ -1,7 +1,7 @@
 import axios from "axios";
 
 class LecturerService {
-    static BASE_URL = "http://192.248.50.155:9090";
+    static BASE_URL = "http://localhost:9090";
 
     static async getEvaluationCriteriaCA(course_id) {
         try {

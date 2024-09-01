@@ -30,7 +30,7 @@ function LoginPage(){
         };
 
         try{
-            const response = await axios.post('http://192.248.50.155:9090/api/user/login',credentials);
+            const response = await axios.post('http://localhost:9090/api/user/login',credentials);
             
             console.log(response.data.content);
 
