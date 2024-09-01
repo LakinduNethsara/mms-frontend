@@ -112,7 +112,7 @@ export default function DeanFinalMarkSheet(props) {
         fetchCourses();
 
       }
-    }, [user, level, semester, dept,academic_year,approved_level]);
+    }, [level, semester, dept,academic_year,approved_level]);
 
 
 
@@ -175,6 +175,7 @@ export default function DeanFinalMarkSheet(props) {
           `http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`
         );
         setStudentGPA(gpaResponse.data.content);
+        console.log(gpaResponse.data.content)
   
         // Fetch repeaters data
         const repeatersResponse = await axios.get(
@@ -273,7 +274,7 @@ export default function DeanFinalMarkSheet(props) {
       setARSign(ARSignatureData || {});
       console.log(ARSignatureData?.signature);
     } else {
-      toast.error('Failed to fetch AR signature.');
+      // toast.error('Failed to fetch AR signature.');
     }
 
     
@@ -285,16 +286,16 @@ export default function DeanFinalMarkSheet(props) {
       const DeanSignatureData = DeanSignatureResponse.data.content;
       setDeanSign(DeanSignatureData || {});
     } else {
-      toast.error('Failed to fetch Dean signature.');
+      // toast.error('Failed to fetch Dean signature.');
     }
 
   } catch (error) {
     if (error.response) {
-      console.error('Error fetching signature data:', error.response);
-      toast.error(`Error ${error.response.status}: ${error.response.data.message || 'Something went wrong.'}`);
+      // console.error('Error fetching signature data:', error.response);
+      // toast.error(`Error ${error.response.status}: ${error.response.data.message || 'Something went wrong.'}`);
     } else {
-      console.error('Error fetching signature data:', error.message);
-      toast.error('An unexpected error occurred while fetching signature data.');
+      // console.error('Error fetching signature data:', error.message);
+      // toast.error('An unexpected error occurred while fetching signature data.');
     }
   } finally {
     setLoading(false);
@@ -519,7 +520,7 @@ const alternateRowStyle = {
 
         </div>
     
-        {finalResults.length > 0  && studentGPA.length>0 && (
+        {finalResults.length > 0  && studentGPA.length>0 ?(
 
           <div className="">
             <table className="overflow-x-scroll table border shadow table-hover" style={{ marginTop: "60px" }}>
@@ -564,7 +565,7 @@ const alternateRowStyle = {
               </tbody>
             </table>
           </div>
-        )}
+        ):null}
 
           {repeatersfinalResults.length>0 && repeat_studentGPA.length>0 ?
 

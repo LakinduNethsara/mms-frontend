@@ -128,6 +128,7 @@ const endMarks={
 
   useEffect(() => {
     Eligi();
+    getEditLogs();
   }, [course_id, student_id]);
 
 
@@ -294,6 +295,10 @@ const endMarks={
 };
 
 const handleConfirmChange = async (newGrade, reason) => {
+  if (!reason) {
+    toast.error('Reason is required');
+    return;
+  }else{
   try {
     const response = await axios.put(`http://localhost:9090/api/studentMarks/updateAGrade/${student_id}/${course_id}/${newGrade}/${reason}`);
     if (response.status === 200) {
@@ -307,7 +312,7 @@ const handleConfirmChange = async (newGrade, reason) => {
   } catch (error) {
     toast.error('Error updating grade');
     console.error(error);
-  }
+  }}
 };
 
 
@@ -325,7 +330,7 @@ const handleConfirmChange = async (newGrade, reason) => {
       
         marksSheet && marksSheet.student_id && marksSheet.course_id && marksSheet.ca && marksSheet.end && attendanceEligibility && (
 
-      <div className=' bg-white' style={{marginTop:"70px"}}>
+      <div className=' bg-white' style={{marginTop:"70px",fontSize:"13px"}}>
       <h2 style={{marginLeft:"30px"}}>{student_id} {marksSheet.student_name}</h2>
       <h3 style={{marginLeft:"30px"}}>{course_id} {course_name}</h3>
       
@@ -374,9 +379,38 @@ const handleConfirmChange = async (newGrade, reason) => {
 
                 </tbody>
               </table>
-              {/* {
-                approval_level=="finalized" ? <button style={{width:'100px'}} className={`btn btn-outline-success btn-sm mt-3 `} value="Update" disabled={!updatebtn} onClick={updateMarks}/>:null
-              } */}
+              
+              {editLogs.length > 0 && (
+                
+                <div className="col mt-4 shadow p-4">
+                  <h4>Edit Logs</h4>
+                  <table className="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Previous Value</th>
+                        <th>Updated Value</th>
+                        <th>Reason</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {editLogs.map((log, index) => (
+                        
+                        <tr key={index}>
+                          <td>{log.type}</td>
+                          <td>{log.pre_mark}</td>
+                          <td>{log.current_mark}</td>
+                          <td>{log.reason}</td>
+                          <td>{new Date(log.date_time).toISOString().slice(0, 10)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+              
+            </div>
+              )}
               
             </div>
 
@@ -433,9 +467,10 @@ const handleConfirmChange = async (newGrade, reason) => {
                     <input style={{marginLeft:"58px"}} type='text' size="10" value={marksSheet.grade} disabled />
 
                     <div style={{marginLeft:"20px"}}>
-
-                    <div className="dropdown">
-                      <button className="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {
+                      approval_level=="finalized" ||approval_level=="AssignedRB"
+                      ?<div className="dropdown">
+                      <button className="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:"12px"}}>
                         Change Grade
                       </button>
                       <ul className="dropdown-menu dropdown-menu-dark">
@@ -443,7 +478,10 @@ const handleConfirmChange = async (newGrade, reason) => {
                         <li><a className="dropdown-item" onClick={() => handleGradeChange('AC')}>AC</a></li>
                       </ul>
                     </div>
+                    :null
 
+                    }
+                    
                     </div>
                   </div>
                   
@@ -472,7 +510,7 @@ const handleConfirmChange = async (newGrade, reason) => {
                                 <ModalHeader toggle={() => setShowModal(false)}>Confirm Grade Change</ModalHeader>
                                 <ModalBody>
                                   Are you sure you want to change the grade to {grade}? This action cannot be undone.
-                                  <input type="text" className="form-control" placeholder="Enter reason for grade change" />
+                                  <input type="text" className="form-control" placeholder="Enter reason for grade change" required/>
                                 </ModalBody>
                                 <ModalFooter>
                                   <Button color="secondary" onClick={() => setShowModal(false)}>Cancel</Button>

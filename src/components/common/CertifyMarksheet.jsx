@@ -22,20 +22,20 @@ export default function CertifyMarksheet(props) {
       setUser(parsedUser);
       userEmail=parsedUser.email;
       // Ensuring the function runs after setting the user state
+      // loadAvailableResultSheets(approved_level);
+    }
+    setLoading(false);
+  }, []); // Add dependencies if necessary
+  
+
+  // Load available result sheets based on approved level
+  useEffect(() => {
+    setLoading(true);
+    if (user) {
       loadAvailableResultSheets(approved_level);
     }
     setLoading(false);
-  }, [approved_level]); // Add dependencies if necessary
-  
-
-  // // Load available result sheets based on approved level
-  // useEffect(() => {
-  //   setLoading(true);
-  //   if (user) {
-  //     loadAvailableResultSheets(approved_level);
-  //   }
-  //   setLoading(false);
-  // }, [approved_level, user]);
+  }, [approved_level, user]);
 
 
   const loadAvailableResultSheets = async (approved_level) => {
@@ -65,14 +65,18 @@ export default function CertifyMarksheet(props) {
     setLoading(false);
   };
 
+  const Spinner = () => (
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="spinner-border" role="status">
+        <span className="sr-only visually-hidden">Loading...</span>
+      </div>
+    </div>
+  );
+
+  
   if(loading){
     return (
-      <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
-      <div className="spinner-border" role="status">
-        <span className="sr-only"></span>
-      </div>
-      <label style={{marginLeft:"10px"}}> Loading data</label>
-    </div>
+    <Spinner />
     );
 }
 
@@ -81,12 +85,7 @@ export default function CertifyMarksheet(props) {
 
   return (
     <>{loading ? (
-      <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
-        <div className="spinner-border" role="status">
-          <span className="sr-only"></span>
-        </div>
-        <label style={{marginLeft:"10px"}}> Loading data</label>
-      </div>
+      <Spinner/>
     ):(
       
       <div className='certify-div-1'>
