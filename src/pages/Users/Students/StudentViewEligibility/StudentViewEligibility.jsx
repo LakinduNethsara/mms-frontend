@@ -25,7 +25,7 @@ export default function StudentViewEligibility() {
     const loadStudentDetails = async () => {                // load the student details
         if(studentEmail != null){
 
-            const studentDetailsResult = await axios.get(`http://localhost:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)              //Call api to get student details
+            const studentDetailsResult = await axios.get(`http://192.248.50.155:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)              //Call api to get student details
             setStudentId(studentDetailsResult.data.user_id);
             setStudentName(studentDetailsResult.data.name_with_initials);
             setStudentRegisteredYear(studentDetailsResult.data.registered_year);
@@ -36,7 +36,7 @@ export default function StudentViewEligibility() {
 
     const loadAcademicYearDetails = async () => {          // load the academic year details
         try{
-            const academicYearDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`)          //Call api to get academic year details
+            const academicYearDetails = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAcademicYearDetails`)          //Call api to get academic year details
             setAcademicYearDetails(academicYearDetails.data[0]);            //Set academic year details to the state
         }catch(error){
             console.error(`Error - ${error}`);
@@ -49,7 +49,7 @@ export default function StudentViewEligibility() {
     const loadStudentCourses = async () => {          // load the student courses
         if(studentEmail!=null && studentId != null && academicYearDetails.length != 0){
             try{
-                const studentCourses = await axios.get(`http://localhost:9090/api/Student/getStudentCourseListBySelectedYear/${studentId}/${academicYearDetails.current_academic_year}/${academicYearDetails.current_semester}`)            //Call api to get student courses with eligibility
+                const studentCourses = await axios.get(`http://192.248.50.155:9090/api/Student/getStudentCourseListBySelectedYear/${studentId}/${academicYearDetails.current_academic_year}/${academicYearDetails.current_semester}`)            //Call api to get student courses with eligibility
                 
                 if(studentCourses.data.length != 0){
                     setStudentCourses(studentCourses.data);

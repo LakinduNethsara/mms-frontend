@@ -78,7 +78,7 @@ export default function UpdateABPage() {
         setLoading(true);
 
         try{
-            const result = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${studentDetails.academic_year}`);   //Get all the medical submission details from the backend
+            const result = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllMedicalSubmissionsByYear/${studentDetails.academic_year}`);   //Get all the medical submission details from the backend
         
         
             if(result.data.length>0){    //condition to check if the medical list is uploaded
@@ -86,7 +86,7 @@ export default function UpdateABPage() {
                 setMedicalListUploaded(true);   //Set the medicalListUploaded state to true if the medical list is uploaded
             
 
-                const selectedStudentMedicalDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentMedicalDetails/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/${studentDetails.midORend}`);   //Get the selected student medical details from the backend
+                const selectedStudentMedicalDetails = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getSelectedStudentMedicalDetails/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/${studentDetails.midORend}`);   //Get the selected student medical details from the backend
                 if(selectedStudentMedicalDetails.data.length>0){    //condition to check whether the selected student has submitted a medical or not
 
                     await selectedStudentMedicalDetails.data.map((element)=>{       //Map the selected student medical details
@@ -143,7 +143,7 @@ export default function UpdateABPage() {
 
         try{
             setLoading(true);
-            const selectedStudentGrade = await axios.get(`http://localhost:9090/api/AssistantRegistrar/findSelectedStudentGrade/${studentDetails.course_id}/${studentDetails.student_id}`);   //Get the selected student grade from the backend
+            const selectedStudentGrade = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/findSelectedStudentGrade/${studentDetails.course_id}/${studentDetails.student_id}`);   //Get the selected student grade from the backend
             
             if(selectedStudentGrade.data.length>0){    //condition to check whether the selected student has a grade or not (Grade should be there )
                 existingGrade.id=selectedStudentGrade.data[0].id;                                            //Set existing id in the grade table
@@ -171,7 +171,7 @@ export default function UpdateABPage() {
 
         try{
             setLoading(true);
-            const academicDetails = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAcademicYearDetails`)              //Get academic year details to find current and previous academic year
+            const academicDetails = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAcademicYearDetails`)              //Get academic year details to find current and previous academic year
             if(academicDetails.data.length>0){                                                                                    //condition to check whether the academic year details are available
                 academicYearDetails.previous_academic_year = academicDetails.data[0].previous_academic_year;                //Set the previous academic year
                 academicYearDetails.current_academic_year = academicDetails.data[0].current_academic_year;                  //Set the current academic year
@@ -194,9 +194,9 @@ export default function UpdateABPage() {
         try{
 
             setLoading(true);
-            // const marksList =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/${studentDetails.exam_type}`);   //Get the selected student marks by selected course in previous academic year (to check whether the student is a propper student or not)
+            // const marksList =await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${academicYearDetails.previous_academic_year}/${studentDetails.exam_type}`);   //Get the selected student marks by selected course in previous academic year (to check whether the student is a propper student or not)
             
-            const repeatStatus = await axios.get(`http://localhost:9090/api/AssistantRegistrar/checkStudentRepeatStatus/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}`);   //Get the repeat status of the student
+            const repeatStatus = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/checkStudentRepeatStatus/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}`);   //Get the repeat status of the student
 
             setLoading(false);
 
@@ -225,7 +225,7 @@ export default function UpdateABPage() {
                         try{
 
                             setLoading(true);
-                            const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);   //Update the  grade of a propper student with the new grade and other details in Mid exam scenario 
+                            const updateGradeResult= await axios.put(`http://192.248.50.155:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);   //Update the  grade of a propper student with the new grade and other details in Mid exam scenario 
                             toast.success('Final grade updated successfully',{autoClose:2000});     //Show a toast message
                             setLoading(false);
                             
@@ -238,7 +238,7 @@ export default function UpdateABPage() {
 
                         try{
                             setLoading(true);
-                            const update = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
+                            const update = await axios.put("http://192.248.50.155:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
                             if(update.data<0){     //condition to check is there a error with updating the grade
                                 toast.error('Error with updating AB score with new score',{autoClose:2000}); 
                             }else{
@@ -264,7 +264,7 @@ export default function UpdateABPage() {
                             
                             try{
                                 setLoading(true);
-                                const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/Mid`);   //Get the mid  exam results of the student in the current academic year
+                                const midExamMarksList= await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/Mid`);   //Get the mid  exam results of the student in the current academic year
                             
 
                                 setLoading(false);
@@ -340,7 +340,7 @@ export default function UpdateABPage() {
 
                                 setLoading(true);
 
-                                const update = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
+                                const update = await axios.put("http://192.248.50.155:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
                                 if(update.data<0){     //condition to check is there a error with updating the grade
                                     toast.error('Error with updating AB score with new score',{autoClose:2000}); 
                                 }else{
@@ -355,7 +355,7 @@ export default function UpdateABPage() {
 
                             try{
                                 setLoading(true);
-                                const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a propper student with the new grade and other details in End exam scenario
+                                const updateGradeResult= await axios.put(`http://192.248.50.155:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a propper student with the new grade and other details in End exam scenario
                                 toast.success('Final grade updated successfully',{autoClose:2000});             //Show a toast message
                                 setLoading(false);
                             }
@@ -406,7 +406,7 @@ export default function UpdateABPage() {
 
                         //Get previous mid result
                         setLoading(true);
-                        const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/Mid`);   //Get the selected student previous mid exam marks 
+                        const previousMidExamResult =await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/Mid`);   //Get the selected student previous mid exam marks 
                         setLoading(false);
                         if(previousMidExamResult.data.length >0){       //If there are previous mid result
 
@@ -436,7 +436,7 @@ export default function UpdateABPage() {
 
                         try{            //Try for update marks
                             setLoading(true);
-                            const update = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
+                            const update = await axios.put("http://192.248.50.155:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
                             if(update.data<0){     //condition to check is there a error with updating the grade
                                 toast.error('Error with updating AB score with new score',{autoClose:2000}); 
                             }else{
@@ -453,7 +453,7 @@ export default function UpdateABPage() {
                         try{        //try for update Grade 
 
                             setLoading(true);
-                            const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);   //Update the  grade of a propper student with the new grade and other details in Mid exam scenario 
+                            const updateGradeResult= await axios.put(`http://192.248.50.155:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);   //Update the  grade of a propper student with the new grade and other details in Mid exam scenario 
                             toast.success('Final grade updated successfully',{autoClose:2000});     //Show a toast message
                             setLoading(false);
                             
@@ -477,7 +477,7 @@ export default function UpdateABPage() {
 
                         setLoading(true);
                         //Get mid exam marks of the same subject
-                        const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/Mid`);   //Get the mid  exam results of the student in the current academic year
+                        const midExamMarksList= await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/Mid`);   //Get the mid  exam results of the student in the current academic year
                         setLoading(false);
 
                         if(midExamMarksList.data.length > 0){       // IF there are mid exam marks
@@ -495,7 +495,7 @@ export default function UpdateABPage() {
                         }
 
                         setLoading(true);
-                        const previousEndExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/End`);   //Get the selected student previous end exam marks 
+                        const previousEndExamResult =await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/End`);   //Get the selected student previous end exam marks 
                         setLoading(false);
 
                         if(previousEndExamResult.data.length >0 ){
@@ -536,7 +536,7 @@ export default function UpdateABPage() {
 
                                 setLoading(true);
 
-                                const update = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
+                                const update = await axios.put("http://192.248.50.155:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
                                 if(update.data<0){     //condition to check is there a error with updating the grade
                                     toast.error('Error with updating AB score with new score',{autoClose:2000}); 
                                 }else{
@@ -552,7 +552,7 @@ export default function UpdateABPage() {
 
                             try{
                                 setLoading(true);
-                                const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a propper student with the new grade and other details in End exam scenario
+                                const updateGradeResult= await axios.put(`http://192.248.50.155:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a propper student with the new grade and other details in End exam scenario
                                 toast.success('Final grade updated successfully',{autoClose:2000});             //Show a toast message
                                 setLoading(false);
                             }
@@ -586,7 +586,7 @@ export default function UpdateABPage() {
                     if(studentDetails.midORend.toLowerCase()=="Mid".toLowerCase()){         //Scenario for repeat student mid exam
 
                         setLoading(true);
-                        const previousMidExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/Mid`);   //Get the selected student previous mid exam marks 
+                        const previousMidExamResult =await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/Mid`);   //Get the selected student previous mid exam marks 
                         setLoading(false);
 
                     
@@ -630,7 +630,7 @@ export default function UpdateABPage() {
                     }else if(studentDetails.midORend.toLowerCase()=="End".toLowerCase()){       //Scenario for end exam repeat students
 
                         
-                        const midExamMarksList= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/Mid`);   //Get the mid  exam results of the student in the current academic year
+                        const midExamMarksList= await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${studentDetails.academic_year}/Mid`);   //Get the mid  exam results of the student in the current academic year
 
 
                         if(midExamMarksList.data.length > 0){       // IF there are mid exam marks
@@ -646,7 +646,7 @@ export default function UpdateABPage() {
 
                         
                         setLoading(true);
-                        const previousEndExamResult =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/End`);   //Get the selected student previous End exam marks 
+                        const previousEndExamResult =await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getSelectedStudentSelectedExamMarksBySelectedCourseAndSelectedAcademicYear/${studentDetails.student_id}/${studentDetails.course_id}/${decrementedAcYear}/End`);   //Get the selected student previous End exam marks 
                         setLoading(false);
 
                         if((!previousEndExamResult.data.length>0) && existingGrade.grade=="MC" && newScore=="F"){    //condition if student do not have End exams and previous grade is WH and new medical is rejected
@@ -694,7 +694,7 @@ export default function UpdateABPage() {
 
                             setLoading(true);
 
-                            const update = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
+                            const update = await axios.put("http://192.248.50.155:9090/api/AssistantRegistrar/updateStudentScore" , updateMarksTableOject);   //Update the student AB exam score  with the new score (MC or F)
                             if(update.data<0){     //condition to check is there a error with updating the grade
                                 toast.error('Error with updating AB score with new score',{autoClose:2000}); 
                             }else{
@@ -709,7 +709,7 @@ export default function UpdateABPage() {
 
                         try{
                             setLoading(true);
-                            const updateGradeResult= await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a propper student with the new grade and other details in End exam scenario
+                            const updateGradeResult= await axios.put(`http://192.248.50.155:9090/api/AssistantRegistrar/updateStudentFinalGrade`,existingGrade);         //Update the  grade of a propper student with the new grade and other details in End exam scenario
                             toast.success('Final grade updated successfully',{autoClose:2000});             //Show a toast message
                             setLoading(false);
                         }
