@@ -19,17 +19,21 @@ export default function CertifyMarksheet(props) {
     if (storedData) {
       setUser(JSON.parse(storedData));
     }
+
+    
+      loadAvailableResultSheets(approved_level);
+    
     setLoading(false);
   }, []);
 
-  // Load available result sheets based on approved level
-  useEffect(() => {
-    setLoading(true);
-    if (user) {
-      loadAvailableResultSheets(approved_level);
-    }
-    setLoading(false);
-  }, [approved_level, user]);
+  // // Load available result sheets based on approved level
+  // useEffect(() => {
+  //   setLoading(true);
+  //   if (user) {
+  //     loadAvailableResultSheets(approved_level);
+  //   }
+  //   setLoading(false);
+  // }, [approved_level, user]);
 
 
   const loadAvailableResultSheets = async (approved_level) => {
@@ -61,22 +65,27 @@ export default function CertifyMarksheet(props) {
 
   if(loading){
     return (
-        <div className="d-flex justify-content-center">
-            <div className="spinner-border" role="status">
-                <span className="sr-only"></span>
-            </div>
-        </div>
+      <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
+      <div className="spinner-border" role="status">
+        <span className="sr-only"></span>
+      </div>
+      <label style={{marginLeft:"10px"}}> Loading data</label>
+    </div>
     );
 }
 
+
+
+
   return (
     <>{loading ? (
-        <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-          <div className="spinner-border" role="status">
-            <span className="sr-only"></span>
-          </div>
+      <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
+        <div className="spinner-border" role="status">
+          <span className="sr-only"></span>
         </div>
-      ) : (
+        <label style={{marginLeft:"10px"}}> Loading data</label>
+      </div>
+    ):(
       
       <div className='certify-div-1'>
         <BackButton/>

@@ -16,8 +16,8 @@ export default function DeanFinalMarkSheet(props) {
   const [repeatercourses, setrepeatersCourses] = useState([]);
   const [repeatstudents, setrepeatStudents] = useState([]);
   const { level, semester, dept,academic_year } = useParams();
-  const [studentGPA, setStudentGPA] = useState([{}]);
-  const [repeat_studentGPA, setRepeatStudentGPA] = useState([{}]);
+  const [studentGPA, setStudentGPA] = useState([]);
+  const [repeat_studentGPA, setRepeatStudentGPA] = useState([]);
   const history = useHistory();
   const [error, setError] = useState("");
   const { approved_level } = props;
@@ -25,36 +25,16 @@ export default function DeanFinalMarkSheet(props) {
   const [nextApprovedlevel, setNextApprovedlevel] = useState("");
   const [degree,setDegree]=useState("");
   const[Allcourses,setAllCourses]=useState([]);
+  var date = new DateObject({
+    date: new Date(),
+  });
 
   const [user, setUser] = useState({
         
   });
 
-  const storedData = localStorage.getItem('user');
-  useEffect(() => {
-      if(storedData){
-          setUser(JSON.parse(storedData));
-      }else{
-          setUser(null);
-      }
-  }, []);
-  // const { oktaAuth, authState } = useOktaAuth();
-   const userNameAuth = user?.full_name;
-   const role=user?.role;
-
-   useEffect(() => {
-    if (dept === "ICT") {
-        setDegree("Bachelor of Information and Communication Technology Honours Degree");
-    } else if (dept === "BST") {
-        setDegree("Bachelor of Bio Systems Technology Honours Degree");
-    } else if (dept === "ET") {
-        setDegree("Bachelor of Engineering Technology Honours Degree");
-    }
-}, [dept]);
-
-  var date = new DateObject({
-    date: new Date(),
-  });
+  const userNameAuth = user?.full_name;
+  const role=user?.role;
 
   const [ARSign, setARSign] = useState({
     "level": "",
@@ -66,6 +46,8 @@ export default function DeanFinalMarkSheet(props) {
     "department_id": "",
     "signature": ""
   });
+
+  console.log(ARSign)
 
   const [DeanSign, setDeanSign] = useState({
     "level": "",
@@ -100,135 +82,48 @@ export default function DeanFinalMarkSheet(props) {
     "signature": newSignature
   };
 
+  
 
-
-  const resultSheet = async () => {
-    try {
-      if (approved_level === "RB") {
-        setNextApprovedlevel("AR");
-      } else if (approved_level === "AR") {
-        setNextApprovedlevel("Dean");
-      } else if (approved_level === "Dean") {
-        setNextApprovedlevel("VC");
+  const storedData = localStorage.getItem('user');
+  useEffect(() => {
+      if(storedData){
+          setUser(JSON.parse(storedData));
+      }else{
+          setUser(null);
       }
-      const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`);
-      const data = result.data.content;
-      
-      
-
-      const gpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`);
-      const gpaData = gpa.data.content;
-      setStudentGPA(gpaData);
+      if (dept === "ICT") {
+        setDegree("Bachelor of Information and Communication Technology Honours Degree");
+    } else if (dept === "BST") {
+        setDegree("Bachelor of Bio Systems Technology Honours Degree");
+    } else if (dept === "ET") {
+        setDegree("Bachelor of Engineering Technology Honours Degree");
+    }
 
     
-
-      const processedFinalResults = finalResultsData.reduce((acc, curr) => {
-        if (!Array.isArray(acc)) {
-          acc = []; // Ensure acc is an array
-        }
-      
-        const existingStudent = acc.find(student => student.student_id === curr.student_id);
-        if (existingStudent) {
-          existingStudent.courses.push({
-            course_id: curr.course_id,
-            overall_score: curr.total_rounded_mark,
-            grade: curr.grade,
-          });
-        } else {
-          acc.push({
-            student_id: curr.student_id,
-            courses: [
-              {
-                course_id: curr.course_id,
-                overall_score: curr.total_rounded_mark,
-                grade: curr.grade,
-              },
-            ],
-          });
-        }
-        return acc;
-      }, []); 
-      
-
-      setFinalResults(processedData);
-      const courseIdsSet = new Set();
-      processedData.forEach(student => {
-        student.courses.forEach(course => {
-          courseIdsSet.add(course.course_id);
-        });
-      });
-      setCourses(Array.from(courseIdsSet));
-
-      setStudents(processedData.map(student => student.student_id));
+  }, []);
+  // const { oktaAuth, authState } = useOktaAuth();
+  
 
 
-      //--------For repeaters
+    useEffect(() => {
+      if (user) {
+        fetchData();
+        fetchSignature();
+        fetchCourses();
 
-
-      const Repeatresult = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`);
-      const repeaterdata=Repeatresult.data.content;
-
-      const Repeatersgpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`);
-      const RepeatersgpaData = gpa.data.content;
-      setRepeatStudentGPA(RepeatersgpaData);
-
-      const processedRepeatersData = repeaterdata.reduce((acc, curr) => {
-          if (!Array.isArray(acc)) {
-            acc = []; // Ensure acc is an array
-          }
-        
-          const existingStudent = acc.find(student => student.student_id === curr.student_id);
-          if (existingStudent) {
-            existingStudent.courses.push({
-              course_id: curr.course_id,
-              overall_score: curr.total_rounded_mark,
-              grade: curr.grade,
-            });
-          } else {
-            acc.push({
-              student_id: curr.student_id,
-              courses: [
-                {
-                  course_id: curr.course_id,
-                  overall_score: curr.total_rounded_mark,
-                  grade: curr.grade,
-                },
-              ],
-            });
-          }
-          return acc;
-        }, []); // Initialize acc as an empty array here
-        
-
-      try {
-
-      } catch (error) {
-        console.error('Error fetching GPA data:', error.response || error.message);
       }
-
-      setRepeatersFinalResults(processedRepeatersData);
-
-      const repeaterscourseIdsSet = new Set();
-      processedRepeatersData.forEach(student => {
-        student.courses.forEach(course => {
-          courseIdsSet.add(course.course_id);
-        });
-      });
-      setrepeatersCourses(Array.from(repeaterscourseIdsSet));
-
-      setrepeatStudents(processedRepeatersData.map(student => student.student_id));
-
-    } catch (error) {
-      console.error(error);
-      setError(error.message);
-    }
-  };
+    }, [user, level, semester, dept,academic_year,approved_level]);
 
 
-  useEffect(() => {
+
+
+ 
+
+
     const fetchData = async () => {
       try {
         setLoading(true);
+  
         const nextLevelMap = {
           "RB": "AR",
           "AR": "Dean",
@@ -238,15 +133,12 @@ export default function DeanFinalMarkSheet(props) {
   
         // Fetch final results
         const finalResultsResponse = await axios.get(
+          
           `http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`
         );
         const finalResultsData = finalResultsResponse.data.content;
   
         const processedFinalResults = finalResultsData.reduce((acc, curr) => {
-          if (!Array.isArray(acc)) {
-            acc = []; // Ensure acc is an array
-          }
-        
           const existingStudent = acc.find(student => student.student_id === curr.student_id);
           if (existingStudent) {
             existingStudent.courses.push({
@@ -267,10 +159,10 @@ export default function DeanFinalMarkSheet(props) {
             });
           }
           return acc;
-        }, []); // Initialize acc as an empty array here
-        
+        }, []); // Initializing acc as an empty array
   
         setFinalResults(processedFinalResults);
+        
   
         // Fetch courses
         const coursesResponse = await axios.get(
@@ -289,56 +181,54 @@ export default function DeanFinalMarkSheet(props) {
           `http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`
         );
         const repeaterData = repeatersResponse.data.content;
-        setRepeatStudentGPA(repeaterData);
   
-        // Process repeaters data
         const processedRepeaterData = repeaterData.reduce((acc, curr) => {
-            if (!Array.isArray(acc)) {
-              acc = []; // Ensure acc is an array
-            }
-          
-            const existingStudent = acc.find(student => student.student_id === curr.student_id);
-            if (existingStudent) {
-              existingStudent.courses.push({
-                course_id: curr.course_id,
-                overall_score: curr.total_rounded_mark,
-                grade: curr.grade,
-              });
-            } else {
-              acc.push({
-                student_id: curr.student_id,
-                courses: [
-                  {
-                    course_id: curr.course_id,
-                    overall_score: curr.total_rounded_mark,
-                    grade: curr.grade,
-                  },
-                ],
-              });
-            }
-            return acc;
-          }, []); // Initialize acc as an empty array here
-          
+          const existingStudent = acc.find(student => student.student_id === curr.student_id);
+          if (existingStudent) {
+            existingStudent.courses.push({
+              course_id: curr.course_id,
+              overall_score: curr.total_rounded_mark,
+              grade: curr.grade,
+            });
+          } else {
+            acc.push({
+              student_id: curr.student_id,
+              courses: [
+                {
+                  course_id: curr.course_id,
+                  overall_score: curr.total_rounded_mark,
+                  grade: curr.grade,
+                },
+              ],
+            });
+          }
+          return acc;
+        }, []); // Initializing acc as an empty array
   
         setRepeatersFinalResults(processedRepeaterData);
   
-        // Fetch signatures
-        await fetchSignature();
+        const repeatersgpa = await axios.get(
+          `http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`
+        );
+        setRepeatStudentGPA(repeatersgpa.data.content);
+  
+        
+  
   
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Failed to fetch data');
+        setLoading(false);
       }
     };
   
-    fetchData();
-  }, [level, semester, dept, approved_level, academic_year]);
+  
   
   // ... rest of the code remains the same
   
   const handleSubmit = async (e) => {
-    let response = null;
+    setLoading(true);
     e.preventDefault();
     try {
       console.log(approval.academic_year, approval.approval_level, approval.approved_user_id, approval.date_time, approval.department_id, approval.level, approval.semester, approval.signature);
@@ -360,6 +250,9 @@ export default function DeanFinalMarkSheet(props) {
         console.error("Error updating approval level: ", error);
         toast.error("Failed to update approval level");
       }
+    }finally
+    {
+      setLoading(false);
     }
   };
 
@@ -368,35 +261,49 @@ export default function DeanFinalMarkSheet(props) {
   };
 
   const fetchSignature = async () => {
-    try {
+  try {
+    setLoading(true);
 
-      setLoading(true);
+    const ARSignatureResponse = await axios.get(
+      `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`
+    );
 
-      const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
+    if (ARSignatureResponse.status === 200) {
+      const ARSignatureData = ARSignatureResponse.data.content;
+      setARSign(ARSignatureData || {});
+      console.log(ARSignatureData?.signature);
+    } else {
+      toast.error('Failed to fetch AR signature.');
+    }
 
-      setARSign(ARSign.data.content);
-      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
-      setDeanSign(DeanSign.data.content);
-      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
-      setVCSign(VCSign.data.content);
+    
+    const DeanSignatureResponse = await axios.get(
+      `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`
+    );
 
-      console.log(ARSign.data.content);
-      console.log(DeanSign.data.content);
-      console.log(VCSign.data.content);
+    if (DeanSignatureResponse.status === 200) {
+      const DeanSignatureData = DeanSignatureResponse.data.content;
+      setDeanSign(DeanSignatureData || {});
+    } else {
+      toast.error('Failed to fetch Dean signature.');
+    }
 
-    } catch (error) {
-      console.error('Error fetching signature data:', error.response || error.message);
-    }finally{
-      setLoading(false);}
-  };
+  } catch (error) {
+    if (error.response) {
+      console.error('Error fetching signature data:', error.response);
+      toast.error(`Error ${error.response.status}: ${error.response.data.message || 'Something went wrong.'}`);
+    } else {
+      console.error('Error fetching signature data:', error.message);
+      toast.error('An unexpected error occurred while fetching signature data.');
+    }
+  } finally {
+    setLoading(false);
+  }
+};
 
-  useEffect(() => {
-    fetchSignature();
-  }, [level, semester, dept, approved_level, academic_year]);
 
 
 
-  useEffect(() => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
@@ -410,8 +317,6 @@ export default function DeanFinalMarkSheet(props) {
       }
     };
   
-    fetchCourses();
-  }, [level, semester, dept]);
   
 
 
@@ -466,11 +371,12 @@ const alternateRowStyle = {
     <div className="container" style={{marginTop:'70px'}}>
       <ToastContainer/>
       {loading ? (
-                 <div className="d-flex justify-content-center">
-                 <div className="spinner-border" role="status">
-                     <span className="sr-only"></span>
-                 </div>
-             </div>
+                  <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
+                  <div className="spinner-border" role="status">
+                    <span className="sr-only"></span>
+                  </div>
+                  <label style={{marginLeft:"10px"}}> Loading data</label>
+                </div>
             ) : (
               <>
       <BackButton />
@@ -490,111 +396,112 @@ const alternateRowStyle = {
         ) : null}
         
          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-  <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>University of Ruhuna</h2>
-  <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>Faculty of Technology</h2>
-  <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>{degree}</h5>
-  <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>Level {level}     Semester {semester}     <br/>    Academic year {formatAcademicYear(academic_year)}</h5>
-  <h5 style={{ marginBottom: '20px', fontFamily: 'Arial, sans-serif', color: '#777' }}>Provisional results subject to confirmation by the Senate</h5>
-</div>
+          <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>University of Ruhuna</h2>
+          <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>Faculty of Technology</h2>
+          <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>{degree}</h5>
+          <h5 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#555' }}>Level {level}     Semester {semester}     <br/>    Academic year {formatAcademicYear(academic_year)}</h5>
+          <h5 style={{ marginBottom: '20px', fontFamily: 'Arial, sans-serif', color: '#777' }}>Provisional results subject to confirmation by the Senate</h5>
+        </div>
 
 
-          <div className=' shadow-lg' style={{display:'flex'}}>
+          <div className=' shadow-lg col-12 container' style={{display:'flex'}}>
 
           <div
-  className="description"
-  style={{
-    padding: '10px',
-    margin: '20px',
-    float: 'left',
-    marginLeft: '50px',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    backgroundColor: '#f9f9f9',
-  }}
->
+            className=" col-7 "
+            style={{
+              fontSize: '14px',
+              padding: '10px',
+              margin: '20px',
+              marginLeft: '50px',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+              backgroundColor: '#f9f9f9',
+              
+            }}
+          >
 
 
-  <h5 style={{ textAlign: 'center', marginBottom: '10px', fontWeight: 'bold', color: '#333' }}>
-    Key to Grading
-  </h5>
-  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-    <tbody>
-      <tr>
-        <td style={cellStyle}>A+</td>
-        <td style={cellStyle}>4.00</td>
-        <td style={cellStyle}>A</td>
-        <td style={cellStyle}>4.00</td>
-      </tr>
-      <tr style={{ backgroundColor: '#f2f2f2' }}>
-        <td style={cellStyle}>A-</td>
-        <td style={cellStyle}>3.70</td>
-        <td style={cellStyle}>B+</td>
-        <td style={cellStyle}>3.30</td>
-      </tr>
-      <tr>
-        <td style={cellStyle}>B</td>
-        <td style={cellStyle}>3.00</td>
-        <td style={cellStyle}>B-</td>
-        <td style={cellStyle}>2.70</td>
-      </tr>
-      <tr style={{ backgroundColor: '#f2f2f2' }}>
-        <td style={cellStyle}>C+</td>
-        <td style={cellStyle}>2.30</td>
-        <td style={cellStyle}>C</td>
-        <td style={cellStyle}>2.00</td>
-      </tr>
-      <tr>
-        <td style={cellStyle}>C-</td>
-        <td style={cellStyle}>1.70</td>
-      </tr>
-      <tr style={{ backgroundColor: '#f2f2f2' }}>
-        <td style={cellStyle}>D+</td>
-        <td style={cellStyle}>1.30</td>
-        <td style={cellStyle}>D</td>
-        <td style={cellStyle}>1.00</td>
-      </tr>
-      <tr>
-        <td style={cellStyle}>E</td>
-        <td style={cellStyle}>0.00</td>
-      </tr>
-      <tr style={{ backgroundColor: '#f2f2f2' }}>
-        <td style={cellStyle}>F</td>
-        <td style={cellStyle}>CA Fail</td>
-      </tr>
-      <tr>
-        <td style={cellStyle}>MC</td>
-        <td style={cellStyle}>Accepted Medical Certificate</td>
-      </tr>
-      <tr style={{ backgroundColor: '#f2f2f2' }}>
-        <td style={cellStyle}>AC</td>
-        <td style={cellStyle}>Accepted Academic Concession (Acceptable reason by the Senate other than the Medical)</td>
-      </tr>
-      <tr>
-        <td style={cellStyle}>WH</td>
-        <td style={cellStyle}>Results Withheld</td>
-      </tr>
-      <tr style={{ backgroundColor: '#f2f2f2' }}>
-        <td style={cellStyle}>E*</td>
-        <td style={cellStyle}>Not Eligible/Not Applied/Absent without Medical</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+            <h5 style={{ textAlign: 'center', marginBottom: '10px', fontWeight: 'bold', color: '#333' }}>
+              Key to Grading
+            </h5>
+            <table className=' table table-responsive-sm' style={{ borderCollapse: 'collapse'}}>
+              <tbody>
+                <tr>
+                  <td style={cellStyle}>A+</td>
+                  <td style={cellStyle}>4.00</td>
+                  <td style={cellStyle}>A</td>
+                  <td style={cellStyle}>4.00</td>
+                </tr>
+                <tr style={{ backgroundColor: '#f2f2f2' }}>
+                  <td style={cellStyle}>A-</td>
+                  <td style={cellStyle}>3.70</td>
+                  <td style={cellStyle}>B+</td>
+                  <td style={cellStyle}>3.30</td>
+                </tr>
+                <tr>
+                  <td style={cellStyle}>B</td>
+                  <td style={cellStyle}>3.00</td>
+                  <td style={cellStyle}>B-</td>
+                  <td style={cellStyle}>2.70</td>
+                </tr>
+                <tr style={{ backgroundColor: '#f2f2f2' }}>
+                  <td style={cellStyle}>C+</td>
+                  <td style={cellStyle}>2.30</td>
+                  <td style={cellStyle}>C</td>
+                  <td style={cellStyle}>2.00</td>
+                </tr>
+                <tr>
+                  <td style={cellStyle}>C-</td>
+                  <td style={cellStyle}>1.70</td>
+                </tr>
+                <tr style={{ backgroundColor: '#f2f2f2' }}>
+                  <td style={cellStyle}>D+</td>
+                  <td style={cellStyle}>1.30</td>
+                  <td style={cellStyle}>D</td>
+                  <td style={cellStyle}>1.00</td>
+                </tr>
+                <tr>
+                  <td style={cellStyle}>E</td>
+                  <td style={cellStyle}>0.00</td>
+                </tr>
+                <tr style={{ backgroundColor: '#f2f2f2' }}>
+                  <td style={cellStyle}>F</td>
+                  <td style={cellStyle}>CA Fail</td>
+                </tr>
+                <tr>
+                  <td style={cellStyle}>MC</td>
+                  <td style={cellStyle}>Accepted Medical Certificate</td>
+                </tr>
+                <tr style={{ backgroundColor: '#f2f2f2' }}>
+                  <td style={cellStyle}>AC</td>
+                  <td style={cellStyle}>Accepted Academic Concession (Acceptable reason by the Senate other than the Medical)</td>
+                </tr>
+                <tr>
+                  <td style={cellStyle}>WH</td>
+                  <td style={cellStyle}>Results Withheld</td>
+                </tr>
+                <tr style={{ backgroundColor: '#f2f2f2' }}>
+                  <td style={cellStyle}>E*</td>
+                  <td style={cellStyle}>Not Eligible/Not Applied/Absent without Medical</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
 
-<div
-  style={{
-    marginLeft: '400px',
-    marginTop: '50px',
-    float: 'right',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    backgroundColor: '#f9f9f9',
-    padding: '10px'
-  }}
->
+          <div
+            style={{
+              marginLeft: '40px',
+              marginTop: '50px',
+              float: 'right',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+              backgroundColor: '#f9f9f9',
+              padding: '10px'
+            }}
+          >
   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
     <tbody>
       {Allcourses.map((id, index) => (
@@ -612,7 +519,7 @@ const alternateRowStyle = {
 
         </div>
     
-        {finalResults.length > 0  && (
+        {finalResults.length > 0  && studentGPA.length>0 && (
 
           <div className="">
             <table className="overflow-x-scroll table border shadow table-hover" style={{ marginTop: "60px" }}>
@@ -659,7 +566,7 @@ const alternateRowStyle = {
           </div>
         )}
 
-          {repeatersfinalResults.length>0 ?
+          {repeatersfinalResults.length>0 && repeat_studentGPA.length>0 ?
 
             <div className="">
               <h5>Repeaters </h5>
@@ -735,7 +642,7 @@ const alternateRowStyle = {
                 <>
                    {ARSign.signature !== null || ARSign.signature !== "" ?
                    <>
-                 
+                 {console.log(ARSign.signature)}
                    <h5>Certified Correct,</h5>
                    <img src={ARSign.signature} style={{ width: '80px', height: '40px' }} />
                    <p></p>
