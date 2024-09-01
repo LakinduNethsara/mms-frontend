@@ -11,20 +11,22 @@ export default function CertifyMarksheet(props) {
   const { approved_level } = props; // Approved level for result board conducted courses
   const history = useHistory(); // for routing
   const[loading,setLoading]=useState(false);
+  let userEmail=null;
 
   // Retrieve user data from localStorage
   useEffect(() => {
     setLoading(true);
     const storedData = localStorage.getItem('user');
     if (storedData) {
-      setUser(JSON.parse(storedData));
-    }
-
-    
+      const parsedUser = JSON.parse(storedData);
+      setUser(parsedUser);
+      userEmail=parsedUser.email;
+      // Ensuring the function runs after setting the user state
       loadAvailableResultSheets(approved_level);
-    
+    }
     setLoading(false);
-  }, []);
+  }, [approved_level]); // Add dependencies if necessary
+  
 
   // // Load available result sheets based on approved level
   // useEffect(() => {
@@ -41,12 +43,12 @@ export default function CertifyMarksheet(props) {
       setLoading(true);
       let response;
       if(approved_level=="finalized"){
-        response=await axios.get(`http://localhost:9090/api/courses/getcourseforcc/${user.email}`);
+        response=await axios.get(`http://localhost:9090/api/courses/getcourseforcc/${userEmail}`);
         setFinalMarksheetList(response.data.content);
         console.log(response.data)
       }
       else if (approved_level === "course_coordinator") {
-        response = await axios.get(`http://localhost:9090/api/courses/getCoursesforLectCertify/${user.email}`);
+        response = await axios.get(`http://localhost:9090/api/courses/getCoursesforLectCertify/${userEmail}`);
         setFinalMarksheetList(response.data.content);
         console.log(response.data.content)
       }

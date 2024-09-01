@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
 import EditValueModal from './EditValueModal';
 import DateObject from 'react-date-object';
+// Import Bootstrap modal components
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap'
 
 
 export default function MarksCheckingForm() {
@@ -14,13 +16,14 @@ export default function MarksCheckingForm() {
   const history = useHistory();
   const [text, setText] = useState('');
   const[noData,setNoData]=useState('')
-  const [calculations, setCalculations] = useState([]);
+  const [editLogs, setEditlogs] = useState([]);
   const[updatebtn,setEnableupdatebtn]=useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState({
     "key":"",
     "value":""
   });
+  const [showModal, setShowModal] = useState(false);
   const[marksSheet,setMarksSheet]=useState({
     
       "student_id": "",
@@ -30,7 +33,8 @@ export default function MarksCheckingForm() {
       "ca": [],
       "end": []
   });
-    const [data, setData] = useState([]);
+  const[grade,updateGrade]=useState('');
+  const [data, setData] = useState([]);
 
   const [user, setUser] = useState({
         
@@ -256,10 +260,19 @@ const endMarks={
       }
     }
   };
-  
 
-  
-  
+  const getEditLogs = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`http://localhost:9090/api/studentMarks/getEditLogs/${course_id}/${student_id}`);
+      setEditlogs(response.data.content);
+      setLoading(false);
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
+
 
   // Function to open the modal and set the editing item
   const handleEditClick = (key, value) => {
@@ -273,9 +286,31 @@ const endMarks={
     setIsModalOpen(false);
   };
 
-  
 
-  
+
+  const handleGradeChange = (newGrade) => {
+  setShowModal(true);
+  updateGrade(newGrade);
+};
+
+const handleConfirmChange = async (newGrade, reason) => {
+  try {
+    const response = await axios.put(`http://localhost:9090/api/studentMarks/updateAGrade/${student_id}/${course_id}/${newGrade}/${reason}`);
+    if (response.status === 200) {
+      toast.success('Grade updated successfully');
+      setMarksSheet({ ...marksSheet, grade: newGrade });
+    } else {
+      toast.error('Error updating grade');
+      console.log(response);
+    }
+    setShowModal(false);
+  } catch (error) {
+    toast.error('Error updating grade');
+    console.error(error);
+  }
+};
+
+
 
   return (
     <>
@@ -391,8 +426,27 @@ const endMarks={
                 <div className="py-4 px-5">
                   <label> <b>Final Marks</b> </label>
                   <input type='text' size="10" className=' mx-3' value={marksSheet.total_rounded_marks} disabled />
-                  <label> <b>Grade</b> </label>
-                  <input type='text' size="10" className=' mx-3' value={marksSheet.grade} disabled />
+                  <br />
+                  <hr />  
+                  <div style={{display:"flex"}}>
+                    <label> <b>Grade</b> </label>
+                    <input style={{marginLeft:"58px"}} type='text' size="10" value={marksSheet.grade} disabled />
+
+                    <div style={{marginLeft:"20px"}}>
+
+                    <div className="dropdown">
+                      <button className="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Change Grade
+                      </button>
+                      <ul className="dropdown-menu dropdown-menu-dark">
+                        <li><a className="dropdown-item" onClick={() => handleGradeChange('MC')}>MC</a></li>
+                        <li><a className="dropdown-item" onClick={() => handleGradeChange('AC')}>AC</a></li>
+                      </ul>
+                    </div>
+
+                    </div>
+                  </div>
+                  
                 </div>
               </div>
               {
@@ -413,6 +467,20 @@ const endMarks={
                                   </form>
                                 </div>
                                 ) : null}
+                                {/* Modal */}
+                                <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)}>
+                                <ModalHeader toggle={() => setShowModal(false)}>Confirm Grade Change</ModalHeader>
+                                <ModalBody>
+                                  Are you sure you want to change the grade to {grade}? This action cannot be undone.
+                                  <input type="text" className="form-control" placeholder="Enter reason for grade change" />
+                                </ModalBody>
+                                <ModalFooter>
+                                  <Button color="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
+                                  <Button color="primary" onClick={() => handleConfirmChange(grade, document.querySelector('.modal-body input').value)}>Confirm</Button>
+                                </ModalFooter>
+                              </Modal>
+
+
               
               <div>
                 <input onClick={handleReturn} type="button" className="btn shadow btn-outline-success btn-sm w-25 float-end my-4" id="backbtn" value="Back" />
