@@ -37,6 +37,7 @@ export default function ResultBoardMarksSheetAssign() {
     const [startResultBoardButtonAvailability, setStartResultBoardButtonAvailability] = useState(false); //State to store the availability of the start result board button [true or false
     const [startResultBoardButtonColor, setStartResultBoardButtonColor] = useState("gray"); //State to store the color of the start result board button [green or red
 
+    const [loading,setLoading]=useState(false);
 
 
     const [selectedResultBoard, setSelectedResultBoard] = useState({
@@ -88,7 +89,8 @@ export default function ResultBoardMarksSheetAssign() {
 
     const getSelectedResultBoard = async () => {     //Get the result board details from the database
         try{
-            const resultBoard = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getResultBoardDetailsByID/${selectedResultBoard.id}`); //Get the result board details from the database
+            
+            const resultBoard = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getResultBoardDetailsByID/${selectedResultBoard.id}`); //Get the result board details from the database
             setSelectedResultBoard(resultBoard.data); //Set the result board details
         }catch(err){
             toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
@@ -100,7 +102,9 @@ export default function ResultBoardMarksSheetAssign() {
     const getAvailableCourses = async () => {     //Get the result board details from the database
 
         try {
-            const courseList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCourseListRemainingToAddToResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.id}`); //Get the course list that can be added to the result board from the database
+            
+            const courseList = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCourseListRemainingToAddToResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.id}`); //Get the course list that can be added to the result board from the database
+            
             setAvailableCourseList(courseList.data); //Set the course list that can be added to the result board
 
             if(courseList.data.length>0){
@@ -129,7 +133,7 @@ export default function ResultBoardMarksSheetAssign() {
 
 
         try {
-            const examinerList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllCourseCoordinatorsBySelectedAcademicYearDepartmentLevelSemester/${selectedResultBoard.academic_year}/${selectedResultBoard.department}/${selectedResultBoard.level}/${selectedResultBoard.semester}`); //Get the course coordinator list from the database
+            const examinerList = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllCourseCoordinatorsBySelectedAcademicYearDepartmentLevelSemester/${selectedResultBoard.academic_year}/${selectedResultBoard.department}/${selectedResultBoard.level}/${selectedResultBoard.semester}`); //Get the course coordinator list from the database
             setAvailableExaminerList(examinerList.data); //Set the course coordinator list
         } catch (err) {
             toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
@@ -142,7 +146,9 @@ export default function ResultBoardMarksSheetAssign() {
 
     const getAssignMarkSheetDetails = async ()=>{         //Function to get assigned marksheet details 
         try{
-            const list = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`); //Get the assigned marksheet details from the database
+            
+            const list = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`); //Get the assigned marksheet details from the database
+            
             setAssignedMarksSheetList(list.data); //Set the assigned marksheet details
         }catch(err){
             toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
@@ -152,7 +158,8 @@ export default function ResultBoardMarksSheetAssign() {
     const getSelectedExaminerAssignedMarkSheetDetails = async (examinerID) => {     //Get the result board details from the database
 
         try{
-            const list = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAssignedMarksSheetsByExaminerIdAndResultBoardID/${selectedResultBoard.id}/${examinerID}`); //Get the assigned marksheet details from the database
+            
+            const list = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAssignedMarksSheetsByExaminerIdAndResultBoardID/${selectedResultBoard.id}/${examinerID}`); //Get the assigned marksheet details from the database
             setAssignedMarksSheetList(list.data); //Set the assigned marksheet details
 
         }catch(err){
@@ -182,7 +189,10 @@ export default function ResultBoardMarksSheetAssign() {
             assignmentObject.assigned_date_time = formattedDateTime; //Set the formatted date and time to the assignment object
 
             try{
-                 const saveResult = await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoardMember', assignmentObject);
+                
+                const saveResult = await axios.post('http://192.248.50.155:9090/api/AssistantRegistrar/saveResultBoardMember', assignmentObject);
+                
+                
                 if(saveResult.data===true){
                     toast.success('Marksheet assigned successfully',{autoClose:3000}); //Display the success message
                     setMessageColor('green'); //Set the color of the message
@@ -217,7 +227,10 @@ export default function ResultBoardMarksSheetAssign() {
 
     const removeAssignedMarksSheet = async (id) => {     //Function to remove the assigned marksheet
         try{
-            const isDeleted = await axios.delete(`http://localhost:9090/api/AssistantRegistrar/deleteResultBoardMemberById/${id}`); //Delete the assigned marksheet from the database
+            
+            const isDeleted = await axios.delete(`http://192.248.50.155:9090/api/AssistantRegistrar/deleteResultBoardMemberById/${id}`); //Delete the assigned marksheet from the database
+            
+            
             if(isDeleted.data===true){
                 toast.success('Removed successfully',{autoClose:3000}); //Display the success message
             }else{
@@ -246,7 +259,10 @@ export default function ResultBoardMarksSheetAssign() {
             selectedResultBoard.conducted_date_time = formattedDateTime; //Set the conducted date and time
 
             try{
-                await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
+                setLoading(true);
+                await axios.post('http://192.248.50.155:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
+                setLoading(false);
+
                 //API call to just view result board
                 history.push({pathname:'/arJoinResultsBoard',state:selectedResultBoard})
             }catch(err){
@@ -276,14 +292,19 @@ export default function ResultBoardMarksSheetAssign() {
             selectedResultBoard.status = "Ended"; //Set the status of the result board to ended
 
             try{
-                await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
+                setLoading(true);
+                await axios.post('http://192.248.50.155:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
+                setLoading(false);
+                
                 toast.success('Result board ended successfully!',{autoClose:3000}); //Display the success message
                 setStartResultBoardDivMessageColor('green')
                 setStartResultBoardDivMessage('Result board ended successfully!');
 
                 try{
-                    const approvedLevelUpdate = await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateApprovedLevelAfterResultBoard`,selectedResultBoard); //Update the approved level in the database
-                    
+                    setLoading(true);
+                    const approvedLevelUpdate = await axios.put(`http://192.248.50.155:9090/api/AssistantRegistrar/updateApprovedLevelAfterResultBoard`,selectedResultBoard); //Update the approved level in the database
+                    setLoading(false);
+
                 }catch(err){
                     toast.error("Error with updating approved level",{autoClose:3000}); //Display the error message if an error occurs
                 }
@@ -316,10 +337,12 @@ export default function ResultBoardMarksSheetAssign() {
 
         try{
             
-            await axios.delete(`http://localhost:9090/api/AssistantRegistrar/deleteAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`) //Delete the assigned marksheet details from the database
+            setLoading(true);
+            await axios.delete(`http://192.248.50.155:9090/api/AssistantRegistrar/deleteAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`) //Delete the assigned marksheet details from the database
             
-            const deletedResultBoardCount = await axios.delete(`http://localhost:9090/api/AssistantRegistrar/deleteNotStartedResultBoard/${selectedResultBoard.id}`)
 
+            const deletedResultBoardCount = await axios.delete(`http://192.248.50.155:9090/api/AssistantRegistrar/deleteNotStartedResultBoard/${selectedResultBoard.id}`)
+            setLoading(false);
             if(deletedResultBoardCount.data>0){
 
                 toast.success('Result board deleted successfully!',{autoClose:2000}); //Display the success message
@@ -393,8 +416,17 @@ export default function ResultBoardMarksSheetAssign() {
 
     return (
         <div className='marksheet-assign-body container' style={{marginTop:"70px",minWidth:"100%",paddingLeft:"50px",paddingRight:"50px",height:"100%"}}>
-            
-            <div className='row justify-content-between'>
+
+            {
+                loading ? (
+                    <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
+                        <div className="spinner-border" role="status">
+                            <span className="sr-only"></span>
+                        </div>
+                        <label style={{marginLeft:"10px"}}> Loading data</label>
+                    </div>
+                ):(
+                    <div className='row justify-content-between'>
 
 
                 <div className='col-4 main-left-column' style={{width:"45%",minWidth:"540px",marginBottom:"20px"}}>
@@ -563,6 +595,10 @@ export default function ResultBoardMarksSheetAssign() {
 
 
             </div>
+                )
+            }
+            
+            
 
 
             <ToastContainer />

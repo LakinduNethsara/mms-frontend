@@ -19,10 +19,9 @@ export default function ARJoinResultBoard() {
 
     const getStudentGrade = async ()=>{
         try{
-            const gradeResponse =await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGradesForResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
+            const gradeResponse =await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getGradesForResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
             
             setStudentGrades(gradeResponse.data);
-
             const uniqueStudentArr = [...new Set(gradeResponse.data.map((item)=>item.student_id))].sort();                                     // get unique academic years
             setUniqueStudents(uniqueStudentArr); 
 
@@ -30,11 +29,11 @@ export default function ARJoinResultBoard() {
             setUniqueCourses(uniqueCourseArr);
 
             //call api to get studentGPA
-            const gpaResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getGpaListForResultBoard/${selectedResultBoard.department}/${selectedResultBoard.academic_year}/${selectedResultBoard.level}/${selectedResultBoard.semester}`);
+            const gpaResponse = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getGpaListForResultBoard/${selectedResultBoard.department}/${selectedResultBoard.academic_year}/${selectedResultBoard.level}/${selectedResultBoard.semester}`);
             
             setStudentGpa(gpaResponse.data);
 
-            const courseDetailsResponse = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCourseDetailsForMarkSheet/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
+            const courseDetailsResponse = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCourseDetailsForMarkSheet/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
             setCourseDetails(courseDetailsResponse.data);
             
         }catch(error){
@@ -52,7 +51,7 @@ export default function ARJoinResultBoard() {
 
 
   return (
-    <div className='join-rb-main-div' style={{marginTop:"20px",minWidth:"100%",paddingRight:"50px",paddingLeft:"50px",height:"100%"}}>
+    <div className='join-rb-main-div' style={{marginTop:"70px",minWidth:"100%",paddingRight:"50px",paddingLeft:"50px",height:"100%"}}>
         <h5 style={{color:"blue",textAlign:"center"}}>
             University of Ruhuna - Faculty of Technology
         </h5>
@@ -61,7 +60,9 @@ export default function ARJoinResultBoard() {
         </h5>
         <h6 style={{color:"blue",textAlign:"center"}}>Level {selectedResultBoard.level} Semester {selectedResultBoard.semester} (Academic year {selectedResultBoard.academic_year})</h6>
         
+        
         {
+            
             uniqueCourses != null ? (
                 <>
                     <hr/>

@@ -111,20 +111,23 @@ export default function DeanFinalMarkSheet(props) {
       } else if (approved_level === "Dean") {
         setNextApprovedlevel("VC");
       }
-      const result = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`);
+      const result = await axios.get(`http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`);
       const data = result.data.content;
       
       
 
-      const gpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`);
+      const gpa = await axios.get(`http://192.248.50.155:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`);
       const gpaData = gpa.data.content;
       setStudentGPA(gpaData);
 
     
 
-      const processedData = data.reduce((acc, curr) => {
+      const processedFinalResults = finalResultsData.reduce((acc, curr) => {
+        if (!Array.isArray(acc)) {
+          acc = []; // Ensure acc is an array
+        }
+      
         const existingStudent = acc.find(student => student.student_id === curr.student_id);
-        const gpaInfo = gpaData.find(ele => ele.student_id === curr.student_id);
         if (existingStudent) {
           existingStudent.courses.push({
             course_id: curr.course_id,
@@ -134,15 +137,18 @@ export default function DeanFinalMarkSheet(props) {
         } else {
           acc.push({
             student_id: curr.student_id,
-            courses: [{
-              course_id: curr.course_id,
-              overall_score: curr.total_rounded_mark,
-              grade: curr.grade,
-            }]
+            courses: [
+              {
+                course_id: curr.course_id,
+                overall_score: curr.total_rounded_mark,
+                grade: curr.grade,
+              },
+            ],
           });
         }
         return acc;
-      }, []);
+      }, []); 
+      
 
       setFinalResults(processedData);
       const courseIdsSet = new Set();
@@ -159,34 +165,40 @@ export default function DeanFinalMarkSheet(props) {
       //--------For repeaters
 
 
-      const Repeatresult = await axios.get(`http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`);
+      const Repeatresult = await axios.get(`http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`);
       const repeaterdata=Repeatresult.data.content;
 
-      const Repeatersgpa = await axios.get(`http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`);
+      const Repeatersgpa = await axios.get(`http://192.248.50.155:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`);
       const RepeatersgpaData = gpa.data.content;
       setRepeatStudentGPA(RepeatersgpaData);
 
       const processedRepeatersData = repeaterdata.reduce((acc, curr) => {
-        const existingStudent = acc.find(student => student.student_id === curr.student_id);
-        const gpaInfo = RepeatersgpaData.find(ele => ele.student_id === curr.student_id);
-        if (existingStudent) {
-          existingStudent.courses.push({
-            course_id: curr.course_id,
-            overall_score: curr.total_rounded_mark,
-            grade: curr.grade,
-          });
-        } else {
-          acc.push({
-            student_id: curr.student_id,
-            courses: [{
+          if (!Array.isArray(acc)) {
+            acc = []; // Ensure acc is an array
+          }
+        
+          const existingStudent = acc.find(student => student.student_id === curr.student_id);
+          if (existingStudent) {
+            existingStudent.courses.push({
               course_id: curr.course_id,
               overall_score: curr.total_rounded_mark,
               grade: curr.grade,
-            }]
-          });
-        }
-        return acc;
-      }, []);
+            });
+          } else {
+            acc.push({
+              student_id: curr.student_id,
+              courses: [
+                {
+                  course_id: curr.course_id,
+                  overall_score: curr.total_rounded_mark,
+                  grade: curr.grade,
+                },
+              ],
+            });
+          }
+          return acc;
+        }, []); // Initialize acc as an empty array here
+        
 
       try {
 
@@ -226,12 +238,15 @@ export default function DeanFinalMarkSheet(props) {
   
         // Fetch final results
         const finalResultsResponse = await axios.get(
-          `http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`
+          `http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`
         );
         const finalResultsData = finalResultsResponse.data.content;
   
-        // Process final results
         const processedFinalResults = finalResultsData.reduce((acc, curr) => {
+          if (!Array.isArray(acc)) {
+            acc = []; // Ensure acc is an array
+          }
+        
           const existingStudent = acc.find(student => student.student_id === curr.student_id);
           if (existingStudent) {
             existingStudent.courses.push({
@@ -252,51 +267,58 @@ export default function DeanFinalMarkSheet(props) {
             });
           }
           return acc;
-        }, []);
+        }, []); // Initialize acc as an empty array here
+        
   
         setFinalResults(processedFinalResults);
   
         // Fetch courses
         const coursesResponse = await axios.get(
-          `http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`
+          `http://192.248.50.155:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`
         );
         setAllCourses(coursesResponse.data);
   
         // Fetch GPA
         const gpaResponse = await axios.get(
-          `http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`
+          `http://192.248.50.155:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`
         );
         setStudentGPA(gpaResponse.data.content);
   
         // Fetch repeaters data
         const repeatersResponse = await axios.get(
-          `http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`
+          `http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`
         );
         const repeaterData = repeatersResponse.data.content;
+        setRepeatStudentGPA(repeaterData);
   
         // Process repeaters data
         const processedRepeaterData = repeaterData.reduce((acc, curr) => {
-          const existingStudent = acc.find(student => student.student_id === curr.student_id);
-          if (existingStudent) {
-            existingStudent.courses.push({
-              course_id: curr.course_id,
-              overall_score: curr.total_rounded_mark,
-              grade: curr.grade,
-            });
-          } else {
-            acc.push({
-              student_id: curr.student_id,
-              courses: [
-                {
-                  course_id: curr.course_id,
-                  overall_score: curr.total_rounded_mark,
-                  grade: curr.grade,
-                },
-              ],
-            });
-          }
-          return acc;
-        }, []);
+            if (!Array.isArray(acc)) {
+              acc = []; // Ensure acc is an array
+            }
+          
+            const existingStudent = acc.find(student => student.student_id === curr.student_id);
+            if (existingStudent) {
+              existingStudent.courses.push({
+                course_id: curr.course_id,
+                overall_score: curr.total_rounded_mark,
+                grade: curr.grade,
+              });
+            } else {
+              acc.push({
+                student_id: curr.student_id,
+                courses: [
+                  {
+                    course_id: curr.course_id,
+                    overall_score: curr.total_rounded_mark,
+                    grade: curr.grade,
+                  },
+                ],
+              });
+            }
+            return acc;
+          }, []); // Initialize acc as an empty array here
+          
   
         setRepeatersFinalResults(processedRepeaterData);
   
@@ -321,7 +343,7 @@ export default function DeanFinalMarkSheet(props) {
     try {
       console.log(approval.academic_year, approval.approval_level, approval.approved_user_id, approval.date_time, approval.department_id, approval.level, approval.semester, approval.signature);
       // Use the nextApprovedlevel variable directly in the network request
-      response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
+      response = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
 
       toast.success("Result sheet approved successfully");
 
@@ -350,12 +372,12 @@ export default function DeanFinalMarkSheet(props) {
 
       setLoading(true);
 
-      const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
+      const ARSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
 
       setARSign(ARSign.data.content);
-      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
+      const DeanSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
       setDeanSign(DeanSign.data.content);
-      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
+      const VCSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
       setVCSign(VCSign.data.content);
 
       console.log(ARSign.data.content);
@@ -368,7 +390,6 @@ export default function DeanFinalMarkSheet(props) {
       setLoading(false);}
   };
 
-  console.log(level, semester, dept, approved_level, academic_year);
   useEffect(() => {
     fetchSignature();
   }, [level, semester, dept, approved_level, academic_year]);
@@ -379,7 +400,7 @@ export default function DeanFinalMarkSheet(props) {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const courses = await axios.get(`http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
+        const courses = await axios.get(`http://192.248.50.155:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
 
         setAllCourses(courses.data);
       } catch (error) {
@@ -453,7 +474,7 @@ const alternateRowStyle = {
             ) : (
               <>
       <BackButton />
-      {finalResults.length > 0 ? (
+      {(finalResults.length > 0 ||repeatersfinalResults.length>0) ? (
 
         <>
         
@@ -590,6 +611,8 @@ const alternateRowStyle = {
 
 
         </div>
+    
+        {finalResults.length > 0  && (
 
           <div className="">
             <table className="overflow-x-scroll table border shadow table-hover" style={{ marginTop: "60px" }}>
@@ -634,6 +657,7 @@ const alternateRowStyle = {
               </tbody>
             </table>
           </div>
+        )}
 
           {repeatersfinalResults.length>0 ?
 

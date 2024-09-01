@@ -1,7 +1,7 @@
 import axios from "axios";
 
 class ARService {
-    static BASE_URL = "http://localhost:9090";
+    static BASE_URL = "http://192.248.50.155:9090";
 
     static async getViewMarksCourseList(level,semester,department_id) {     // API call to fetch course data
         try {

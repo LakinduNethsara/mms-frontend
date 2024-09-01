@@ -3,12 +3,12 @@
     margin-bottom: 10px;
     position: sticky;
   }
-.ar-medical-table-head{
+/* .ar-medical-table-head{
     background-color: #ffffff;
     position: sticky;
     top: 65px;
     z-index: 1;
-}
+} */
 
 .dataTable {
   text-align: center;
