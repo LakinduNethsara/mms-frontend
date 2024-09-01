@@ -4,8 +4,10 @@ import { Link, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditUserModal from './EditUserModal';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function LecturersManagement() {
+    const [showPassword, setShowPassword] = React.useState(false); // This is a state variable to toggle password visibility
     const [users, setUser] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
@@ -28,13 +30,13 @@ export default function LecturersManagement() {
     }, [refreshKey]);
 
     const loadUsers = async () => {
-        const result = await axios.get("http://192.248.50.155:9090/api/lecreg/get/allusersdetails");
+        const result = await axios.get("http://localhost:9090/api/lecreg/get/allusersdetails");
         setUser(result.data.content);
         console.log(result.data.content);
     };
 
     const deleteUser = async (id) => {
-        await axios.delete(`http://192.248.50.155:9090/api/lecreg/delete/deleteById/${id}`);
+        await axios.delete(`http://localhost:9090/api/lecreg/delete/deleteById/${id}`);
         toast.success("User deleted successfully!");
         loadUsers();
     };
@@ -65,7 +67,7 @@ export default function LecturersManagement() {
 
         const updatedUser = { ...user, name_with_initials: fullNameConvertToInitial(user.full_name) };
         console.log(updatedUser)
-        await axios.post("http://192.248.50.155:9090/api/lecreg/savelecdetails", updatedUser);
+        await axios.post("http://localhost:9090/api/lecreg/savelecdetails", updatedUser);
 
         setUserDetails({
             user_id: "",
@@ -96,18 +98,25 @@ export default function LecturersManagement() {
 
     const handleEditSubmit = async (updatedUser) => {
 
-            await axios.put(`http://192.248.50.155:9090/api/lecreg/edit/alecdetails`, updatedUser);
+            await axios.put(`http://localhost:9090/api/lecreg/edit/alecdetails`, updatedUser);
 
+            setRefreshKey(Date.now());
+            toast.success("User details updated successfully!");
+
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(prevState => !prevState);
     };
 
 
     return (
-        <div className='container'>
+        <div className='container' style={{marginTop:"70px"}}>
             <div className='row'>
-                <div className='col-md-12 mt-2 mb-3 '>
+                <div className='col-md-12 mt-2 mb-3  shadow p-4'>
                     <h2 className='text-center m-4'>Register Academics & Non-Academics</h2>
                     <form onSubmit={(e) => onSubmit(e)}>
-                        <div className='mb-3 row'>
+                        <div className='mb-3 row '>
                             <div className='col-md-3'>
                                 <label htmlFor='user_id' className='form-label'>User ID</label>
                                 <input type={"text"} className='form-control' placeholder='Enter Lecturer ID' name='user_id' value={user.user_id} onChange={(e) => onInputChange(e)} />
@@ -122,8 +131,8 @@ export default function LecturersManagement() {
                             </div>
                             <div className='col-md-3'>
                                 <label htmlFor='role' className='form-label'>User Role</label>
-                                <select type={"text"} className=' form-select' placeholder='Enter User Role' name='role' value={user.role} onChange={(e) => onInputChange(e)} >
-                                    <option value="">Select Role</option>
+                                <select type={"text"} className=' form-select' placeholder='Select User Role' name='role' value={user.role} onChange={(e) => onInputChange(e)} >
+                                    <option value="" selected disabled>Select Role</option>
                                     <option value="lecturer">Lecturer</option>
                                     <option value="dean">Dean</option>
                                     <option value="hod">HOD</option>
@@ -139,14 +148,47 @@ export default function LecturersManagement() {
                                 <input type={"text"} className='form-control' placeholder='Enter E-mail Address' name='email' value={user.email} onChange={(e) => onInputChange(e)} />
                             </div>
                             
-                            <div className='col-md-3'>
+                            {/* <div className='col-md-3'>
                                 <label htmlFor='password' className='form-label'>Password</label>
                                 <input type={"password"} className='form-control' placeholder='Enter Password' name='password' value={user.password} onChange={(e) => onInputChange(e)} />
+                            </div> */}
+
+                            <div className='col-md-3' style={{position:'relative'}}>
+                                <label className='form-label' htmlFor="password">Password</label>
+                                <input
+                                    className='form-control'
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    value={user.password}
+                                    onChange={(e) => onInputChange(e)}
+                                    
+                                />
+                                <span
+                                    onClick={togglePasswordVisibility}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '72%',
+                                        right: '30px',
+                                        transform: 'translateY(-50%)',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </span>
                             </div>
 
                             <div className='col-md-3'>
-                                <label htmlFor='department_id' className='form-label'>Department</label>
-                                <input type={"text"} className='form-control' placeholder='Enter Department' name='department_id' value={user.department_id} onChange={(e) => onInputChange(e)} />
+                                {/* <label htmlFor='department_id' className='form-label'>Department</label>
+                                <input type={"text"} className='form-control' placeholder='Enter Department' name='department_id' value={user.department_id} onChange={(e) => onInputChange(e)} /> */}
+
+                                <label htmlFor='role' className='form-label'>Department</label>
+                                <select type={"text"} className=' form-select' placeholder='Select a Department' name='department_id' value={user.department_id} onChange={(e) => onInputChange(e)} >
+                                    <option value="" selected disabled>Select Department</option>
+                                    <option value="ICT">ICT</option>
+                                    <option value="ET">ET</option>
+                                    <option value="BST">BST</option>
+                                    <option value="Multi_Disciplinary">Multi Disciplinary</option>
+                                </select>
                             </div>
 
                             <div className='col-md-3 d-flex align-items-end'>
@@ -160,7 +202,7 @@ export default function LecturersManagement() {
                 </div>
             </div>
 
-            <div className='row'>
+            <div className='row mt-3'>
                 <div className='col-md-12'>
                     <div className='pb-5'>
                         <div id='table-wrapper'></div>

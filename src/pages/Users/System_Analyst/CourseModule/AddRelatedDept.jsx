@@ -10,7 +10,7 @@ export default function AddRelatedDept() {
     }, []);
 
     const fetchCourses = () => {
-        axios.get('http://192.248.50.155:9090/api/courses/getallcousrenotregto_crdept')
+        axios.get('http://localhost:9090/api/courses/getallcousrenotregto_crdept')
             .then(response => {
                 setCourses(response.data.content);
             })
@@ -67,7 +67,7 @@ export default function AddRelatedDept() {
             }
 
             if (departmentDataList.length > 0) {
-                axios.post('http://192.248.50.155:9090/api/coursedept/insertacoursetocrdept', departmentDataList)
+                axios.post('http://localhost:9090/api/coursedept/insertacoursetocrdept', departmentDataList)
                 .then(response => {
                     alert('Data saved successfully');
                 })
@@ -83,7 +83,7 @@ export default function AddRelatedDept() {
     };
 
     return (
-        <div className='container'>
+        <div className='container' style={{marginTop:"70px"}}>
             <div className='row'>
                 <div className='h3 mt-lg-5' style={{ color: "maroon" }}>Add Course to Related Departments</div>
                 <div className='h6 mt-lg-5 text-danger'>*Please Try To Use Only One Course At One Time</div>

@@ -26,7 +26,7 @@ export default function CCAssignedResultSheet() {
         const fetchData = async () => {
             if (user_id && id) {
                 try {
-                    const response = await axios.get(`http://192.248.50.155:9090/api/results_board/getAssignedResultSheet/${user_id}/${id}`);
+                    const response = await axios.get(`http://localhost:9090/api/results_board/getAssignedResultSheet/${user_id}/${id}`);
                     let data = response.data.content || [];
 
                     // Ensure data is always an array
@@ -51,7 +51,7 @@ export default function CCAssignedResultSheet() {
 
     const getCourseName = async (courseId) => {
         try {
-            const response = await axios.get(`http://192.248.50.155:9090/api/courses/getcourse/${courseId}`);
+            const response = await axios.get(`http://localhost:9090/api/courses/getcourse/${courseId}`);
             return response.data.content.course_name || "";
         } catch (error) {
             console.error('Error fetching course name:', error);

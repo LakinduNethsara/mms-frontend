@@ -28,7 +28,7 @@ export default function StudentWithHeldSubjects() {
         if(studentEmail != null){
 
             try{
-                const studentDetailsResult = await axios.get(`http://192.248.50.155:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)      //API to get student details by email
+                const studentDetailsResult = await axios.get(`http://localhost:9090/api/Student/getStudentDetailsByEmail/${studentEmail}`)      //API to get student details by email
                 setStudentId(studentDetailsResult.data.user_id);
                 setStudentName(studentDetailsResult.data.name_with_initials);
                 setStudentRegisteredYear(studentDetailsResult.data.registered_year);
@@ -50,7 +50,7 @@ export default function StudentWithHeldSubjects() {
     const getWithHeldSubjects = async (StuID) => {                            //Get with held subjects
         try{
 
-            const gradeListResponse = await axios.get(`http://192.248.50.155:9090/api/Student/getGradeBySelectedStudentSelectedGrade/${StuID}/${grade}`)             //API to get WH course list
+            const gradeListResponse = await axios.get(`http://localhost:9090/api/Student/getGradeBySelectedStudentSelectedGrade/${StuID}/${grade}`)             //API to get WH course list
             setWithHeldSubjects(gradeListResponse.data);
 
         }catch(error){

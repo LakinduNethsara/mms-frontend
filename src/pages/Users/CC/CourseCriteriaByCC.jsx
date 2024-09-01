@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -37,14 +37,21 @@ export default function CourseCriteriaByCC() {
     const [isMidSelected, setIsMidSelected] = useState(false);
     const [userSelectedMidType, setUserSelectedMidType] = useState('');
     const [selectedMainAssessmentValue, setSelectedMainAssessmentValue] = useState('');
+    const [loader, setLoader] = useState(false);
+    const [courseSelected, setCourseSelected] = useState(false);
+    const [isAllDataNotLoaded, setIsAllDataNotLoaded] = useState(false);
+    const [isChecked, setIsChecked] = useState(false); //variable for checkbox
+
+    console.log(email);
 
     
 
     useEffect(() => {
         if(storedData){
 
-          setUserData(JSON.parse(storedData));
+          // setUserData(JSON.parse(storedData));
           fetchData(JSON.parse(storedData).email);
+          setEmail(JSON.parse(storedData).email);
         }else{
 
           setUserData(null);
@@ -52,17 +59,22 @@ export default function CourseCriteriaByCC() {
         
     }, [email]);
 
-    const fetchData = async (email)=>{
-      
+    const fetchData = async (email)=>{      
         try{
-            const result1  = await axios.get(`http://192.248.50.155:9090/api/astylist/get/allassessmenttypes`);
-          // console.log(result1.data.content);
-            setAssessmentTypesData(result1.data.content);
-            const result2  = await axios.get(`http://192.248.50.155:9090/api/ccmanage/getAllCidToCourseCriteria/${email}`);
-          // console.log(result2.data.content);
-            setCidsData(result2.data.content);
+            setLoader(true);
+
+            try{
+              const result2  = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${email}`);
+              setCidsData(result2.data.content);
+              setIsAllDataNotLoaded(false);
+            }catch(error){
+              setLoader(false);
+              setIsAllDataNotLoaded(true);
+            }
+
+            setLoader(false);
         }catch(error){
-            console.log(error);
+            // console.log(error);
         }
 
         }
@@ -193,7 +205,7 @@ export default function CourseCriteriaByCC() {
                 };
                 setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
               }
-               else{
+              else{
                 const assignment_name = `${selectedAssessmentType}`;
                 const newCriterion_name = {
                   evaluationcriteria_id,
@@ -206,7 +218,11 @@ export default function CourseCriteriaByCC() {
             }
           }
           // Clear the form after submission
-          document.querySelectorAll('input').forEach(input => input.value = '');
+          document.querySelector('input[name="percentage"]').value = '';
+          setIsChecked(!isChecked);
+          setNoOfConducted('');
+          setNoOfTaken('');
+
         };
       
         const saveData = async () => {
@@ -214,9 +230,9 @@ export default function CourseCriteriaByCC() {
             
         
             // Call the first API to insert criteria-name data
-            await axios.post("http://192.248.50.155:9090/api/evaluationCriteriaName/insertcriterianame", criteria_name);
+            await axios.post("http://localhost:9090/api/evaluationCriteriaName/insertcriterianame", criteria_name);
             // Now, call the second API to insert criteria data
-            await axios.post("http://192.248.50.155:9090/api/evaluationCriteria/insertcriteria", criteriaData);
+            await axios.post("http://localhost:9090/api/evaluationCriteria/insertcriteria", criteriaData);
       
             setCriteriaData([]);
             setCriteria_name([]);
@@ -229,10 +245,16 @@ export default function CourseCriteriaByCC() {
       
             setShowButton(!showButton);
       
+
+            setInterval(() => {
+              window.location.reload();
+            }, 2000);
+
           } catch (error) {
             console.error("Error saving data:", error);
             toast.error("Error submitting data. Please try again.");
           }
+
         };
       
         const onSave = async (newValue) => {
@@ -241,7 +263,7 @@ export default function CourseCriteriaByCC() {
             // console.log("New Assessment Type : " + newValue.popupInputValue);
             // console.log("New Assessment Type : " + newValue.selectedType);
 
-            await axios.post("http://192.248.50.155:9090/api/astylist/savenewasty", { assessment_type_name: newValue.popupInputValue,ca_mid_end: newValue.selectedType} );
+            await axios.post("http://localhost:9090/api/astylist/savenewasty", { assessment_type_name: newValue.popupInputValue,ca_mid_end: newValue.selectedType} );
             toast.success("New assessment type saved successfully!");
             setReloadButton(prevState =>!prevState);
             setSelectedAssessmentType(newValue);
@@ -287,15 +309,51 @@ export default function CourseCriteriaByCC() {
 
         };
 
+        const handleCourseCodeChange = async (event) => {
+
+            const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`);
+            setAssessmentTypesData(result1.data.content);
+            setCourseSelected(true);
+        };
+
+        const handleDelete = (index) => {
+          const updatedCriteriaData = [...criteriaData];
+          const updatedCriteriaNames = [...criteria_name];
+    
+          updatedCriteriaData.splice(index, 1);
+          updatedCriteriaNames.splice(index, 1);
+    
+          setCriteriaData(updatedCriteriaData);
+          setCriteria_name(updatedCriteriaNames);
+        };
+
   return (
     <div>
         <div className=' container' >
+          {
+            isAllDataNotLoaded ? (
+              <div class="alert alert-warning" style={{marginTop:"70px"}} role="alert">
+                No Any Course To Create Evaluation Criteria
+              </div>
+            ) : (
+
+            <>
+
+        {loader ? ( 
+                    <div style={{margin:"100px",display:"flex"}}>
+                        <div className="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+                    </div>
+                ) : (<>
+
           <div className='h3' style={{marginTop:"70px",color:'maroon'}}>Evaluation Criteria Creation</div>
           <div className=' row ' style={{marginLeft:"auto",marginRight:"auto"}}>
             <div className=' col-9 mt-3 shadow p-5' >
               <form onSubmit={handleSubmit} >
                 <label htmlFor="" className=' form-label'>Select a Course Code for Create Evaluation Criteria</label>
-                <select className=' form-select m-2' name="courseCode" style={{width:"350px"}} required>
+                <select className=' form-select m-2' name="courseCode" style={{width:"350px"}} required onChange={handleCourseCodeChange}>
                   <option selected disabled>Select Course Code</option>
                   {
                     cidsData.map((cid,index) => (
@@ -303,6 +361,11 @@ export default function CourseCriteriaByCC() {
                     ))
                   }
                 </select>
+
+                {courseSelected && (
+                  
+              <>
+
                 <div className=' col-10 mt-5' style={{display:"flex",width:"auto"}}>
                   <div style={{marginRight:"80px"}} >
                     <label htmlFor="" className=' form-label'>Select The Assessment</label>
@@ -397,12 +460,14 @@ export default function CourseCriteriaByCC() {
                   </div>
                   <div>
                     <div className=' form-check'>
-                      <input type="checkbox" className='form-check-input'  required/>
+                      <input type="checkbox" className='form-check-input'  onChange={(e) => setIsChecked(e.target.checked)} required/>
                       <label htmlFor="" className=' form-label'> Confirm All Details are Correct</label>
                     </div>
                     <button className='btn btn-outline-dark btn-sm m-2' style={{width:"100px"}} type="submit">Insert</button>
                   </div>
                 </div>
+              </>
+              )}
               </form>
             </div>
             <div className=' col-9 mt-3 shadow p-5'>
@@ -429,7 +494,7 @@ export default function CourseCriteriaByCC() {
                         <td>{criterion.no_of_taken}</td>
                         <td>{criterion.percentage}</td>
                         <td>{criterion.description}</td>
-                        <td><button className='btn btn-danger btn-sm'>Delete</button></td>
+                        <td><button className='btn btn-danger btn-sm'  onClick={() => handleDelete(index)}>Delete</button></td>
                       </tr>
                     ))}
                   </tbody>
@@ -439,6 +504,10 @@ export default function CourseCriteriaByCC() {
               <button className=' btn btn-primary sm m-4' id='ctc' onClick={saveData}>Create The Criteria</button>
             </div>
           </div>
+
+          </>)}
+          
+        </>)}
 
       </div>
       <ToastContainer />

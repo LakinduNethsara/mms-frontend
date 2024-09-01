@@ -16,15 +16,15 @@ export default function StudentsManagement() {
     const [clearButtonClicked, setClearButtonClicked] = useState(false);
     const [loader, setLoader] = useState(false);
     const expectedKeys = ["user_id", "full_name", "name_with_initials", "email","password","registered_year","role","department_id","is_deleted"];
-
+    const [refreshKey, setRefreshKey] = useState(Date.now());
 
     useEffect(() => {
         fetchData();
-    }, [])
+    }, [refreshKey])
 
     const fetchData = async () => {
         try {
-            const response = await axios.get("http://192.248.50.155:9090/api/studentdetails/getallstudentsdetails");
+            const response = await axios.get("http://localhost:9090/api/studentdetails/getallstudentsdetails");
             setStudentsData(response.data.content);
             setLoader(false);
         } catch (error) {
@@ -33,7 +33,7 @@ export default function StudentsManagement() {
     };
 
     const deleteUser = async (id) => {
-        await axios.delete(`http://192.248.50.155:9090/api/lecreg/delete/deleteById/${id}`);
+        await axios.delete(`http://localhost:9090/api/lecreg/delete/deleteById/${id}`);
         toast.success("Student deleted successfully!");
         fetchData();
     };
@@ -83,9 +83,11 @@ export default function StudentsManagement() {
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://192.248.50.155:9090/api/lecreg/insertbulkusersdetails", data);
-            alert("Data submitted successfully!");
-            window.location.reload();
+            await axios.post("http://localhost:9090/api/lecreg/insertbulkusersdetails", data);
+            
+            setRefreshKey(Date.now());
+            toast.success("Data submitted successfully!");
+            
         } catch (error) {
             // console.error("Error submitting data:", error);
             toast.error("Error submitting data. some users are exists!");
@@ -117,11 +119,15 @@ export default function StudentsManagement() {
 
     const handleEditSubmit = async (updatedUser) => {
 
-        await axios.put(`http://192.248.50.155:9090/api/lecreg/savelecdetails`, updatedUser);
-        fetchData();
+        console.log(updatedUser);
+
+        await axios.put(`http://localhost:9090/api/lecreg/edit/alecdetails`, updatedUser); 
+        
+        setRefreshKey(Date.now());
+        toast.success("User details updated successfully!");
 };
     return (
-        <div className='container'>
+        <div className='container' style={{marginTop:"70px"}}>
             
             <div className='py-4'>
                 <div className="h2 ">Students Registraion</div>

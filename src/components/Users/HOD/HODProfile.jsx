@@ -63,7 +63,7 @@ export default function HODProfile() {
 
     const getresultBoard = async () => {
         try {
-            const response = await axios.get(`http://192.248.50.155:9090/api/results_board/getAvailableResultsBoardsforDeanCC/${department}`);
+            const response = await axios.get(`http://localhost:9090/api/results_board/getAvailableResultsBoardsforDeanCC/${department}`);
             setResultBoard(response.data.content);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -71,11 +71,10 @@ export default function HODProfile() {
     };
 
     return (
-        <>
-            <div className="container mt-4">
-               
+        
+            <div className="container" style={{marginTop:"200px",display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'}}>
                 
-                <div className="row">
+                {/* <div className="row">
                     <div className="col-md-3 mb-4">
                         <div className="card text-center functionCard">
                             <div className="card-body">
@@ -85,7 +84,7 @@ export default function HODProfile() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* <div className="row">
                     {levels.map((level) => (
@@ -104,7 +103,7 @@ export default function HODProfile() {
                 </div> */}
 
                 
-                <div className="row">
+                {/* <div className="row">
                     <div className="col-md-3 mb-4">
                         <div className="card text-center functionCard">
                             <div className="card-body">
@@ -114,8 +113,34 @@ export default function HODProfile() {
                             </div>
                         </div>
                     </div>
+                </div> */}
+
+                <div className="row g-3 my-4">
+
+                    <div className="card shadow m-4" style={{width: "18rem"}}>
+                        <div className="card-body ">
+                            <h5 className="card-title py-2">Courses for Lecturers</h5>
+                            <a href="/assignleccourse"  className="btn btn-primary btn-sm mt-2">To Manage Form </a>
+                        </div>
+                    </div>
+
+
+                    <div className="card shadow m-4" style={{width: "18rem"}}>
+                        <div className="card-body ">
+                            <h5 className="card-title py-2">Certify Marks Return Sheet</h5>
+                            <a href="/pendingHODCertifyMarksheet"  className="btn btn-primary btn-sm mt-2">To Marks Return Sheet</a>
+                        </div>
+                    </div>
+
+                    <div className="card shadow m-4" style={{width: "18rem"}}>
+                        <div className="card-body ">
+                            <h5 className="card-title py-2">Result Board</h5>
+                            <a href="/ccresultsboard"  className="btn btn-primary btn-sm mt-2">To Result Board</a>
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
-        </>
     );
 }
