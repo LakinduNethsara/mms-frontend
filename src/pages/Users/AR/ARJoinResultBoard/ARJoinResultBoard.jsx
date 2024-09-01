@@ -51,7 +51,7 @@ export default function ARJoinResultBoard() {
 
 
   return (
-    <div className='join-rb-main-div' style={{marginTop:"20px",minWidth:"100%",paddingRight:"50px",paddingLeft:"50px",height:"100%"}}>
+    <div className='join-rb-main-div' style={{marginTop:"70px",minWidth:"100%",paddingRight:"50px",paddingLeft:"50px",height:"100%"}}>
         <h5 style={{color:"blue",textAlign:"center"}}>
             University of Ruhuna - Faculty of Technology
         </h5>
