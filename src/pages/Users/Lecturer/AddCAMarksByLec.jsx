@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import LecturerService from '../../../components/service/LecturerService';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../components/common/AcademicYearManagerSingleton';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddCAMarksByLec() {
     const { course_id, course_name } = useParams();
@@ -279,7 +281,16 @@ export default function AddCAMarksByLec() {
 
 
     const handleCACalculation = async () => {
-        const CAELi = await axios.get(`http://localhost:9090/api/ca/calculate/${course_id}`);
+        try{
+
+            const CAELi = await axios.get(`http://localhost:9090/api/ca/calculate/${course_id}`);
+            toast.success("CA Marks Calculated successfully!");
+
+        }catch(e){
+            console.error("Error calculating CA Marks:", e);
+        }
+
+        
 
         // http://localhost:9090/api/ca/calculate/ICT1112
     };

@@ -1,10 +1,12 @@
 import React from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
 
 export default function EditUserModal({ user, onSubmit, onClose }) {
     const [userDetails, setUserDetails] = React.useState(user);
-
+    const [showPassword, setShowPassword] = React.useState(false); // This is a state variable to toggle password visibility
     const handleInputChange = (e) => {
         setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
     };
@@ -21,6 +23,12 @@ export default function EditUserModal({ user, onSubmit, onClose }) {
         }
         
     };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(prevState => !prevState);
+    };
+
+    
     return (
         <div className="modal" style={{ display: 'block', position: 'fixed', zIndex: 1, left: 0, top: 0, width: '100%', height: '100%', overflow: 'auto', backgroundColor: 'rgba(0,0,0,0.4)' }}>
             <div className="modal-content" style={{ backgroundColor: '#fefefe',  padding: '20px', border: '1px solid #888', width: '700px', maxWidth: '100%', transform: 'translate(-50%, -50%)', top: '50%', left: '50%', position: 'absolute' }}>
@@ -45,17 +53,38 @@ export default function EditUserModal({ user, onSubmit, onClose }) {
                             </div>
                         </div>
                         <div className=' row g-1'>
-                            {/* <div>
-                                <label className='form-label' htmlFor="user_name">Username</label>
-                                <input className='form-control' type="text" name="user_name" value={userDetails.user_name} onChange={handleInputChange} size="30" />
-                            </div> */}
                             <div>
                                 <label className='form-label' htmlFor="email">Email</label>
                                 <input className='form-control' type="text" name="email" value={userDetails.email} onChange={handleInputChange} size="30" />
                             </div>
-                            <div>
+
+                            {/* <div>
                                 <label className='form-label' htmlFor="password">Password</label>
-                                <input className='form-control' type="text" name="password" value={userDetails.password} onChange={handleInputChange} size="30" />
+                                <input className='form-control' type="password" name="password" value={userDetails.password} onChange={handleInputChange} size="30" />
+                            </div> */}
+
+                            <div style={{ position: 'relative' }}>
+                                <label className='form-label' htmlFor="password">Password</label>
+                                <input
+                                    className='form-control'
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    value={userDetails.password}
+                                    onChange={handleInputChange}
+                                    size="30"
+                                />
+                                <span
+                                    onClick={togglePasswordVisibility}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '72%',
+                                        right: '20px',
+                                        transform: 'translateY(-50%)',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </span>
                             </div>
                             <div>
                                 <label className='form-label' htmlFor="registered_year">Registered year</label>
@@ -66,16 +95,30 @@ export default function EditUserModal({ user, onSubmit, onClose }) {
                             <div>
                                 <label className='form-label' htmlFor="role">Role</label>
                                 <select className='form-select' name="role" value={userDetails.role} onChange={handleInputChange}>
-                                    <option value="">Select Role</option>
-                                    <option value="Lecturer">Lecturer</option>
-                                    <option value="Dean">Dean</option>
-                                    <option value="HOD">HOD</option>
+                                    <option value="" disabled>Select Role</option>
+                                    <option value="lecturer">Lecturer</option>
+                                    <option value="dean">Dean</option>
+                                    <option value="hod">HOD</option>
+                                    <option value="ar">Assistant Registrar</option>
+                                    <option value="vc">Vice Chancellor</option>
+                                    <option value="system_analyst">System Analyst</option>
                                 </select>
                             </div>
+
                             <div>
                                 <label className='form-label' htmlFor="department_id">Department</label>
-                                <input className='form-control' type="text" name="department_id" value={userDetails.department_id} onChange={handleInputChange} size="30" />
+                                <select className='form-select' name="department_id" value={userDetails.department_id} onChange={handleInputChange}>
+                                    <option value="" disabled>Select Role</option>
+                                    <option value="ICT">ICT</option>
+                                    <option value="ET">ET</option>
+                                    <option value="BST">BST</option>
+                                </select>
                             </div>
+
+                            {/* <div>
+                                <label className='form-label' htmlFor="department_id">Department</label>
+                                <input className='form-control' type="text" name="department_id" value={userDetails.department_id} onChange={handleInputChange} size="30" />
+                            </div> */}
                             <div>
                                 <label className='form-label' htmlFor="is_deleted">User Active status</label>
                                 <input className='form-control' type="text" name="is_deleted" value={userDetails.is_deleted} onChange={handleInputChange} size="30"  disabled/>
