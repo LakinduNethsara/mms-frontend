@@ -17,7 +17,7 @@ export default function StudentRegCourses() {
   const fetchData = async () => {
     try {
       setLoader(true);
-      const response = await axios.get("http://localhost:9090/api/studentRegCourses/getallRegisteredStudents");
+      const response = await axios.get("http://192.248.50.155:9090/api/studentRegCourses/getallRegisteredStudents");
       setMedicalData(response.data.content);
       setLoader(false);
     } catch (error) {
@@ -65,7 +65,7 @@ export default function StudentRegCourses() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:9090/api/studentRegCourses/insert_allRegisteredStudents", data);
+      await axios.post("http://192.248.50.155:9090/api/studentRegCourses/insert_allRegisteredStudents", data);
       toast.success("Data submitted successfully!");
       fetchData();
     } catch (error) {

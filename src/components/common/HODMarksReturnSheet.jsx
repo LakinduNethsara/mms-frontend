@@ -206,7 +206,7 @@ export default function HODMarksReturnSheet(props) {
         const fetchLecturers = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${user_department}`);
+                const response = await axios.get(`http://192.248.50.155:9090/api/lecreg/get/getAllLecurerDetails/${user_department}`);
                 if (response.data.code === '00') {
                     setLecturerList(response.data.content);
                     console.log("Lecturers fetched:", response.data.content);
@@ -243,8 +243,8 @@ useEffect(() => {
 
 
 
-            const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/0/${academicYear}/${department}`);
-            const Repeatresponse = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/1/${academicYear}/${department}`);
+            const response = await axios.get(`http://192.248.50.155:9090/api/marksReturnSheet/getMarks/${course_id}/0/${academicYear}/${department}`);
+            const Repeatresponse = await axios.get(`http://192.248.50.155:9090/api/marksReturnSheet/getMarks/${course_id}/1/${academicYear}/${department}`);
 
 
             setMarksSheet(response.data);
@@ -264,7 +264,7 @@ useEffect(() => {
 
             setLoading(true);
 
-            const response = await axios.get(`http://localhost:9090/api/approvalLevel/getSignatures/${course_id}/${academicYear}/${department}`);
+            const response = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignatures/${course_id}/${academicYear}/${department}`);
 
 
             const signatures = response.data.content; // Adjust this based on your actual response structure
@@ -333,11 +333,11 @@ useEffect(() => {
 
 
                 setLoading(true);
-                const lecturerAssign = await axios.post(`http://localhost:9090/api/approvalLevel/assignCertifyLecturer`,lecturerCertifyAssign);
+                const lecturerAssign = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/assignCertifyLecturer`,lecturerCertifyAssign);
                 setLoading(false);
             }
             setLoading(true);
-            const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevel`,approval);
+            const response = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/updateApprovalLevel`,approval);
             setLoading(false);
 
 
@@ -373,7 +373,7 @@ useEffect(() => {
         try {
 
             
-            const response = await axios.post(`http://localhost:9090/api/approvalLevel/return`,Returnapproval);
+            const response = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/return`,Returnapproval);
             if (response.status === 200) {
                 toast.success("Result sheet approved successfully");
                  
@@ -464,7 +464,7 @@ useEffect(() => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const result = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${department}`);
+            const result = await axios.get(`http://192.248.50.155:9090/api/lecreg/get/getAllLecurerDetails/${department}`);
             setData(result.data.content);
             setFilteredData(result.data.content); // Initially, all data is considered as filtered
           } catch (error) {

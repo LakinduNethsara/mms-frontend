@@ -132,7 +132,7 @@ export default function DeanFinalMarkSheet(props) {
   
         // Fetch final results
         const finalResultsResponse = await axios.get(
-          `http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`
+          `http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/0`
         );
         const finalResultsData = finalResultsResponse.data.content;
   
@@ -164,20 +164,20 @@ export default function DeanFinalMarkSheet(props) {
   
         // Fetch courses
         const coursesResponse = await axios.get(
-          `http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`
+          `http://192.248.50.155:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`
         );
         setAllCourses(coursesResponse.data);
   
         // Fetch GPA
         const gpaResponse = await axios.get(
-          `http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`
+          `http://192.248.50.155:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/0`
         );
         setStudentGPA(gpaResponse.data.content);
         console.log(gpaResponse.data.content)
   
         // Fetch repeaters data
         const repeatersResponse = await axios.get(
-          `http://localhost:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`
+          `http://192.248.50.155:9090/api/studentMarks/GetApprovedMarksByLS/${level}/${semester}/${approved_level}/${dept}/1`
         );
         const repeaterData = repeatersResponse.data.content;
   
@@ -207,7 +207,7 @@ export default function DeanFinalMarkSheet(props) {
         setRepeatersFinalResults(processedRepeaterData);
   
         const repeatersgpa = await axios.get(
-          `http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`
+          `http://192.248.50.155:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`
         );
         setRepeatStudentGPA(repeatersgpa.data.content);
   
@@ -232,7 +232,7 @@ export default function DeanFinalMarkSheet(props) {
     try {
       console.log(approval.academic_year, approval.approval_level, approval.approved_user_id, approval.date_time, approval.department_id, approval.level, approval.semester, approval.signature);
       // Use the nextApprovedlevel variable directly in the network request
-      response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
+      response = await axios.post(`http://192.248.50.155:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
 
       toast.success("Result sheet approved successfully");
 
@@ -264,7 +264,7 @@ export default function DeanFinalMarkSheet(props) {
     setLoading(true);
 
     const ARSignatureResponse = await axios.get(
-      `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`
+      `http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`
     );
 
 
@@ -278,15 +278,15 @@ export default function DeanFinalMarkSheet(props) {
 
     
     const DeanSignatureResponse = await axios.get(
-      `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`
+      `http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`
     );
 
-      const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
+      const ARSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
 
       setARSign(ARSign.data.content);
-      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
+      const DeanSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
       setDeanSign(DeanSign.data.content);
-      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
+      const VCSign = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
       setVCSign(VCSign.data.content);
 
 
@@ -316,7 +316,7 @@ export default function DeanFinalMarkSheet(props) {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const courses = await axios.get(`http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
+        const courses = await axios.get(`http://192.248.50.155:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
 
         setAllCourses(courses.data);
       } catch (error) {
