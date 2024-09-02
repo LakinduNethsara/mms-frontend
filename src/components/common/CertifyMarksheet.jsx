@@ -32,24 +32,25 @@ export default function CertifyMarksheet(props) {
   useEffect(() => {
     setLoading(true);
     if (user) {
-      loadAvailableResultSheets(approved_level);
+      loadAvailableResultSheets(approved_level,user);
     }
     setLoading(false);
-  }, [approved_level, user]);
+  }, [approved_level, user]); // Add dependencies if necessary
 
+  console.log(approved_level)
 
-  const loadAvailableResultSheets = async (approved_level) => {
+  const loadAvailableResultSheets = async (approved_level,user) => {
     try {
       setLoading(true);
       let response;
 
       if(approved_level=="finalized"){
-        response=await axios.get(`http://localhost:9090/api/courses/getcourseforcc/${userEmail}`);
+        response=await axios.get(`http://localhost:9090/api/courses/getcourseforcc/${user.email}`);
         setFinalMarksheetList(response.data.content);
         console.log(response.data)
       }
       else if (approved_level === "course_coordinator") {
-        response = await axios.get(`http://localhost:9090/api/courses/getCoursesforLectCertify/${userEmail}`);
+        response = await axios.get(`http://localhost:9090/api/courses/getCoursesforLectCertify/${user.email}`);
         setFinalMarksheetList(response.data.content);
         console.log(response.data.content)
       }
@@ -82,7 +83,7 @@ export default function CertifyMarksheet(props) {
     );
 }
 
-
+console.log(approved_level,user,finalMarksheetList)
 
 
   return (

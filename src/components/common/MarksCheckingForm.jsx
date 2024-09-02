@@ -61,7 +61,7 @@ export default function MarksCheckingForm() {
 
 
 
-const {course_id, course_name,approval_level,student_id,academic_year,repeat } = useParams();
+const {course_id, course_name,approval_level,student_id,academic_year,repeat,department } = useParams();
 
 
 const fetchData = async () => {
@@ -69,7 +69,7 @@ const fetchData = async () => {
 
     setLoading
 
-    const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/${repeat}/${academic_year}`);
+    const response = await axios.get(`http://localhost:9090/api/marksReturnSheet/getMarks/${course_id}/${repeat}/${academic_year}/${department}`);
 
     const data = response.data;
 
@@ -234,6 +234,7 @@ const endMarks={
       const combinedData = {
         studentData: endMarks,
         marksEditLogDTO: EditLog,
+        academic_year: academic_year,
       };
   
     
@@ -266,7 +267,11 @@ const endMarks={
     try {
       setLoading(true);
       const response = await axios.get(`http://localhost:9090/api/studentMarks/getEditLogs/${course_id}/${student_id}`);
+      if (response.data.content.length === 0) {
+        setEditlogs([]);
+      }else{
       setEditlogs(response.data.content);
+      }
       setLoading(false);
     }
     catch (error) {

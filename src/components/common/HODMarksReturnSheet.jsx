@@ -368,11 +368,11 @@ useEffect(() => {
 
     const handleReturn = async (event) => {
         event.preventDefault(); // Prevent the default form submission behavior
-
+        setLoading(true);
         
         try {
 
-            setLoading(true);
+            
             const response = await axios.post(`http://localhost:9090/api/approvalLevel/return`,Returnapproval);
             if (response.status === 200) {
                 toast.success("Result sheet approved successfully");
@@ -384,9 +384,12 @@ useEffect(() => {
                 console.error("Failed to update approval level");
                 toast.error('Error Returning Marks Sheet');
             }
-            setLoading(false);
+           
         } catch (error) {
             console.error("Error updating approval level: ", error);
+        }finally
+        {
+            setLoading(false);
         }
     };
     
@@ -674,7 +677,7 @@ const Spinner = () => (
                              }
  
                              <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
-                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}/${ele.student_id}/${academicYear}/0`
+                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}/${ele.student_id}/${academicYear}/0/${department}`
                                  
                              }}>View</Link></td>
                          </tr>))}
@@ -795,7 +798,7 @@ const Spinner = () => (
                              }
  
                              <td><Link className=" btn btn-primary mx-3 btn-sm" to={{
-                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}/${ele.student_id}/${academicYear}/1`,
+                                 pathname: `/MarksCheckingForm/${course_id}/${course_name}/${approval_level}/${ele.student_id}/${academicYear}/1/${department}`,
                             
                              }}>View</Link></td>
                          </tr>))}
