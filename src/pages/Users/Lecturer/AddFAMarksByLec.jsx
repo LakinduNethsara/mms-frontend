@@ -533,6 +533,7 @@ export default function AddFAMarksByLec() {
         console.log(course_id);
         console.log(selectedMarkingOption);
         console.log(academicYear);
+        toast.success("Generating Final mark...")
 
         setInterval(() => {
             window.location.reload();
