@@ -158,7 +158,7 @@ export default function AddCAMarksByLec() {
         setIsSubmitDisabled(!(isLastStudent && isLastStudentScoreFilled));
 
 
-        handleCAEligibilityButinVisibility();
+        handleCAEligibilityButtonVisibility();
         // Disable button if no assignment name is selected
 
         
@@ -277,9 +277,13 @@ export default function AddCAMarksByLec() {
         }
 
         // setSubmitted(true);
+
+        setInterval(() => {
+            window.location.reload();
+          }, 1000);
     };
 
-    const handleCAEligibilityButinVisibility = async ()=>{
+    const handleCAEligibilityButtonVisibility = async ()=>{
         if((course_id) && (currentAcademicYear)){
             var result = false;
             try{
@@ -323,6 +327,12 @@ export default function AddCAMarksByLec() {
             console.error("Error calculating CA Marks:", e);
         }
 
+        
+
+
+        setInterval(() => {
+            window.location.reload();
+          }, 1000);
         
 
         // http://localhost:9090/api/ca/calculate/ICT1112
@@ -646,6 +656,7 @@ export default function AddCAMarksByLec() {
             </div>
 
             </>)} 
+            <ToastContainer/>
         </div>
     );
 }

@@ -25,6 +25,8 @@ export default function AddFAMarksByLec() {
     const [currentAcademicYear, setCurrentAcademicYear] = useState('');
     // const [getValAssessmentType, setGetValAssessmentType] = useState('');
     const [eligbilityBtnDisable, setEligbilityBtnDisable] = useState();
+    
+    const [finalizedBtnDisable, setFinalizedBtnDisable] = useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const [submitted, setSubmitted] = useState(false);
     const [markingTurnValaue, setMarkingTurnValaue] = useState([]);
@@ -40,6 +42,38 @@ export default function AddFAMarksByLec() {
 
     var selectedAssignmentName="";
 
+    const handleFinalizedButtonVisibility = async ()=>{
+        
+            var result = false;
+            try{
+                result = await axios.get(`http://localhost:9090/api/grade/isFinalized/${course_id}/${currentAcademicYear}`)
+                // setEligbilityBtnDisable(result.data)
+                console.log(result.data)
+            }catch(err){
+                console.log(err)
+            }
+
+            if(result.data){
+                setFinalizedBtnDisable(true);
+            }else{
+                setFinalizedBtnDisable(false);
+            }
+
+        
+
+        
+
+        
+
+
+
+        
+    }
+
+    useEffect(()=>{
+        handleFinalizedButtonVisibility();
+    },[currentAcademicYear,course_id])
+
 
     useEffect(() => {
         const fetchAndSaveYear = async () => {
@@ -51,11 +85,13 @@ export default function AddFAMarksByLec() {
         };
 
         fetchAndSaveYear();
+
+        // handleFinalizedButtonVisibility();
     }, []);
 
 
 
-    useEffect(() => {
+    useEffect(() => { 
         const fetchAllData = async () => {
             setLoader(true);
             try {
@@ -149,6 +185,7 @@ export default function AddFAMarksByLec() {
         };
         // setDataCAMarksAll([]);
         fetchAllData();
+        // handleFinalizedButtonVisibility();
     }, [course_id,submitted]);
 
     useEffect(() => {
@@ -158,7 +195,8 @@ export default function AddFAMarksByLec() {
         setIsSubmitDisabled(!(isLastStudent && isLastStudentScoreFilled));
 
         // Disable button if no assignment name is selected
-        setEligbilityBtnDisable(evaluationCriteria.length == 0 ? false : true);
+
+        // handleFinalizedButtonVisibility();
 
     }, [currentStudentIndex, regStudent.length, caMarks,selectedCriteria]);
 
@@ -184,6 +222,8 @@ export default function AddFAMarksByLec() {
                 name === sortedEvaluationCriteria[index].assignment_name
             );
         }
+
+        // handleFinalizedButtonVisibility();
     
         // console.log("Arrays are the same:", arraysAreSame);
         // Here you can set your state or variable based on arraysAreSame value
@@ -724,7 +764,7 @@ export default function AddFAMarksByLec() {
                             }
                         </tbody>
                     </table>
-                    <button className=' btn btn-dark btn-sm' onClick={CalculateRoundedMarks}>Final Assessment Finalized</button>
+                    <button className=' btn btn-dark btn-sm' disabled={finalizedBtnDisable} onClick={CalculateRoundedMarks}>Final Assessment Finalized</button>
                             
                 </div>
             </div>
