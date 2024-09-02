@@ -353,6 +353,10 @@ export default function AddFAMarksByLec() {
             // console.error("Error submitting CA Marks:", error);
         }
 
+        setInterval(() => {
+            window.location.reload();
+          }, 1000);
+
         // setSubmitted(true);
     };
 
@@ -530,6 +534,11 @@ export default function AddFAMarksByLec() {
         console.log(selectedMarkingOption);
         console.log(academicYear);
 
+        setInterval(() => {
+            window.location.reload();
+          }, 1000);
+        
+
     }
 
     const CalculateRoundedMarks = async () => {
@@ -541,6 +550,11 @@ export default function AddFAMarksByLec() {
         } catch (error) {
             
         }
+
+        setInterval(() => {
+            window.location.reload();
+          }, 1000);
+        
         
     }
 
