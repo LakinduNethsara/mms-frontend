@@ -23,7 +23,7 @@ export default function AddCAMarksByLec() {
     const [uniqueAssigmentName, setUniqueAssigmentName] = useState([]);
     const [currentAcademicYear, setCurrentAcademicYear] = useState('');
     // const [getValAssessmentType, setGetValAssessmentType] = useState('');
-    const [eligbilityBtnDisable, setEligbilityBtnDisable] = useState();
+    const [eligbilityBtnDisable, setEligbilityBtnDisable] = useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const [submitted, setSubmitted] = useState(false);
     const [loader, setLoader] = useState(false);
@@ -293,7 +293,7 @@ export default function AddCAMarksByLec() {
 
         if(evaluationCriteria.length == 0){
             setEligbilityBtnDisable(false);
-            if(result){
+            if(result.data){
                 setEligbilityBtnDisable(true);
             }
         }else{
@@ -304,7 +304,7 @@ export default function AddCAMarksByLec() {
 
         
 
-        setEligbilityBtnDisable(evaluationCriteria.length == 0 ? false : true);
+        
 
         
     }
