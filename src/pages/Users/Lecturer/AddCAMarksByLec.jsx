@@ -23,7 +23,7 @@ export default function AddCAMarksByLec() {
     const [uniqueAssigmentName, setUniqueAssigmentName] = useState([]);
     const [currentAcademicYear, setCurrentAcademicYear] = useState('');
     // const [getValAssessmentType, setGetValAssessmentType] = useState('');
-    const [eligbilityBtnDisable, setEligbilityBtnDisable] = useState();
+    const [eligbilityBtnDisable, setEligbilityBtnDisable] = useState(false);
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const [submitted, setSubmitted] = useState(false);
     const [loader, setLoader] = useState(false);
@@ -157,8 +157,11 @@ export default function AddCAMarksByLec() {
         setSubmitButtonErrorMSG(isLastStudent && isLastStudentScoreFilled ? '' : 'All students marks are not filled');
         setIsSubmitDisabled(!(isLastStudent && isLastStudentScoreFilled));
 
+
+        handleCAEligibilityButtonVisibility();
         // Disable button if no assignment name is selected
-        setEligbilityBtnDisable(evaluationCriteria.length == 0 ? false : true);
+
+        
 
     }, [currentStudentIndex, regStudent.length, caMarks,selectedCriteria]);
 
@@ -274,7 +277,41 @@ export default function AddCAMarksByLec() {
         }
 
         // setSubmitted(true);
+
+        setInterval(() => {
+            window.location.reload();
+          }, 1000);
     };
+
+    const handleCAEligibilityButtonVisibility = async ()=>{
+        if((course_id) && (currentAcademicYear)){
+            var result = false;
+            try{
+                result = await axios.get(`http://localhost:9090/api/marksCalculations/isCalculationDetailsAvailable/${course_id}/${currentAcademicYear}`)
+                // setEligbilityBtnDisable(result.data)
+                console.log(result.data)
+            }catch(err){
+                console.log(err)
+            }
+        }
+
+        if(evaluationCriteria.length == 0){
+            setEligbilityBtnDisable(false);
+            if(result.data){
+                setEligbilityBtnDisable(true);
+            }
+        }else{
+            
+            setEligbilityBtnDisable(true);
+
+        }
+
+        
+
+        
+
+        
+    }
 
     // console.log(caMarks[currentStudentIndex]?.student_id);
     // console.log(caMarks);
@@ -290,6 +327,12 @@ export default function AddCAMarksByLec() {
             console.error("Error calculating CA Marks:", e);
         }
 
+        
+
+
+        setInterval(() => {
+            window.location.reload();
+          }, 1000);
         
 
         // http://localhost:9090/api/ca/calculate/ICT1112
@@ -452,19 +495,19 @@ export default function AddCAMarksByLec() {
 
     return (
         <div className='container'>
+            <ToastContainer />
             {loader ? ( 
 
-                    
-<div style={{margin:"100px",display:"flex"}}>
+                <div style={{margin:"100px",display:"flex"}}>
 
-    <div className="spinner-border" role="status">
-        <span className="visually-hidden">Loading...</span>
-    </div>
-    <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
-</div>
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+                </div>
 
 
-) : (<>
+                ) : (<>
             <div className='container' style={{ marginTop: "50px" }}>
                 <h4>Continuous Assessment Marks Entry : <span style={{ color: "maroon" }}>{course_name} - {course_id}</span></h4>
                 <br />
@@ -613,6 +656,7 @@ export default function AddCAMarksByLec() {
             </div>
 
             </>)} 
+            <ToastContainer/>
         </div>
     );
 }
