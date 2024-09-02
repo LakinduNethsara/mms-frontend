@@ -106,12 +106,13 @@ export default function DeanFinalMarkSheet(props) {
 
 
     useEffect(() => {
+      setLoading(true)
       if (user) {
         fetchData();
-        fetchSignature();
-        fetchCourses();
+        // fetchCourses();
       }
-    }, [level, semester, dept,academic_year,approved_level]);
+      setLoading(false)
+    }, [level, semester, dept,approved_level]);
 
 
 
@@ -121,7 +122,7 @@ export default function DeanFinalMarkSheet(props) {
 
     const fetchData = async () => {
       try {
-        setLoading(true);
+      
   
         const nextLevelMap = {
           "RB": "AR",
@@ -214,11 +215,10 @@ export default function DeanFinalMarkSheet(props) {
         
   
   
-        setLoading(false);
+      
       } catch (error) {
         console.error('Error fetching data:', error);
-        setError('Failed to fetch data');
-        setLoading(false);
+       
       }
     };
   
@@ -227,7 +227,7 @@ export default function DeanFinalMarkSheet(props) {
   // ... rest of the code remains the same
   
   const handleSubmit = async (e) => {
-    setLoading(true);
+    
     e.preventDefault();
     try {
       console.log(approval.academic_year, approval.approval_level, approval.approved_user_id, approval.date_time, approval.department_id, approval.level, approval.semester, approval.signature);
@@ -241,17 +241,17 @@ export default function DeanFinalMarkSheet(props) {
       }, 3000);
     } catch (error) {
       if (error.code === 'ERR_NETWORK') {
-        setError("Network error. Please check your network connection");
+        // setError("Network error. Please check your network connection");
         console.error("Network error: ", error);
-        toast.error("Network error. Please check your network connection");
+        // toast.error("Network error. Please check your network connection");
       } else {
-        setError("Failed to update approval level");
-        console.error("Error updating approval level: ", error);
-        toast.error("Failed to update approval level");
+        // setError("Failed to update approval level");
+        // console.error("Error updating approval level: ", error);
+        // toast.error("Failed to update approval level");
       }
     }finally
     {
-      setLoading(false);
+   
     }
   };
 
@@ -259,9 +259,11 @@ export default function DeanFinalMarkSheet(props) {
     setNewSignature(url);
   };
 
+  useEffect(() => {
+    setLoading(true);
   const fetchSignature = async () => {
   try {
-    setLoading(true);
+   
 
     const ARSignatureResponse = await axios.get(
       `http://192.248.50.155:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`
@@ -306,9 +308,10 @@ export default function DeanFinalMarkSheet(props) {
       // toast.error('An unexpected error occurred while fetching signature data.');
     }
   } finally {
-    setLoading(false);
+   setLoading(false);
   }
 };
+}, [level, semester, dept, academic_year]);
 
 
 
@@ -322,7 +325,7 @@ export default function DeanFinalMarkSheet(props) {
       } catch (error) {
         console.error('Error fetching courses:', error);
       }finally{
-        setLoading(false);
+      
       }
     };
   
@@ -371,6 +374,21 @@ const alternateRowStyle = {
   backgroundColor: '#f2f2f2',
 };
 
+const Spinner = () => (
+  <div className="d-flex justify-content-center align-items-center vh-100">
+    <div className="spinner-border" role="status">
+      <span className="sr-only visually-hidden">Loading...</span>
+    </div>
+  </div>
+);
+
+
+
+// if(loading){
+//   return (
+//   <Spinner />
+//   );
+// }
   
 
 
@@ -380,16 +398,11 @@ const alternateRowStyle = {
     <div className="container" style={{marginTop:'70px'}}>
       <ToastContainer/>
       {loading ? (
-                  <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
-                  <div className="spinner-border" role="status">
-                    <span className="sr-only"></span>
-                  </div>
-                  <label style={{marginLeft:"10px"}}> Loading data</label>
-                </div>
+                  <Spinner/>
             ) : (
               <>
       <BackButton />
-      {(finalResults.length > 0 ||repeatersfinalResults.length>0) ? (
+      {((finalResults.length > 0 && studentGPA.length>0)  ||(repeatersfinalResults.length>0 && repeat_studentGPA.length>0)) ? (
 
         <>
         
@@ -743,15 +756,7 @@ const alternateRowStyle = {
          
           
         </>
-      ) : (
-        <div className=" container" style={{ marginTop: "150px" }}>
-          <div className="alert alert-primary" role="alert"> {`No Result sheets found for  level ${level} and semester ${semester} to Approve`}</div>
-           
-            <br />
-
-          </div>
-       
-      )
+      ) :null
     }
       </>
 )}  
