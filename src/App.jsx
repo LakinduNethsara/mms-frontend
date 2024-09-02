@@ -167,6 +167,18 @@ function App() {
             <Route exact path="/CourseCard/:level/:semester/:department" 
               render={(props) => <CourseCard {...props} approved_level={"lecturer"} />} 
             />
+            <Route exact path="/pendingCCCertifyMarksheet" 
+              render={(props) => <CertifyMarksheet {...props}  approved_level={"finalized"}/>} 
+            />
+
+            <Route exact path="/pendingLecCertifyMarksheet" 
+              render={(props) => <CertifyMarksheet {...props}  approved_level={"course_coordinator"}/>} 
+            />
+
+            <Route exact path="/pendingDeanCertifyMarksheet" 
+              render={(props) => <CertifyMarksheet {...props}  approved_level={"AR"}/>} 
+            />
+
             <Route exact path="/HODMarksReturnSheet/:course_id/:course_name/:department/:academicYear" 
               render={(props) => <HODMarksReturnSheet {...props}  approved_level={"lecturer"} />} 
             />
@@ -200,7 +212,7 @@ function App() {
             <Route exact path="/pendingHODCertifyMarksheet"
               render={(props) => <CertifyMarksheet {...props}  approved_level={"lecturer"}/>}
             />
-            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level/:student_id/:academic_year/:repeat" 
+            <Route exact path="/MarksCheckingForm/:course_id/:course_name/:approval_level/:student_id/:academic_year/:repeat/:department" 
               render={() => <MarksCheckingForm/>} 
             />
 
