@@ -109,10 +109,10 @@ export default function DeanFinalMarkSheet(props) {
       setLoading(true)
       if (user) {
         fetchData();
-        fetchCourses();
+        // fetchCourses();
       }
       setLoading(false)
-    }, [level, semester, dept,academic_year,approved_level]);
+    }, [level, semester, dept,approved_level]);
 
 
 
@@ -384,11 +384,11 @@ const Spinner = () => (
 
 
 
-if(loading){
-  return (
-  <Spinner />
-  );
-}
+// if(loading){
+//   return (
+//   <Spinner />
+//   );
+// }
   
 
 
