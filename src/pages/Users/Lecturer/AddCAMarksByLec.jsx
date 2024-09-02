@@ -157,8 +157,11 @@ export default function AddCAMarksByLec() {
         setSubmitButtonErrorMSG(isLastStudent && isLastStudentScoreFilled ? '' : 'All students marks are not filled');
         setIsSubmitDisabled(!(isLastStudent && isLastStudentScoreFilled));
 
+
+        handleCAEligibilityButinVisibility();
         // Disable button if no assignment name is selected
-        setEligbilityBtnDisable(evaluationCriteria.length == 0 ? false : true);
+
+        
 
     }, [currentStudentIndex, regStudent.length, caMarks,selectedCriteria]);
 
@@ -275,6 +278,36 @@ export default function AddCAMarksByLec() {
 
         // setSubmitted(true);
     };
+
+    const handleCAEligibilityButinVisibility = async ()=>{
+        if((course_id) && (currentAcademicYear)){
+            var result = false;
+            try{
+                result = await axios.get(`http://localhost:9090/api/marksCalculations/isCalculationDetailsAvailable/${course_id}/${currentAcademicYear}`)
+                // setEligbilityBtnDisable(result.data)
+                console.log(result.data)
+            }catch(err){
+                console.log(err)
+            }
+        }
+
+        if(evaluationCriteria.length == 0){
+            setEligbilityBtnDisable(false);
+            if(result){
+                setEligbilityBtnDisable(true);
+            }
+        }else{
+            
+            setEligbilityBtnDisable(true);
+
+        }
+
+        
+
+        setEligbilityBtnDisable(evaluationCriteria.length == 0 ? false : true);
+
+        
+    }
 
     // console.log(caMarks[currentStudentIndex]?.student_id);
     // console.log(caMarks);
