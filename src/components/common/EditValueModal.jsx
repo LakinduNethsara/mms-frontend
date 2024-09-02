@@ -16,7 +16,8 @@ export default function EditValueModal({ isOpen, onClose, initialValue, onSubmit
         if (
             (isNaN(numValue) || numValue < 0 || numValue > 100) && 
             value.toUpperCase() !== 'MC' && 
-            value.toUpperCase() !== 'AB'
+            value.toUpperCase() !== 'AB' && 
+            value.toUpperCase() !== 'E*'
         ) {
             toast.error('Please enter a valid number for marks (0-100) or "MC"/"AB".');
             return;
