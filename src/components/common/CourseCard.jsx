@@ -19,7 +19,7 @@ export default function CourseCard(props) {
     const{level,semester,department}=useParams();
     const{approved_level}=props;
    
- 
+  console.log(level,semester,department,approved_level)
 
        useEffect(() => {
         const fetchData = async () => {
