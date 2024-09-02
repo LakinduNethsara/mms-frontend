@@ -495,19 +495,19 @@ export default function AddCAMarksByLec() {
 
     return (
         <div className='container'>
+            <ToastContainer />
             {loader ? ( 
 
-                    
-<div style={{margin:"100px",display:"flex"}}>
+                <div style={{margin:"100px",display:"flex"}}>
 
-    <div className="spinner-border" role="status">
-        <span className="visually-hidden">Loading...</span>
-    </div>
-    <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
-</div>
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <div className=' h4 mx-3' style={{color:"maroon"}}>Data is Loading...</div>
+                </div>
 
 
-) : (<>
+                ) : (<>
             <div className='container' style={{ marginTop: "50px" }}>
                 <h4>Continuous Assessment Marks Entry : <span style={{ color: "maroon" }}>{course_name} - {course_id}</span></h4>
                 <br />
