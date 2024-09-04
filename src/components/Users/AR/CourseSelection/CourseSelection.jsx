@@ -25,7 +25,7 @@ export default function CourseSelection(props) {
     const loadCourseData = async(academic_year)=>{       // Function to fetch course data
         try{
           setLoading(true);       // Setting the loading state to true
-          const result=await axios.get(`http://localhost:9090/api/AssistantRegistrar/getViewMarksCourseList/${level}/${semester}/${department_id}/${academic_year}`);     // API call to fetch course data
+          const result=await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getViewMarksCourseList/${level}/${semester}/${department_id}/${academic_year}`);     // API call to fetch course data
 
           if(result.data.length>0){
             setCoursesAvailability(true);       // Setting the availability of courses to true
@@ -50,7 +50,7 @@ export default function CourseSelection(props) {
 
       try{
         setLoading(true);       // Setting the loading state to true  
-        const academicYearDetails= await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllAcademicYearList`)          //Api to get academic year list
+        const academicYearDetails= await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllAcademicYearList`)          //Api to get academic year list
         setAcademicYearList([]);
         setAcademicYearList(academicYearDetails.data);
         setAcademicYear(academicYearDetails.data[0]);

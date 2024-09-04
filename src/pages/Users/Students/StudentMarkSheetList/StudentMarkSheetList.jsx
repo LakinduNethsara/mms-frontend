@@ -19,7 +19,7 @@ export default function StudentMarkSheetList() {
 
     const getPublishedMarkSheets = async () => {         // load the published mark sheets
         try{
-          const result = await axios.get(`http://localhost:9090/api/Student/getPublishedMarksSheetList/${approvedLevel}/${resultBoardState}`);
+          const result = await axios.get(`http://192.248.50.155:9090/api/Student/getPublishedMarksSheetList/${approvedLevel}/${resultBoardState}`);
           setPublishedMarkSheetsList(result.data);
         }catch(error){
           console.error(`Error - ${error}`);
