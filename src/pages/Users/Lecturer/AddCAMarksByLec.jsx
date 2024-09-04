@@ -271,6 +271,8 @@ export default function AddCAMarksByLec() {
 
             // Reset the submitted state
             setSubmitted(false);
+
+            toast.success('Marks are submitted successfully')
             
         } catch (error) {
             // console.error("Error submitting CA Marks:", error);

@@ -265,6 +265,7 @@ export default function ResultBoardMarksSheetAssign() {
 
                 //API call to just view result board
                 history.push({pathname:'/arJoinResultsBoard',state:selectedResultBoard})
+                // history.push(`/FinalMarkSheet/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
             }catch(err){
                 toast.error("There is a error with starting the result board",{autoClose:3000}); //Display the error message if an error occurs
             }
@@ -275,6 +276,8 @@ export default function ResultBoardMarksSheetAssign() {
 
                 //Api call to just view result board
                 history.push({pathname:'/arJoinResultsBoard',state:selectedResultBoard})
+                // history.push(`/FinalMarkSheet/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.academic_year}`);
+
 
 
         }else{
