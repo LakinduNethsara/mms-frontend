@@ -6,9 +6,14 @@ import SignatureForApproval from './SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from './AcademicYearManagerSingleton';
 import DateObject from 'react-date-object';
 import BackButton from '../Users/AR/BackButton/BackButton';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 
 export default function DeanFinalMarkSheet(props) {
-  const [loading, setLoading] = useState(true);
+  const [headersList, setHeadersList] = useState([]);
+  const[data,setData]=useState([])
+  const [loading, setLoading] = useState(false);
   const [finalResults, setFinalResults] = useState([]);
   const [repeatersfinalResults, setRepeatersFinalResults] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -101,29 +106,36 @@ export default function DeanFinalMarkSheet(props) {
 
     
   }, []);
-  // const { oktaAuth, authState } = useOktaAuth();
+ 
+  
   
 
 
     useEffect(() => {
+      setLoading(true);
       if (user) {
         fetchData();
-        fetchSignature();
-        fetchCourses();
+        // fetchCourses();
       }
-    }, [level, semester, dept,academic_year,approved_level]);
+      setLoading(false)
+    }, [level, semester, dept,approved_level]);
 
 
-
+    const headers = [
+      ...Allcourses.map(course => ({ label: course.course_id, key: 'courses', subKeys: ['overall_score', 'grade'] })),
+      { label: 'SGPA', key: 'sgpa' },
+      { label: 'CGPA', key: 'cgpa' }
+    ];
+    
+   console.log(headers);
+    
 
  
 
 
     const fetchData = async () => {
       try {
-        setLoading(true);
-  
-        const nextLevelMap = {
+         const nextLevelMap = {
           "RB": "AR",
           "AR": "Dean",
           "Dean": "VC"
@@ -160,6 +172,9 @@ export default function DeanFinalMarkSheet(props) {
         }, []); // Initializing acc as an empty array
   
         setFinalResults(processedFinalResults);
+
+
+
         
   
         // Fetch courses
@@ -205,6 +220,7 @@ export default function DeanFinalMarkSheet(props) {
         }, []); // Initializing acc as an empty array
   
         setRepeatersFinalResults(processedRepeaterData);
+        
   
         const repeatersgpa = await axios.get(
           `http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`
@@ -212,119 +228,108 @@ export default function DeanFinalMarkSheet(props) {
         setRepeatStudentGPA(repeatersgpa.data.content);
   
         
-  
-  
-        setLoading(false);
+       
+
+        
+        
+      
       } catch (error) {
         console.error('Error fetching data:', error);
-        setError('Failed to fetch data');
-        setLoading(false);
+       
       }
     };
   
   
-  
-  // ... rest of the code remains the same
+  console.log(headers)
   
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
     try {
-      console.log(approval.academic_year, approval.approval_level, approval.approved_user_id, approval.date_time, approval.department_id, approval.level, approval.semester, approval.signature);
-      // Use the nextApprovedlevel variable directly in the network request
-      response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
-
-      toast.success("Result sheet approved successfully");
-
-      setTimeout(() => {
-        history.goBack();
-      }, 3000);
+      // Declare response
+      const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
+      
+      if (response.data.code === "00") {
+        toast.success("Result sheet approved successfully");
+        setTimeout(() => {
+          history.goBack();
+        }, 1000);
+      } else {
+        // Handle case where response code is not "00"
+        toast.error("Failed to approve the result sheet.");
+      }
     } catch (error) {
       if (error.code === 'ERR_NETWORK') {
-        setError("Network error. Please check your network connection");
         console.error("Network error: ", error);
-        toast.error("Network error. Please check your network connection");
+        toast.error("Network error. Please check your network connection.");
       } else {
-        setError("Failed to update approval level");
         console.error("Error updating approval level: ", error);
-        toast.error("Failed to update approval level");
+        toast.error("Failed to update approval level.");
       }
-    }finally
-    {
-      setLoading(false);
     }
   };
+  
 
   const saveDigitalSignature = (url) => {
     setNewSignature(url);
   };
 
-  const fetchSignature = async () => {
-  try {
-    setLoading(true);
-
-    const ARSignatureResponse = await axios.get(
-      `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`
-    );
-
-
-    if (ARSignatureResponse.status === 200) {
-      const ARSignatureData = ARSignatureResponse.data.content;
-      setARSign(ARSignatureData || {});
-      console.log(ARSignatureData?.signature);
-    } else {
-      // toast.error('Failed to fetch AR signature.');
-    }
 
     
-    const DeanSignatureResponse = await axios.get(
-      `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`
-    );
-
-      const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
-
-      setARSign(ARSign.data.content);
-      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
-      setDeanSign(DeanSign.data.content);
-      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
-      setVCSign(VCSign.data.content);
-
-
-    if (DeanSignatureResponse.status === 200) {
-      const DeanSignatureData = DeanSignatureResponse.data.content;
-      setDeanSign(DeanSignatureData || {});
-    } else {
-      // toast.error('Failed to fetch Dean signature.');
-    }
-
-  } catch (error) {
-    if (error.response) {
-      // console.error('Error fetching signature data:', error.response);
-      // toast.error(`Error ${error.response.status}: ${error.response.data.message || 'Something went wrong.'}`);
-    } else {
-      // console.error('Error fetching signature data:', error.message);
-      // toast.error('An unexpected error occurred while fetching signature data.');
-    }
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-
-
-    const fetchCourses = async () => {
+    const fetchSignature = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const courses = await axios.get(`http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
-
-        setAllCourses(courses.data);
+        // Fetch AR signature
+        const ARSignatureResponse = await axios.get(
+          `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`
+        );
+  
+        if (ARSignatureResponse.status === 200) {
+          const ARSignatureData = ARSignatureResponse.data.content;
+          setARSign(ARSignatureData || {});
+          console.log(ARSignatureData?.signature);
+        } else {
+          // Handle the failure of AR signature fetching
+          // toast.error('Failed to fetch AR signature.');
+        }
+  
+        // Fetch Dean signature
+        const DeanSignatureResponse = await axios.get(
+          `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`
+        );
+  
+        if (DeanSignatureResponse.status === 200) {
+          const DeanSignatureData = DeanSignatureResponse.data.content;
+          setDeanSign(DeanSignatureData || {});
+          console.log(DeanSignatureData?.signature);
+        } else {
+          // Handle the failure of Dean signature fetching
+          // toast.error('Failed to fetch Dean signature.');
+        }
+  
       } catch (error) {
-        console.error('Error fetching courses:', error);
-      }finally{
+        if (error.response) {
+          // Error handling for server response errors
+          console.error('Error fetching signature data:', error.response);
+          // toast.error(`Error ${error.response.status}: ${error.response.data.message || 'Something went wrong.'}`);
+        } else {
+          // Error handling for other errors
+          console.error('Error fetching signature data:', error.message);
+          // toast.error('An unexpected error occurred while fetching signature data.');
+        }
+      } finally {
         setLoading(false);
       }
     };
+  
+    useEffect(() => {
+      fetchSignature();
+    }, [level, semester, dept, academic_year]); // Dependencies
+  
+  
+
+
+    
+
   
   
 
@@ -371,6 +376,174 @@ const alternateRowStyle = {
   backgroundColor: '#f2f2f2',
 };
 
+const downloadPDF = () => {
+  const generatePDF = (results, gpaResults, fileName) => {
+    if (results.length > 0 || gpaResults.length > 0) {
+      const doc = new jsPDF('p', 'pt', 'A4');
+
+      // University and Faculty Header
+      doc.setFontSize(10);
+      doc.text('University of Ruhuna', 297.5, 40, null, null, 'center');
+      doc.text('Faculty of Technology', 297.5, 60, null, null, 'center');
+      doc.setFontSize(9);
+      doc.text('Bachelor of Information and Communication Technology Honours Degree', 297.5, 80, null, null, 'center');
+      doc.text('Level 1 Semester 1', 297.5, 100, null, null, 'center');
+      doc.text('Academic Year 2023-2024', 297.5, 120, null, null, 'center');
+      doc.setFontSize(8);
+      doc.text('Provisional results subject to confirmation by the Senate', 297.5, 140, null, null, 'center');
+
+      // Key to Grading & Course List Section
+      let positionY = 160;
+      doc.setFontSize(8);
+      doc.setFont("Arial", "bold");
+      doc.text("Key to Grading", 297.5, positionY, null, null, 'center');
+      positionY += 10;
+
+      const gradingKey = [
+        ["A+", "4.00", "A", "4.00"],
+        ["A-", "3.70", "B+", "3.30"],
+        ["B", "3.00", "B-", "2.70"],
+        ["C+", "2.30", "C", "2.00"],
+        ["C-", "1.70", "D+", "1.30"],
+        ["D", "1.00", "E", "0.00"],
+        ["F", "CA Fail"],
+        ["MC", "Accepted Medical Certificate"],
+        ["AC", "Accepted Academic Concession"],
+        ["WH", "Results Withheld"],
+        ["E*", "Not Eligible/Not Applied/Absent without Medical"]
+      ];
+
+      gradingKey.forEach((row, index) => {
+        doc.setFont("Arial", "normal");
+        doc.text(row[0], 140, positionY + (index + 1) * 10);
+        doc.text(row[1], 190, positionY + (index + 1) * 10);
+        if (row[2]) {
+          doc.text(row[2], 280, positionY + (index + 1) * 10);
+          doc.text(row[3], 330, positionY + (index + 1) * 10);
+        }
+      });
+
+      positionY += gradingKey.length * 10 + 20;
+
+      doc.setFontSize(8);
+      doc.setFont("Arial", "bold");
+      doc.text("Course List", 297.5, positionY, null, null, 'center');
+      positionY += 10;
+
+      Allcourses.forEach((course, index) => {
+        doc.setFont("Arial", "normal");
+        doc.text(`${course.course_id} - ${course.course_name}`, 297.5, positionY + (index + 1) * 10, null, null, 'center');
+      });
+
+      positionY += Allcourses.length * 10 + 20;
+
+      // Prepare and add student data tables
+      const rowsPerPage = 50;
+      const allData = [];
+      const headers = [
+        'Student ID',
+        ...Allcourses.map(course => course.course_id),
+        'SGPA',
+        'CGPA'
+      ];
+
+      results.forEach((student) => {
+        const studentRow = [student.student_id];
+        
+        Allcourses.forEach(course => {
+          const courseData = student.courses.find(c => c.course_id === course.course_id);
+          studentRow.push(courseData ? courseData.grade : "-");
+        });
+
+        const studentGPAResult = gpaResults.find(g => g.student_id === student.student_id);
+        studentRow.push(studentGPAResult ? studentGPAResult.sgpa : "-");
+        studentRow.push(studentGPAResult ? studentGPAResult.cgpa : "-");
+
+        allData.push(studentRow);
+      });
+
+      for (let i = 0; i < allData.length; i += rowsPerPage) {
+        const slicedData = allData.slice(i, i + rowsPerPage);
+
+        doc.autoTable({
+          head: [headers],
+          body: slicedData,
+          startY: positionY,
+          margin: { top: positionY, bottom: 40, left: 20, right: 20 },
+          theme: 'striped',
+          styles: { fontSize: 7 },
+          headStyles: { fillColor: [220, 220, 220] },
+          tableWidth: 'wrap',
+          columnStyles: {
+            0: { cellWidth: 50 },
+            [Allcourses.length]: { cellWidth: 40 },
+            [Allcourses.length + 1]: { cellWidth: 40 }
+          }
+        });
+
+        if (i + rowsPerPage < allData.length) {
+          doc.addPage();
+        }
+      }
+
+      positionY = doc.lastAutoTable.finalY + 10;
+
+      // Add Signatures
+      const signatureWidth = 60;
+      const signatureHeight = 30;
+
+      if (ARSign.signature) {
+        doc.setFontSize(7);
+        doc.text("Certified Correct,", 40, positionY);
+        doc.addImage(ARSign.signature, 'PNG', 40, positionY + 10, signatureWidth, signatureHeight);
+        doc.text("Assistant Registrar", 40, positionY + 45);
+        doc.text("Faculty of Technology", 40, positionY + 55);
+      }
+
+      if (DeanSign.signature) {
+        doc.addImage(DeanSign.signature, 'PNG', 220, positionY + 10, signatureWidth, signatureHeight);
+        doc.text("Dean/Faculty of Technology", 220, positionY + 45);
+      }
+
+      doc.text("Vice Chancellor", 420, positionY + 80);
+      doc.text("Faculty of Technology", 420, positionY + 90);
+
+      doc.save(fileName);
+    }
+  };
+
+  // Generate PDF for final results
+  generatePDF(finalResults, studentGPA, `Level ${level} Semester  ${semester} Department of Level ${dept} -Proper.pdf`);
+
+  // Generate PDF for repeaters' final results
+  generatePDF(repeatersfinalResults, repeat_studentGPA, `Level ${level} Semester  ${semester} Department of Level ${dept} -Repeaters.pdf`);
+};
+
+
+
+
+
+
+
+
+
+const Spinner = () => (
+  <div className="d-flex justify-content-center align-items-center vh-100">
+    <div className="spinner-border" role="status">
+      <span className="sr-only visually-hidden">Loading...</span>
+    </div>
+  </div>
+);
+
+
+
+
+
+if(loading){
+  return (
+  <Spinner />
+  );
+}
   
 
 
@@ -380,16 +553,11 @@ const alternateRowStyle = {
     <div className="container" style={{marginTop:'70px'}}>
       <ToastContainer/>
       {loading ? (
-                  <div className="d-flex justify-content-center" style={{marginTop:"20%"}}>
-                  <div className="spinner-border" role="status">
-                    <span className="sr-only"></span>
-                  </div>
-                  <label style={{marginLeft:"10px"}}> Loading data</label>
-                </div>
+                  <Spinner/>
             ) : (
               <>
       <BackButton />
-      {(finalResults.length > 0 ||repeatersfinalResults.length>0) ? (
+      {((finalResults.length > 0 && studentGPA.length>0)  ||(repeatersfinalResults.length>0 && repeat_studentGPA.length>0)) ? (
 
         <>
         
@@ -403,6 +571,16 @@ const alternateRowStyle = {
             Change Grade Margin
           </button>
         ) : null}
+        {
+        approved_level == "Dean" ? (
+          <button
+            className="btn btn-outline-success"
+            style={{ float: "right" }}
+            onClick={() => downloadPDF()}
+          >
+            Download
+          </button>
+        ) : null}
         
          <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>University of Ruhuna</h2>
@@ -413,7 +591,7 @@ const alternateRowStyle = {
         </div>
 
 
-          <div className=' shadow-lg col-12 container' style={{display:'flex'}}>
+          <div className=' shadow-lg col-12 container' style={{display:'flex',fontSize:'12px'}}>
 
           <div
             className=" col-7 "
@@ -434,7 +612,7 @@ const alternateRowStyle = {
             <h5 style={{ textAlign: 'center', marginBottom: '10px', fontWeight: 'bold', color: '#333' }}>
               Key to Grading
             </h5>
-            <table className=' table table-responsive-sm' style={{ borderCollapse: 'collapse'}}>
+            <table className=' table table-responsive-sm' style={{ borderCollapse: 'collapse',fontSize:'12px'}}>
               <tbody>
                 <tr>
                   <td style={cellStyle}>A+</td>
@@ -535,10 +713,13 @@ const alternateRowStyle = {
               <thead>
                 <tr>
                   <th scope="col" className='table-info'>Student ID</th>
-                  {Allcourses.map((id, index) => (
+                  
+                  {
+                  Allcourses.map((id, index) => (
                     <React.Fragment key={index}>
                       <th className=' table-secondary'>{id.course_id}</th>
                       {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" || approved_level=="HOD" ?<th className=' table-primary'>Grade</th>:null}
+                      
                     </React.Fragment>
                   ))}
                   <th scope="col" className=' table-warning'>SGPA</th>
@@ -743,15 +924,7 @@ const alternateRowStyle = {
          
           
         </>
-      ) : (
-        <div className=" container" style={{ marginTop: "150px" }}>
-          <div className="alert alert-primary" role="alert"> {`No Result sheets found for  level ${level} and semester ${semester} to Approve`}</div>
-           
-            <br />
-
-          </div>
-       
-      )
+      ) :null
     }
       </>
 )}  
