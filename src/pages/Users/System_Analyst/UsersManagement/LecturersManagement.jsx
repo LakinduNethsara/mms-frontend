@@ -110,6 +110,21 @@ export default function LecturersManagement() {
     };
 
 
+    const clearDataWindow = () => {
+        setUserDetails({
+            user_id: "",
+            full_name: "",
+            name_with_initials: "",
+            email: "",
+            password: "",
+            registered_year: "",
+            role: "",
+            department_id: "",
+            is_deleted: ""
+        });
+    }
+
+
     return (
         <div className='container' style={{marginTop:"70px"}}>
             <div className='row'>
@@ -160,6 +175,7 @@ export default function LecturersManagement() {
                                     type={showPassword ? "text" : "password"}
                                     name="password"
                                     value={user.password}
+                                    placeholder='Enter Password'
                                     onChange={(e) => onInputChange(e)}
                                     
                                 />
@@ -194,7 +210,7 @@ export default function LecturersManagement() {
                             <div className='col-md-3 d-flex align-items-end'>
                                 <button type='submit' className='btn btn-outline-dark btn-sm mx-2' style={{width:"100px"}}>Submit</button>
                                 {/* me cancel eka weda ne thama  */}
-                                <Link className='btn btn-outline-danger mx-2 btn-sm' to="/lecmanage" style={{width:"100px"}}>Cancel</Link> 
+                                <Link className='btn btn-outline-danger mx-2 btn-sm' onClick={clearDataWindow} style={{width:"100px"}}>Cancel</Link> 
                                 
                             </div>
                         </div>

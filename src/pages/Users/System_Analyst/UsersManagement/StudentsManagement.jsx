@@ -40,8 +40,9 @@ export default function StudentsManagement() {
 
     const handleClearData = () => {
         setData([]);
-        toast.info("Data cleared successfully!");
         setClearButtonClicked(false); // Reset the clear button state
+        window.location.reload();
+
     };
 
     const handleFileUpload = (e) => {

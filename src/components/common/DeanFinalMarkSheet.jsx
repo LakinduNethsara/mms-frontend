@@ -393,10 +393,10 @@ const downloadPDF = () => {
       doc.text('Provisional results subject to confirmation by the Senate', 297.5, 140, null, null, 'center');
 
       // Key to Grading & Course List Section
-      let positionY = 160;
+      let positionY = 180;
       doc.setFontSize(8);
       doc.setFont("Arial", "bold");
-      doc.text("Key to Grading", 297.5, positionY, null, null, 'center');
+      doc.text("Key to Grading", 90, positionY, null, null, 'left');
       positionY += 10;
 
       const gradingKey = [
@@ -415,27 +415,28 @@ const downloadPDF = () => {
 
       gradingKey.forEach((row, index) => {
         doc.setFont("Arial", "normal");
-        doc.text(row[0], 140, positionY + (index + 1) * 10);
-        doc.text(row[1], 190, positionY + (index + 1) * 10);
+        doc.text(row[0], 90, positionY + (index + 1) * 10);
+        doc.text(row[1], 140, positionY + (index + 1) * 10);
         if (row[2]) {
-          doc.text(row[2], 280, positionY + (index + 1) * 10);
-          doc.text(row[3], 330, positionY + (index + 1) * 10);
+          doc.text(row[2], 230, positionY + (index + 1) * 10);
+          doc.text(row[3], 280, positionY + (index + 1) * 10);
         }
       });
 
       positionY += gradingKey.length * 10 + 20;
 
+      //course Listing
       doc.setFontSize(8);
       doc.setFont("Arial", "bold");
-      doc.text("Course List", 297.5, positionY, null, null, 'center');
+      doc.text("Course List", 400, 180, null, null, 'left');
       positionY += 10;
 
       Allcourses.forEach((course, index) => {
         doc.setFont("Arial", "normal");
-        doc.text(`${course.course_id} - ${course.course_name}`, 297.5, positionY + (index + 1) * 10, null, null, 'center');
+        doc.text(`${course.course_id} - ${course.course_name}`, 400, 180 + (index + 1) * 10, null, null, 'left');
       });
 
-      positionY += Allcourses.length * 10 + 20;
+      positionY = 330;
 
       // Prepare and add student data tables
       const rowsPerPage = 50;
@@ -469,7 +470,7 @@ const downloadPDF = () => {
           head: [headers],
           body: slicedData,
           startY: positionY,
-          margin: { top: positionY, bottom: 40, left: 20, right: 20 },
+          margin: { top: positionY, bottom: 40, left: 70, right: 40 },
           theme: 'striped',
           styles: { fontSize: 7 },
           headStyles: { fillColor: [220, 220, 220] },
@@ -486,7 +487,7 @@ const downloadPDF = () => {
         }
       }
 
-      positionY = doc.lastAutoTable.finalY + 10;
+      positionY = doc.lastAutoTable.finalY + 40;
 
       // Add Signatures
       const signatureWidth = 60;
@@ -496,17 +497,18 @@ const downloadPDF = () => {
         doc.setFontSize(7);
         doc.text("Certified Correct,", 40, positionY);
         doc.addImage(ARSign.signature, 'PNG', 40, positionY + 10, signatureWidth, signatureHeight);
-        doc.text("Assistant Registrar", 40, positionY + 45);
+        doc.text("Assistant Registrar,", 40, positionY + 45);
         doc.text("Faculty of Technology", 40, positionY + 55);
       }
 
       if (DeanSign.signature) {
         doc.addImage(DeanSign.signature, 'PNG', 220, positionY + 10, signatureWidth, signatureHeight);
-        doc.text("Dean/Faculty of Technology", 220, positionY + 45);
+        doc.text("Dean,", 220, positionY + 45);
+        doc.text("Faculty of Technology", 220, positionY + 55);
       }
 
-      doc.text("Vice Chancellor", 420, positionY + 80);
-      doc.text("Faculty of Technology", 420, positionY + 90);
+      doc.text("Vice Chancellor", 420, positionY + 45);
+      doc.text("Faculty of Technology", 420, positionY + 55);
 
       doc.save(fileName);
     }

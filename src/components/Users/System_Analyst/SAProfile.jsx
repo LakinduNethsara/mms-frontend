@@ -58,50 +58,66 @@ export default function SAProfile() {
                   </div>
                 </div>
 
-                <div className="card shadow m-4" style={{width: "18rem"}}>
+                {/* <div className="card shadow m-4" style={{width: "18rem"}}>
                   <div className="card-body ">
                     <h5 className="card-title py-2">Attendences</h5>
-                    {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
+                    
+                    <a href="/attendencesysan"  className="btn btn-primary btn-sm mt-2">To Manage</a>
+                  </div>
+                </div> */}
+
+              </div>
+
+              <div className='row g-3 my-4'>
+
+                <div className="card shadow m-4" style={{width: "18rem"}}>
+                  <div className="card-body ">
+                    <h5 className="card-title py-2">Upload Attendences</h5>
+                    
                     <a href="/attendencesysan"  className="btn btn-primary btn-sm mt-2">To Manage</a>
                   </div>
                 </div>
 
-              </div>
-
-              <div className='row g-3 my-4'>
-
-                <div className="card shadow m-4" style={{width: "18rem"}}>
+                {/* <div className="card shadow m-4" style={{width: "18rem"}}>
                   <div className="card-body ">
                     <h5 className="card-title py-2">Medicals</h5>
-                    {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
+                    
                     <a href="/medicalsysan"  className="btn btn-primary btn-sm mt-2">To Manage</a>
                   </div>
-                </div>
+                </div> */}
                 
                 <div className="card shadow m-4" style={{width: "18rem"}}>
                   <div className="card-body ">
-                    <h5 className="card-title py-2">Course Module</h5>
-                    {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
-                    <a href="/sysanicoursemodule"  className="btn btn-primary btn-sm mt-2">To Manage</a>
+                    <h5 className="card-title py-2">Add New Course Module</h5>
+                    
+                    <a href="/sysanicoursemodule"  className="btn btn-primary btn-sm mt-2">To Add</a>
                   </div>
                 </div>
 
-                <div className="card shadow m-4" style={{width: "18rem"}}>
+                {/* <div className="card shadow m-4" style={{width: "18rem"}}>
                   <div className="card-body ">
                     <h5 className="card-title py-2">Courses for Lecturers</h5>
-                    {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
+                    
                     <a href="/assignleccourse"  className="btn btn-primary btn-sm mt-2">To Manage Form </a>
                   </div>
-                </div>
+                </div> */}
                 
               </div>
 
               <div className='row g-3 my-4'>
+
+                <div className="card shadow m-4" style={{width: "18rem"}}>
+                  <div className="card-body ">
+                    <h5 className="card-title py-2">Add Course to Related Departments</h5>
+                    
+                    <a href="/relateddeptreq"  className="btn btn-primary btn-sm mt-2">To Add</a>
+                  </div>
+                </div>
 
                 <div className="card shadow m-4" style={{width: "18rem"}}>
                   <div className="card-body ">
                     <h5 className="card-title py-2">Students Courses Registration</h5>
-                    {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
+                    
                     <a href="/screg"  className="btn btn-primary btn-sm mt-2">To Manage</a>
                   </div>
                 </div>

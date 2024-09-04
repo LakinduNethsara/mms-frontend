@@ -236,33 +236,33 @@ function Navbar() {
 
                                             <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/attendencesysan">             
-                                                Attendences
+                                                Upload Attendences
                                                 </a>
                                             </li>
 
-                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
+                                            {/* <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/medicalsysan">             
                                                 Medicals
                                                 </a>
-                                            </li>
+                                            </li> */}
 
                                             <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/sysanicoursemodule">             
-                                                Course Module
+                                                Add New Course Module
                                                 </a>
                                             </li>
 
                                             <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/relateddeptreq">             
-                                                Related Department Regisration for Courses
+                                                Add Course to Related Departments
                                                 </a>
                                             </li>
 
-                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
+                                            {/* <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/assignleccourse">             
                                                 Courses for Lecturers
                                                 </a>
-                                            </li>
+                                            </li> */}
 
                                             <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a className="nav-link active" aria-current="page" href="/screg">             
@@ -293,16 +293,11 @@ function Navbar() {
                                             </li>
 
                                             <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
-                                                <a className="nav-link active" aria-current="page" href="/lec_related_course">        
-                                                Add CA Marks
+                                                <a className="nav-link active" aria-current="page" href="/pendingLecCertifyMarksheet">        
+                                                Certify Marks Return Sheet
                                                 </a>
                                             </li>
 
-                                            <li className="nav-item" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
-                                                <a className="nav-link active" aria-current="page" href="/lec_related_course_fa">      
-                                                Add FA Marks
-                                                </a>
-                                            </li>
 
                                             <li className="nav-item dropdown" style={{backgroundColor:"rgba(99, 99, 99, 0.15)",border: "1px solid #ffffff",paddingLeft:"10px",marginBottom:"7px",borderRadius:"5px"}}>
                                                 <a
@@ -315,6 +310,18 @@ function Navbar() {
                                                 Course Coordinate
                                                 </a>
                                                 <ul className="dropdown-menu">
+
+                                                    <li>
+                                                        <a className="dropdown-item" href="/lec_related_course">
+                                                        Add CA Marks
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a className="dropdown-item" href="/lec_related_course_fa">
+                                                        Add FA Marks
+                                                        </a>
+                                                    </li>
                                                     <li>
                                                         <a className="dropdown-item" href="/ccmarksapproval">
                                                         Marks Approval
