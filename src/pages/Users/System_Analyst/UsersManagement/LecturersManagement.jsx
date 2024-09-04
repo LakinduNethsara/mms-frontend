@@ -68,7 +68,7 @@ export default function LecturersManagement() {
         const updatedUser = { ...user, name_with_initials: fullNameConvertToInitial(user.full_name) };
         console.log(updatedUser)
         try{
-            await axios.post("http://localhost:9090/api/lecreg/savelecdetails", updatedUser);
+            await axios.post("http://192.248.50.155:9090/api/lecreg/savelecdetails", updatedUser);
             toast.success("User details submitted successfully!");
         }catch(e){
             toast.error("Error submitting user details");
