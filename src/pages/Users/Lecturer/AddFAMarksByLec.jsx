@@ -46,7 +46,7 @@ export default function AddFAMarksByLec() {
         
             var result = false;
             try{
-                result = await axios.get(`http://localhost:9090/api/grade/isFinalized/${course_id}/${currentAcademicYear}`)
+                result = await axios.get(`http://192.248.50.155:9090/api/grade/isFinalized/${course_id}/${currentAcademicYear}`)
                 // setEligbilityBtnDisable(result.data)
                 console.log(result.data)
             }catch(err){
@@ -544,7 +544,7 @@ export default function AddFAMarksByLec() {
 
     const CalculateRoundedMarks = async () => {
         try {
-            const result = await axios.get(`http://localhost:9090/api/grade/calculateRoundedMark/${course_id}/${academicYear}`);
+            const result = await axios.get(`http://192.248.50.155:9090/api/grade/calculateRoundedMark/${course_id}/${academicYear}`);
             toast.success("Marks Calculated successfully!");
             console.log(result);
             

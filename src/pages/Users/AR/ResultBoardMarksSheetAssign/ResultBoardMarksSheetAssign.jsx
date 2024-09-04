@@ -90,7 +90,7 @@ export default function ResultBoardMarksSheetAssign() {
     const getSelectedResultBoard = async () => {     //Get the result board details from the database
         try{
             
-            const resultBoard = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getResultBoardDetailsByID/${selectedResultBoard.id}`); //Get the result board details from the database
+            const resultBoard = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getResultBoardDetailsByID/${selectedResultBoard.id}`); //Get the result board details from the database
             setSelectedResultBoard(resultBoard.data); //Set the result board details
         }catch(err){
             toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
@@ -103,7 +103,7 @@ export default function ResultBoardMarksSheetAssign() {
 
         try {
             
-            const courseList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCourseListRemainingToAddToResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.id}`); //Get the course list that can be added to the result board from the database
+            const courseList = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCourseListRemainingToAddToResultBoard/${selectedResultBoard.level}/${selectedResultBoard.semester}/${selectedResultBoard.department}/${selectedResultBoard.id}`); //Get the course list that can be added to the result board from the database
             
             setAvailableCourseList(courseList.data); //Set the course list that can be added to the result board
 
@@ -133,7 +133,7 @@ export default function ResultBoardMarksSheetAssign() {
 
 
         try {
-            const examinerList = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAllCourseCoordinatorsBySelectedAcademicYearDepartmentLevelSemester/${selectedResultBoard.academic_year}/${selectedResultBoard.department}/${selectedResultBoard.level}/${selectedResultBoard.semester}`); //Get the course coordinator list from the database
+            const examinerList = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAllCourseCoordinatorsBySelectedAcademicYearDepartmentLevelSemester/${selectedResultBoard.academic_year}/${selectedResultBoard.department}/${selectedResultBoard.level}/${selectedResultBoard.semester}`); //Get the course coordinator list from the database
             setAvailableExaminerList(examinerList.data); //Set the course coordinator list
         } catch (err) {
             toast.error(err.response.data.errorMessage,{autoClose:3000}); //Display the error message if an error occurs
@@ -147,7 +147,7 @@ export default function ResultBoardMarksSheetAssign() {
     const getAssignMarkSheetDetails = async ()=>{         //Function to get assigned marksheet details 
         try{
             
-            const list = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`); //Get the assigned marksheet details from the database
+            const list = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`); //Get the assigned marksheet details from the database
             
             setAssignedMarksSheetList(list.data); //Set the assigned marksheet details
         }catch(err){
@@ -159,7 +159,7 @@ export default function ResultBoardMarksSheetAssign() {
 
         try{
             
-            const list = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getAssignedMarksSheetsByExaminerIdAndResultBoardID/${selectedResultBoard.id}/${examinerID}`); //Get the assigned marksheet details from the database
+            const list = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getAssignedMarksSheetsByExaminerIdAndResultBoardID/${selectedResultBoard.id}/${examinerID}`); //Get the assigned marksheet details from the database
             setAssignedMarksSheetList(list.data); //Set the assigned marksheet details
 
         }catch(err){
@@ -190,7 +190,7 @@ export default function ResultBoardMarksSheetAssign() {
 
             try{
                 
-                const saveResult = await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoardMember', assignmentObject);
+                const saveResult = await axios.post('http://192.248.50.155:9090/api/AssistantRegistrar/saveResultBoardMember', assignmentObject);
                 
                 
                 if(saveResult.data===true){
@@ -228,7 +228,7 @@ export default function ResultBoardMarksSheetAssign() {
     const removeAssignedMarksSheet = async (id) => {     //Function to remove the assigned marksheet
         try{
             
-            const isDeleted = await axios.delete(`http://localhost:9090/api/AssistantRegistrar/deleteResultBoardMemberById/${id}`); //Delete the assigned marksheet from the database
+            const isDeleted = await axios.delete(`http://192.248.50.155:9090/api/AssistantRegistrar/deleteResultBoardMemberById/${id}`); //Delete the assigned marksheet from the database
             
             
             if(isDeleted.data===true){
@@ -260,7 +260,7 @@ export default function ResultBoardMarksSheetAssign() {
 
             try{
                 setLoading(true);
-                await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
+                await axios.post('http://192.248.50.155:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
                 setLoading(false);
 
                 //API call to just view result board
@@ -296,7 +296,7 @@ export default function ResultBoardMarksSheetAssign() {
 
             try{
                 setLoading(true);
-                await axios.post('http://localhost:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
+                await axios.post('http://192.248.50.155:9090/api/AssistantRegistrar/saveResultBoard', selectedResultBoard); //Update the result board details in the database
                 setLoading(false);
                 
                 toast.success('Result board ended successfully!',{autoClose:3000}); //Display the success message
@@ -305,7 +305,7 @@ export default function ResultBoardMarksSheetAssign() {
 
                 try{
                     setLoading(true);
-                    const approvedLevelUpdate = await axios.put(`http://localhost:9090/api/AssistantRegistrar/updateApprovedLevelAfterResultBoard`,selectedResultBoard); //Update the approved level in the database
+                    const approvedLevelUpdate = await axios.put(`http://192.248.50.155:9090/api/AssistantRegistrar/updateApprovedLevelAfterResultBoard`,selectedResultBoard); //Update the approved level in the database
                     setLoading(false);
 
                 }catch(err){
@@ -341,10 +341,10 @@ export default function ResultBoardMarksSheetAssign() {
         try{
             
             setLoading(true);
-            await axios.delete(`http://localhost:9090/api/AssistantRegistrar/deleteAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`) //Delete the assigned marksheet details from the database
+            await axios.delete(`http://192.248.50.155:9090/api/AssistantRegistrar/deleteAssignedMarksSheetsByResultBoardID/${selectedResultBoard.id}`) //Delete the assigned marksheet details from the database
             
 
-            const deletedResultBoardCount = await axios.delete(`http://localhost:9090/api/AssistantRegistrar/deleteNotStartedResultBoard/${selectedResultBoard.id}`)
+            const deletedResultBoardCount = await axios.delete(`http://192.248.50.155:9090/api/AssistantRegistrar/deleteNotStartedResultBoard/${selectedResultBoard.id}`)
             setLoading(false);
             if(deletedResultBoardCount.data>0){
 

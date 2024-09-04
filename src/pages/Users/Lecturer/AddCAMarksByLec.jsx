@@ -289,7 +289,7 @@ export default function AddCAMarksByLec() {
         if((course_id) && (currentAcademicYear)){
             var result = false;
             try{
-                result = await axios.get(`http://localhost:9090/api/marksCalculations/isCalculationDetailsAvailable/${course_id}/${currentAcademicYear}`)
+                result = await axios.get(`http://192.248.50.155:9090/api/marksCalculations/isCalculationDetailsAvailable/${course_id}/${currentAcademicYear}`)
                 // setEligbilityBtnDisable(result.data)
                 console.log(result.data)
             }catch(err){
@@ -322,7 +322,7 @@ export default function AddCAMarksByLec() {
     const handleCACalculation = async () => {
         try{
 
-            const CAELi = await axios.get(`http://localhost:9090/api/ca/calculate/${course_id}`);
+            const CAELi = await axios.get(`http://192.248.50.155:9090/api/ca/calculate/${course_id}`);
             toast.success("CA Marks Calculated successfully!");
 
         }catch(e){
@@ -337,7 +337,7 @@ export default function AddCAMarksByLec() {
           }, 1000);
         
 
-        // http://localhost:9090/api/ca/calculate/ICT1112
+        // http://192.248.50.155:9090/api/ca/calculate/ICT1112
     };
 
     // const handleCACalculation = async () => {

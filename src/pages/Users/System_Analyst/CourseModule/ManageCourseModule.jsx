@@ -20,7 +20,7 @@ export default function ManageCourseModule() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:9090/api/courses/getallcourses');
+            const response = await axios.get('http://192.248.50.155:9090/api/courses/getallcourses');
             setCourseData(response.data.content);
         } catch (error) {
             console.error('Error fetching data from API:', error);
@@ -84,7 +84,7 @@ export default function ManageCourseModule() {
     };
 
     try {
-        const response = await axios.post('http://localhost:9090/api/courses/insertacourse', courseData);
+        const response = await axios.post('http://192.248.50.155:9090/api/courses/insertacourse', courseData);
         console.log(response.data.content);
         toast.success('Course added successfully!');
       // Optionally, clear the form fields after successful submission
