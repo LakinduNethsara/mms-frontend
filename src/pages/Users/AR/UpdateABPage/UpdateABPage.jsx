@@ -75,6 +75,7 @@ export default function UpdateABPage() {
 
     const loadAllMedicalSubmissions = async() => {   //Function to load the medical submission details from the backend
 
+
         setLoading(true);
 
         try{
@@ -137,7 +138,6 @@ export default function UpdateABPage() {
         updateMarksTableOject.academic_year = studentDetails.academic_year;   //Set the academic year update in marks
         updateMarksTableOject.marks_table_exam_type = studentDetails.marks_table_exam_type;   //Set the exam type update in marks table
         
-        
 
         
 
@@ -190,7 +190,6 @@ export default function UpdateABPage() {
 
         
 
-
         try{
 
             setLoading(true);
@@ -200,10 +199,13 @@ export default function UpdateABPage() {
 
             setLoading(false);
 
-            if(repeatStatus.data.length>0){    //condition to check whether the repeat status is not available
-                
-                if(repeatStatus.data[0].repeat==0){    //condition to check whether the selected student dont have marks in previous academic year (meanse the student is a propper student)
+            console.log("lebgth" , repeatStatus.data[0])
 
+            // if(repeatStatus.data.length>0){    //condition to check whether the repeat status is not available
+                
+                if(repeatStatus.data[0].is_repeat==0){    //condition to check whether the selected student dont have marks in previous academic year (meanse the student is a propper student)
+
+                    console.log("propper")
                 
                     /*---------------------------------------------------------------------Scenario for a propper student---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
                         
@@ -391,7 +393,9 @@ export default function UpdateABPage() {
 
 
                     
-                }else if(repeatStatus.data[0].repeat==1){
+                }else if(repeatStatus.data[0].is_repeat==1){
+
+                    console.log("Repeat")
                     //condition to check whether the selected student has marks in previous academic year (meanse the student is a repeated student or a student who has a WH grade)
 
                 /*---------------------------------------------------------------------Scenario for a repeated or WH student---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -723,9 +727,9 @@ export default function UpdateABPage() {
 
                 }
 
-            }else{
-                toast.error('No records found to identify course registration details',{autoClose:2000});        //Show a toast message
-            }
+            // }else{
+            //     toast.error('No records found to identify course registration details',{autoClose:2000});        //Show a toast message
+            // }
             setLoading(false);
         }
         catch(error){
