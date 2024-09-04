@@ -30,13 +30,13 @@ export default function LecturersManagement() {
     }, [refreshKey]);
 
     const loadUsers = async () => {
-        const result = await axios.get("http://192.248.50.155:9090/api/lecreg/get/allusersdetails");
+        const result = await axios.get("http://localhost:9090/api/lecreg/get/allusersdetails");
         setUser(result.data.content);
         console.log(result.data.content);
     };
 
     const deleteUser = async (id) => {
-        await axios.delete(`http://192.248.50.155:9090/api/lecreg/delete/deleteById/${id}`);
+        await axios.delete(`http://localhost:9090/api/lecreg/delete/deleteById/${id}`);
         toast.success("User deleted successfully!");
         loadUsers();
     };
@@ -68,7 +68,7 @@ export default function LecturersManagement() {
         const updatedUser = { ...user, name_with_initials: fullNameConvertToInitial(user.full_name) };
         console.log(updatedUser)
         try{
-            await axios.post("http://192.248.50.155:9090/api/lecreg/savelecdetails", updatedUser);
+            await axios.post("http://localhost:9090/api/lecreg/savelecdetails", updatedUser);
             toast.success("User details submitted successfully!");
         }catch(e){
             toast.error("Error submitting user details");
@@ -103,7 +103,7 @@ export default function LecturersManagement() {
 
     const handleEditSubmit = async (updatedUser) => {
 
-            await axios.put(`http://192.248.50.155:9090/api/lecreg/edit/alecdetails`, updatedUser);
+            await axios.put(`http://localhost:9090/api/lecreg/edit/alecdetails`, updatedUser);
 
             setRefreshKey(Date.now());
             toast.success("User details updated successfully!");
@@ -237,7 +237,7 @@ export default function LecturersManagement() {
                                             <th scope="col">Full Name</th>
                                             <th scope="col">Name with Initials</th>
                                             <th scope="col">E-mail</th>
-                                            <th scope="col">Password</th>
+                                            {/* <th scope="col">Password</th> */}
                                             <th scope="col">Reg-Year</th>
                                             <th scope="col">Role</th>
                                             <th scope="col">Department</th>
@@ -253,7 +253,9 @@ export default function LecturersManagement() {
                                                 <td>{user.full_name}</td>
                                                 <td>{user.name_with_initials}</td>
                                                 <td>{user.email}</td>
-                                                <td>{user.password}</td>
+                                                {/* <td>
+                                                    <input className='form-label' type='password' readOnly value={user.password}/>
+                                                </td> */}
                                                 <td>{user.registered_year}</td>
                                                 <td>{user.role}</td>
                                                 <td>{user.department_id}</td>

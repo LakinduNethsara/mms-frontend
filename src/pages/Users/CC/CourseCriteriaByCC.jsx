@@ -18,6 +18,8 @@ export default function CourseCriteriaByCC() {
         ca_mid_end: '',
     }); // State to hold the new assessment type
 
+    const [percentage, setPercentage] = useState(0);
+
     const [showButton, setShowButton] = useState(false);
     const [reloadButton, setReloadButton] = useState(false);
     
@@ -64,7 +66,7 @@ export default function CourseCriteriaByCC() {
             setLoader(true);
 
             try{
-              const result2  = await axios.get(`http://192.248.50.155:9090/api/ccmanage/getAllCidToCourseCriteria/${email}`);
+              const result2  = await axios.get(`http://localhost:9090/api/ccmanage/getAllCidToCourseCriteria/${email}`);
               setCidsData(result2.data.content);
               setIsAllDataNotLoaded(false);
             }catch(error){
@@ -220,9 +222,14 @@ export default function CourseCriteriaByCC() {
           // Clear the form after submission
           document.querySelector('input[name="percentage"]').value = '';
           setIsChecked(!isChecked);
-          setNoOfConducted('');
-          setNoOfTaken('');
-
+          if (selectedMainAssessmentValue === 'End') {
+            setNoOfConducted('1');
+            setNoOfTaken('1');
+            
+          }else{
+            setNoOfConducted('');
+            setNoOfTaken('');
+          }
         };
       
         const saveData = async () => {
@@ -230,9 +237,9 @@ export default function CourseCriteriaByCC() {
             
         
             // Call the first API to insert criteria-name data
-            await axios.post("http://192.248.50.155:9090/api/evaluationCriteriaName/insertcriterianame", criteria_name);
+            await axios.post("http://localhost:9090/api/evaluationCriteriaName/insertcriterianame", criteria_name);
             // Now, call the second API to insert criteria data
-            await axios.post("http://192.248.50.155:9090/api/evaluationCriteria/insertcriteria", criteriaData);
+            await axios.post("http://localhost:9090/api/evaluationCriteria/insertcriteria", criteriaData);
       
             setCriteriaData([]);
             setCriteria_name([]);
@@ -263,7 +270,7 @@ export default function CourseCriteriaByCC() {
             // console.log("New Assessment Type : " + newValue.popupInputValue);
             // console.log("New Assessment Type : " + newValue.selectedType);
 
-            await axios.post("http://192.248.50.155:9090/api/astylist/savenewasty", { assessment_type_name: newValue.popupInputValue,ca_mid_end: newValue.selectedType} );
+            await axios.post("http://localhost:9090/api/astylist/savenewasty", { assessment_type_name: newValue.popupInputValue,ca_mid_end: newValue.selectedType} );
             toast.success("New assessment type saved successfully!");
             setReloadButton(prevState =>!prevState);
             setSelectedAssessmentType(newValue);
@@ -313,7 +320,7 @@ export default function CourseCriteriaByCC() {
 
         const handleCourseCodeChange = async (event) => {
 
-            const result1  = await axios.get(`http://192.248.50.155:9090/api/astylist/get/allassessmenttypes`);
+            const result1  = await axios.get(`http://localhost:9090/api/astylist/get/allassessmenttypes`);
             setAssessmentTypesData(result1.data.content);
             setCourseSelected(true);
         };
@@ -328,6 +335,23 @@ export default function CourseCriteriaByCC() {
           setCriteriaData(updatedCriteriaData);
           setCriteria_name(updatedCriteriaNames);
         };
+
+        const handleInputChange = (event) => {
+          const newValue = event.target.value;
+          var prevVal = 0;
+          if (percentage > 0) {
+              prevVal = parseFloat(percentage);
+          }else{
+              prevVal = 0;
+          }
+          // prevVal += parseFloat(percentage);
+          prevVal += parseFloat(newValue);
+          setPercentage(prevVal);
+          if (prevVal > 100) {
+              toast.error("Percentage cannot exceed 100%");
+          }
+      };
+
 
   return (
     <div style={{margin:"70px"}}>
@@ -350,7 +374,7 @@ export default function CourseCriteriaByCC() {
                     </div>
                 ) : (<>
 
-          <div className='h3' style={{marginTop:"70px",color:'maroon'}}>Evaluation Criteria Creation</div>
+          <div className='h3' style={{marginTop:"100px",color:'maroon',marginLeft:"150px"}}>Evaluation Criteria Creation</div>
           <div className=' row justify-content-center' style={{marginLeft:"auto",marginRight:"auto"}}>
             <div className=' col-9 mt-3 shadow p-5' >
               <form onSubmit={handleSubmit} >
@@ -392,11 +416,16 @@ export default function CourseCriteriaByCC() {
                           setIsMidPopupVisible(true);
                         }
                         
+                        
                       }} required>
                       <option selected disabled>Select Assessment Type</option>
                       {
                         assessmentTypesData.map((assessmentType, index) => (
-                          <option key={index} value={assessmentType.assessment_type_name}>{assessmentType.assessment_type_name}</option>
+                          
+                          <option key={index} 
+                          value={assessmentType.assessment_type_name}>
+                            {assessmentType.assessment_type_name} - {assessmentType.ca_mid_end}
+                            </option>
                         ))
                       }
                       <option value="Option">Add-New</option>
@@ -424,7 +453,8 @@ export default function CourseCriteriaByCC() {
                             type="number"
                             className='form-control m-2'
                             placeholder='No of Conduct'
-                            
+                            min={0}
+                            max={15}
                             value={noOfConducted}
                             onChange={(e) => setNoOfConducted(e.target.value)}
                             disabled={disableInputs}
@@ -439,7 +469,8 @@ export default function CourseCriteriaByCC() {
                             type="number"
                             className='form-control m-2'
                             placeholder='No of Take'
-                            
+                            min={0}
+                            max={15}
                             value={noOfTaken}
                             onChange={(e) => setNoOfTaken(e.target.value)}
                             disabled={disableInputs}
@@ -455,6 +486,9 @@ export default function CourseCriteriaByCC() {
                     name="percentage" 
                     style={{width:"350px",marginRight:"80px"}} 
                     type={"number"} 
+                    min={0}
+                    max={100}
+                    onChange={handleInputChange}
                     className='form-control m-2' 
                     placeholder='Enter percentage (%)' 
                     required/>
@@ -474,6 +508,7 @@ export default function CourseCriteriaByCC() {
             </div>
             <div className=' col-9 mt-3 shadow p-5'>
               <div className=' h4 p-3' style={{color:"maroon"}}>The Criteria</div>
+              <p className=' text-danger'>Don't Exceed 100 Percentage (100%)</p>
               <div className=' p-4'>
                 <table className=' table'>
                   <thead>

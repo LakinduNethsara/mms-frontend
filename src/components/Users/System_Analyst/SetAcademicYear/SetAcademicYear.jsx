@@ -35,7 +35,7 @@ export default function SetAcademicYear({ isVisible, onClose ,status }) {
 
     const saveData = async () => {
         try {
-            const response = await axios.put("http://192.248.50.155:9090/api/AssistantRegistrar/updateAcademicYearDetailsBySA/1", {
+            const response = await axios.put("http://localhost:9090/api/AssistantRegistrar/updateAcademicYearDetailsBySA/1", {
                 current_academic_year: popupInputValue,
                 current_semester: selectedType
             });

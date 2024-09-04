@@ -12,6 +12,25 @@ export default function CCProfile() {
             <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'}}>
                 <div className=' center' >
 
+                <div className='row g-3 my-4'>
+                        <div className="card shadow m-4" style={{width: "18rem"}}>
+                            <div className="card-body ">
+                                <h5 className="card-title py-2">Courses Criteria</h5>
+                                {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
+                                <a href="/cccbycc"  className="btn btn-primary btn-sm mt-2">To Create</a>
+                            </div>
+                        </div>
+
+                        <div className="card shadow m-4" style={{width: "18rem"}}>
+                            <div className="card-body ">
+                                <h5 className="card-title py-2">Results Board</h5>
+                                {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
+                                <a href="/ccresultsboard"  className="btn btn-primary btn-sm mt-2">To Results Board</a>
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div className='row g-3'>
                         <div className="card shadow m-4" style={{width: "18rem"}}>
                             <div className="card-body ">
@@ -61,24 +80,7 @@ export default function CCProfile() {
                         </div> */}
                     </div>
                     
-                    <div className='row g-3 my-4'>
-                        <div className="card shadow m-4" style={{width: "18rem"}}>
-                            <div className="card-body ">
-                                <h5 className="card-title py-2">Courses Criteria</h5>
-                                {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
-                                <a href="/cccbycc"  className="btn btn-primary btn-sm mt-2">To Create</a>
-                            </div>
-                        </div>
-
-                        <div className="card shadow m-4" style={{width: "18rem"}}>
-                            <div className="card-body ">
-                                <h5 className="card-title py-2">Results Board</h5>
-                                {/* <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> */}
-                                <a href="/ccresultsboard"  className="btn btn-primary btn-sm mt-2">To Results Board</a>
-                            </div>
-                        </div>
-
-                    </div>
+                    
                 </div>
             </div>
         </div>

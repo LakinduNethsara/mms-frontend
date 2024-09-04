@@ -32,7 +32,7 @@ function LoginPage(){
         };
 
         try{
-            const response = await axios.post('http://192.248.50.155:9090/api/user/login',credentials);
+            const response = await axios.post('http://localhost:9090/api/user/login',credentials);
             
             console.log(response.data.content);
 
@@ -85,7 +85,7 @@ function LoginPage(){
             <div className="container py-5 h-100">
                 <div className="row d-flex align-items-center justify-content-center h-100">
                     <div className="col-md-8 col-lg-7 col-xl-3">
-                        <img src="src/assets/LOGO_OF_RUHUNA-removebg-preview.png" className="img-fluid" alt="UOR logo"/>
+                        <img src="/LOGO_OF_RUHUNA-removebg-preview.png" className="img-fluid" alt="UOR logo"/>
                     </div>
                     <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
                     <h4 className="fw-bold">
