@@ -348,7 +348,7 @@ useEffect(() => {
                 toast.success('Marks Sheet Sent successfully');
                 setTimeout(() => {
                     history.goBack();
-                  }, 3000);
+                  }, 1000);
                 history.goBack();
             } else {
                 console.error("Failed to update approval level");

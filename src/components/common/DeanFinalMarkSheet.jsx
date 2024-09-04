@@ -401,6 +401,16 @@ if(loading){
             Change Grade Margin
           </button>
         ) : null}
+        {
+        approved_level == "Dean" ? (
+          <button
+            className="btn btn-outline-success"
+            style={{ float: "right" }}
+            onClick={() => history.push(``)}
+          >
+            Download
+          </button>
+        ) : null}
         
          <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <h2 style={{ marginBottom: '5px', fontFamily: 'Arial, sans-serif', color: '#333' }}>University of Ruhuna</h2>
@@ -411,7 +421,7 @@ if(loading){
         </div>
 
 
-          <div className=' shadow-lg col-12 container' style={{display:'flex'}}>
+          <div className=' shadow-lg col-12 container' style={{display:'flex',fontSize:'12px'}}>
 
           <div
             className=" col-7 "
@@ -432,7 +442,7 @@ if(loading){
             <h5 style={{ textAlign: 'center', marginBottom: '10px', fontWeight: 'bold', color: '#333' }}>
               Key to Grading
             </h5>
-            <table className=' table table-responsive-sm' style={{ borderCollapse: 'collapse'}}>
+            <table className=' table table-responsive-sm' style={{ borderCollapse: 'collapse',fontSize:'12px'}}>
               <tbody>
                 <tr>
                   <td style={cellStyle}>A+</td>
