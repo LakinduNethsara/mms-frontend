@@ -20,7 +20,7 @@ export default function LecturersManagement() {
         registered_year: "",
         role: "",
         department_id: "",
-        is_deleted: false
+        is_deleted: "false"
     });
 
     const [refreshKey, setRefreshKey] = useState(Date.now());
@@ -67,7 +67,12 @@ export default function LecturersManagement() {
 
         const updatedUser = { ...user, name_with_initials: fullNameConvertToInitial(user.full_name) };
         console.log(updatedUser)
-        await axios.post("http://localhost:9090/api/lecreg/savelecdetails", updatedUser);
+        try{
+            await axios.post("http://localhost:9090/api/lecreg/savelecdetails", updatedUser);
+            toast.success("User details submitted successfully!");
+        }catch(e){
+            toast.error("Error submitting user details");
+        }
 
         setUserDetails({
             user_id: "",
@@ -83,7 +88,7 @@ export default function LecturersManagement() {
         });
 
         setRefreshKey(Date.now());
-        toast.success("User details submitted successfully!");
+        
     };
 
     const openEditModal = (user) => {

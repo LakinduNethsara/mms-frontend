@@ -64,9 +64,18 @@ export default function EditStudentModal({ row, onSubmit, onClose }) {
                                 <label className='form-label' htmlFor="registered_year">Registered year</label>
                                 <input className='form-control' type="text" name="registered_year" value={userDetails.registered_year} onChange={handleInputChange} size="30" />
                             </div>
-                            <div>
+                            {/* <div>
                                 <label className='form-label' htmlFor="department_id">Department</label>
                                 <input className='form-control' type="text" name="department_id" value={userDetails.department_id} onChange={handleInputChange} size="30" />
+                            </div> */}
+                            <div>
+                                <label className='form-label' htmlFor="department_id">Department</label>
+                                <select className='form-select' name="department_id" value={userDetails.department_id} onChange={handleInputChange}>
+                                    <option value="" disabled>Select Role</option>
+                                    <option value="ICT">ICT</option>
+                                    <option value="ET">ET</option>
+                                    <option value="BST">BST</option>
+                                </select>
                             </div>
                             <div>
                                 <label className='form-label' htmlFor="department_id">Role</label>

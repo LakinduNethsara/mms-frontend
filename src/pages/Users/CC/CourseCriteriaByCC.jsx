@@ -269,6 +269,8 @@ export default function CourseCriteriaByCC() {
             setSelectedAssessmentType(newValue);
             // Handle successful save here, e.g., update state or show success message
             setIsPopupVisible(false);
+            // window.location.reload();
+            handleCourseCodeChange();
       
           } catch (error) {
             console.error("Error saving new assessment type:", error);
@@ -328,8 +330,8 @@ export default function CourseCriteriaByCC() {
         };
 
   return (
-    <div>
-        <div className=' container' >
+    <div style={{margin:"70px"}}>
+        <div>
           {
             isAllDataNotLoaded ? (
               <div class="alert alert-warning" style={{marginTop:"70px"}} role="alert">
@@ -349,7 +351,7 @@ export default function CourseCriteriaByCC() {
                 ) : (<>
 
           <div className='h3' style={{marginTop:"70px",color:'maroon'}}>Evaluation Criteria Creation</div>
-          <div className=' row ' style={{marginLeft:"auto",marginRight:"auto"}}>
+          <div className=' row justify-content-center' style={{marginLeft:"auto",marginRight:"auto"}}>
             <div className=' col-9 mt-3 shadow p-5' >
               <form onSubmit={handleSubmit} >
                 <label htmlFor="" className=' form-label'>Select a Course Code for Create Evaluation Criteria</label>
