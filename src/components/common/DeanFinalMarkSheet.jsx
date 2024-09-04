@@ -433,7 +433,7 @@ const downloadPDF = () => {
 
       Allcourses.forEach((course, index) => {
         doc.setFont("Arial", "normal");
-        doc.text(`${course.course_id} - ${course.course_name}`, 400, 180 + (index + 1) * 10, null, null, 'left');
+        doc.text(`${course.course_id} - ${course.course_name}`, 400, 190 + (index + 1) * 10, null, null, 'left');
       });
 
       positionY = 330;
