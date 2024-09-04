@@ -8,7 +8,7 @@ import DateObject from 'react-date-object';
 import BackButton from '../Users/AR/BackButton/BackButton';
 
 export default function DeanFinalMarkSheet(props) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [finalResults, setFinalResults] = useState([]);
   const [repeatersfinalResults, setRepeatersFinalResults] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -101,12 +101,13 @@ export default function DeanFinalMarkSheet(props) {
 
     
   }, []);
-  // const { oktaAuth, authState } = useOktaAuth();
+ 
+  
   
 
 
     useEffect(() => {
-      setLoading(true)
+      setLoading(true);
       if (user) {
         fetchData();
         // fetchCourses();
@@ -122,9 +123,7 @@ export default function DeanFinalMarkSheet(props) {
 
     const fetchData = async () => {
       try {
-      
-  
-        const nextLevelMap = {
+         const nextLevelMap = {
           "RB": "AR",
           "AR": "Dean",
           "Dean": "VC"
@@ -227,107 +226,93 @@ export default function DeanFinalMarkSheet(props) {
   // ... rest of the code remains the same
   
   const handleSubmit = async (e) => {
-    
     e.preventDefault();
     try {
-      console.log(approval.academic_year, approval.approval_level, approval.approved_user_id, approval.date_time, approval.department_id, approval.level, approval.semester, approval.signature);
-      // Use the nextApprovedlevel variable directly in the network request
-      response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
-
-      toast.success("Result sheet approved successfully");
-
-      setTimeout(() => {
-        history.goBack();
-      }, 3000);
+      // Declare response
+      const response = await axios.post(`http://localhost:9090/api/approvalLevel/updateApprovalLevelByDean`, approval);
+      
+      if (response.data.code === "00") {
+        toast.success("Result sheet approved successfully");
+        setTimeout(() => {
+          history.goBack();
+        }, 1000);
+      } else {
+        // Handle case where response code is not "00"
+        toast.error("Failed to approve the result sheet.");
+      }
     } catch (error) {
       if (error.code === 'ERR_NETWORK') {
-        // setError("Network error. Please check your network connection");
         console.error("Network error: ", error);
-        // toast.error("Network error. Please check your network connection");
+        toast.error("Network error. Please check your network connection.");
       } else {
-        // setError("Failed to update approval level");
-        // console.error("Error updating approval level: ", error);
-        // toast.error("Failed to update approval level");
+        console.error("Error updating approval level: ", error);
+        toast.error("Failed to update approval level.");
       }
-    }finally
-    {
-   
     }
   };
+  
 
   const saveDigitalSignature = (url) => {
     setNewSignature(url);
   };
 
-  useEffect(() => {
-    setLoading(true);
-  const fetchSignature = async () => {
-  try {
-   
-
-    const ARSignatureResponse = await axios.get(
-      `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`
-    );
-
-
-    if (ARSignatureResponse.status === 200) {
-      const ARSignatureData = ARSignatureResponse.data.content;
-      setARSign(ARSignatureData || {});
-      console.log(ARSignatureData?.signature);
-    } else {
-      // toast.error('Failed to fetch AR signature.');
-    }
 
     
-    const DeanSignatureResponse = await axios.get(
-      `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`
-    );
-
-      const ARSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`);
-
-      setARSign(ARSign.data.content);
-      const DeanSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`);
-      setDeanSign(DeanSign.data.content);
-      const VCSign = await axios.get(`http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/VC/${academic_year}`);
-      setVCSign(VCSign.data.content);
-
-
-    if (DeanSignatureResponse.status === 200) {
-      const DeanSignatureData = DeanSignatureResponse.data.content;
-      setDeanSign(DeanSignatureData || {});
-    } else {
-      // toast.error('Failed to fetch Dean signature.');
-    }
-
-  } catch (error) {
-    if (error.response) {
-      // console.error('Error fetching signature data:', error.response);
-      // toast.error(`Error ${error.response.status}: ${error.response.data.message || 'Something went wrong.'}`);
-    } else {
-      // console.error('Error fetching signature data:', error.message);
-      // toast.error('An unexpected error occurred while fetching signature data.');
-    }
-  } finally {
-   setLoading(false);
-  }
-};
-}, [level, semester, dept, academic_year]);
-
-
-
-
-    const fetchCourses = async () => {
+    const fetchSignature = async () => {
+      setLoading(true);
       try {
-        
-        const courses = await axios.get(`http://localhost:9090/api/courses/getcidcnamebydls/${dept}/${level}/${semester}`);
-
-        setAllCourses(courses.data);
+        // Fetch AR signature
+        const ARSignatureResponse = await axios.get(
+          `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/AR/${academic_year}`
+        );
+  
+        if (ARSignatureResponse.status === 200) {
+          const ARSignatureData = ARSignatureResponse.data.content;
+          setARSign(ARSignatureData || {});
+          console.log(ARSignatureData?.signature);
+        } else {
+          // Handle the failure of AR signature fetching
+          // toast.error('Failed to fetch AR signature.');
+        }
+  
+        // Fetch Dean signature
+        const DeanSignatureResponse = await axios.get(
+          `http://localhost:9090/api/approvalLevel/getSignature/${level}/${semester}/${dept}/Dean/${academic_year}`
+        );
+  
+        if (DeanSignatureResponse.status === 200) {
+          const DeanSignatureData = DeanSignatureResponse.data.content;
+          setDeanSign(DeanSignatureData || {});
+          console.log(DeanSignatureData?.signature);
+        } else {
+          // Handle the failure of Dean signature fetching
+          // toast.error('Failed to fetch Dean signature.');
+        }
+  
       } catch (error) {
-        console.error('Error fetching courses:', error);
-      }finally{
-      
+        if (error.response) {
+          // Error handling for server response errors
+          console.error('Error fetching signature data:', error.response);
+          // toast.error(`Error ${error.response.status}: ${error.response.data.message || 'Something went wrong.'}`);
+        } else {
+          // Error handling for other errors
+          console.error('Error fetching signature data:', error.message);
+          // toast.error('An unexpected error occurred while fetching signature data.');
+        }
+      } finally {
+        setLoading(false);
       }
     };
+  
+    useEffect(() => {
+      fetchSignature();
+    }, [level, semester, dept, academic_year]); // Dependencies
+  
+  
+
+
+
+
   
   
 
@@ -384,11 +369,11 @@ const Spinner = () => (
 
 
 
-// if(loading){
-//   return (
-//   <Spinner />
-//   );
-// }
+if(loading){
+  return (
+  <Spinner />
+  );
+}
   
 
 

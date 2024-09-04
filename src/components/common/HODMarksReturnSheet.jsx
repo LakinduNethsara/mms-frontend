@@ -341,7 +341,7 @@ useEffect(() => {
             setLoading(false);
 
 
-            if (response.status === 200) {
+            if (response.data.code === "00") {
               
                 setApprovalLevel(nextApprovedlevel)
                 
