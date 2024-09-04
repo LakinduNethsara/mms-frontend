@@ -6,8 +6,13 @@ import SignatureForApproval from './SignatureForApproval';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from './AcademicYearManagerSingleton';
 import DateObject from 'react-date-object';
 import BackButton from '../Users/AR/BackButton/BackButton';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 
 export default function DeanFinalMarkSheet(props) {
+  const [headersList, setHeadersList] = useState([]);
+  const[data,setData]=useState([])
   const [loading, setLoading] = useState(false);
   const [finalResults, setFinalResults] = useState([]);
   const [repeatersfinalResults, setRepeatersFinalResults] = useState([]);
@@ -116,7 +121,14 @@ export default function DeanFinalMarkSheet(props) {
     }, [level, semester, dept,approved_level]);
 
 
-
+    const headers = [
+      ...Allcourses.map(course => ({ label: course.course_id, key: 'courses', subKeys: ['overall_score', 'grade'] })),
+      { label: 'SGPA', key: 'sgpa' },
+      { label: 'CGPA', key: 'cgpa' }
+    ];
+    
+   console.log(headers);
+    
 
  
 
@@ -160,6 +172,9 @@ export default function DeanFinalMarkSheet(props) {
         }, []); // Initializing acc as an empty array
   
         setFinalResults(processedFinalResults);
+
+
+
         
   
         // Fetch courses
@@ -205,6 +220,7 @@ export default function DeanFinalMarkSheet(props) {
         }, []); // Initializing acc as an empty array
   
         setRepeatersFinalResults(processedRepeaterData);
+        
   
         const repeatersgpa = await axios.get(
           `http://localhost:9090/api/gpa/GetGPAByLevelSemester/${level}/${semester}/${approved_level}/${dept}/1`
@@ -212,8 +228,10 @@ export default function DeanFinalMarkSheet(props) {
         setRepeatStudentGPA(repeatersgpa.data.content);
   
         
-  
-  
+       
+
+        
+        
       
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -222,8 +240,7 @@ export default function DeanFinalMarkSheet(props) {
     };
   
   
-  
-  // ... rest of the code remains the same
+  console.log(headers)
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -311,7 +328,7 @@ export default function DeanFinalMarkSheet(props) {
   
 
 
-
+    
 
   
   
@@ -359,6 +376,157 @@ const alternateRowStyle = {
   backgroundColor: '#f2f2f2',
 };
 
+const downloadPDF = () => {
+  const generatePDF = (results, gpaResults, fileName) => {
+    if (results.length > 0 || gpaResults.length > 0) {
+      const doc = new jsPDF('p', 'pt', 'A4');
+
+      // University and Faculty Header
+      doc.setFontSize(10);
+      doc.text('University of Ruhuna', 297.5, 40, null, null, 'center');
+      doc.text('Faculty of Technology', 297.5, 60, null, null, 'center');
+      doc.setFontSize(9);
+      doc.text('Bachelor of Information and Communication Technology Honours Degree', 297.5, 80, null, null, 'center');
+      doc.text('Level 1 Semester 1', 297.5, 100, null, null, 'center');
+      doc.text('Academic Year 2023-2024', 297.5, 120, null, null, 'center');
+      doc.setFontSize(8);
+      doc.text('Provisional results subject to confirmation by the Senate', 297.5, 140, null, null, 'center');
+
+      // Key to Grading & Course List Section
+      let positionY = 160;
+      doc.setFontSize(8);
+      doc.setFont("Arial", "bold");
+      doc.text("Key to Grading", 297.5, positionY, null, null, 'center');
+      positionY += 10;
+
+      const gradingKey = [
+        ["A+", "4.00", "A", "4.00"],
+        ["A-", "3.70", "B+", "3.30"],
+        ["B", "3.00", "B-", "2.70"],
+        ["C+", "2.30", "C", "2.00"],
+        ["C-", "1.70", "D+", "1.30"],
+        ["D", "1.00", "E", "0.00"],
+        ["F", "CA Fail"],
+        ["MC", "Accepted Medical Certificate"],
+        ["AC", "Accepted Academic Concession"],
+        ["WH", "Results Withheld"],
+        ["E*", "Not Eligible/Not Applied/Absent without Medical"]
+      ];
+
+      gradingKey.forEach((row, index) => {
+        doc.setFont("Arial", "normal");
+        doc.text(row[0], 140, positionY + (index + 1) * 10);
+        doc.text(row[1], 190, positionY + (index + 1) * 10);
+        if (row[2]) {
+          doc.text(row[2], 280, positionY + (index + 1) * 10);
+          doc.text(row[3], 330, positionY + (index + 1) * 10);
+        }
+      });
+
+      positionY += gradingKey.length * 10 + 20;
+
+      doc.setFontSize(8);
+      doc.setFont("Arial", "bold");
+      doc.text("Course List", 297.5, positionY, null, null, 'center');
+      positionY += 10;
+
+      Allcourses.forEach((course, index) => {
+        doc.setFont("Arial", "normal");
+        doc.text(`${course.course_id} - ${course.course_name}`, 297.5, positionY + (index + 1) * 10, null, null, 'center');
+      });
+
+      positionY += Allcourses.length * 10 + 20;
+
+      // Prepare and add student data tables
+      const rowsPerPage = 50;
+      const allData = [];
+      const headers = [
+        'Student ID',
+        ...Allcourses.map(course => course.course_id),
+        'SGPA',
+        'CGPA'
+      ];
+
+      results.forEach((student) => {
+        const studentRow = [student.student_id];
+        
+        Allcourses.forEach(course => {
+          const courseData = student.courses.find(c => c.course_id === course.course_id);
+          studentRow.push(courseData ? courseData.grade : "-");
+        });
+
+        const studentGPAResult = gpaResults.find(g => g.student_id === student.student_id);
+        studentRow.push(studentGPAResult ? studentGPAResult.sgpa : "-");
+        studentRow.push(studentGPAResult ? studentGPAResult.cgpa : "-");
+
+        allData.push(studentRow);
+      });
+
+      for (let i = 0; i < allData.length; i += rowsPerPage) {
+        const slicedData = allData.slice(i, i + rowsPerPage);
+
+        doc.autoTable({
+          head: [headers],
+          body: slicedData,
+          startY: positionY,
+          margin: { top: positionY, bottom: 40, left: 20, right: 20 },
+          theme: 'striped',
+          styles: { fontSize: 7 },
+          headStyles: { fillColor: [220, 220, 220] },
+          tableWidth: 'wrap',
+          columnStyles: {
+            0: { cellWidth: 50 },
+            [Allcourses.length]: { cellWidth: 40 },
+            [Allcourses.length + 1]: { cellWidth: 40 }
+          }
+        });
+
+        if (i + rowsPerPage < allData.length) {
+          doc.addPage();
+        }
+      }
+
+      positionY = doc.lastAutoTable.finalY + 10;
+
+      // Add Signatures
+      const signatureWidth = 60;
+      const signatureHeight = 30;
+
+      if (ARSign.signature) {
+        doc.setFontSize(7);
+        doc.text("Certified Correct,", 40, positionY);
+        doc.addImage(ARSign.signature, 'PNG', 40, positionY + 10, signatureWidth, signatureHeight);
+        doc.text("Assistant Registrar", 40, positionY + 45);
+        doc.text("Faculty of Technology", 40, positionY + 55);
+      }
+
+      if (DeanSign.signature) {
+        doc.addImage(DeanSign.signature, 'PNG', 220, positionY + 10, signatureWidth, signatureHeight);
+        doc.text("Dean/Faculty of Technology", 220, positionY + 45);
+      }
+
+      doc.text("Vice Chancellor", 420, positionY + 80);
+      doc.text("Faculty of Technology", 420, positionY + 90);
+
+      doc.save(fileName);
+    }
+  };
+
+  // Generate PDF for final results
+  generatePDF(finalResults, studentGPA, `Level ${level} Semester  ${semester} Department of Level ${dept} -Proper.pdf`);
+
+  // Generate PDF for repeaters' final results
+  generatePDF(repeatersfinalResults, repeat_studentGPA, `Level ${level} Semester  ${semester} Department of Level ${dept} -Repeaters.pdf`);
+};
+
+
+
+
+
+
+
+
+
 const Spinner = () => (
   <div className="d-flex justify-content-center align-items-center vh-100">
     <div className="spinner-border" role="status">
@@ -366,6 +534,8 @@ const Spinner = () => (
     </div>
   </div>
 );
+
+
 
 
 
@@ -406,7 +576,7 @@ if(loading){
           <button
             className="btn btn-outline-success"
             style={{ float: "right" }}
-            onClick={() => history.push(``)}
+            onClick={() => downloadPDF()}
           >
             Download
           </button>
@@ -543,10 +713,13 @@ if(loading){
               <thead>
                 <tr>
                   <th scope="col" className='table-info'>Student ID</th>
-                  {Allcourses.map((id, index) => (
+                  
+                  {
+                  Allcourses.map((id, index) => (
                     <React.Fragment key={index}>
                       <th className=' table-secondary'>{id.course_id}</th>
                       {nextApprovedlevel=="RB" || nextApprovedlevel=="AR" || nextApprovedlevel=="Dean" || approved_level=="HOD" ?<th className=' table-primary'>Grade</th>:null}
+                      
                     </React.Fragment>
                   ))}
                   <th scope="col" className=' table-warning'>SGPA</th>
