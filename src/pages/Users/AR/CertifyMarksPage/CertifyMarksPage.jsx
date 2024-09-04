@@ -22,7 +22,7 @@ export default function CertifyMarksPage(props) {
 
     const loadAvailableResultSheets = async () => {                   // load available final mark sheets
       try {
-        const response = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approvedLevel}/${status}`);        // get available final mark sheets (Latest one matching with the student level)
+        const response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approvedLevel}/${status}`);        // get available final mark sheets (Latest one matching with the student level)
         
         setFinalMarksheetList(response.data);           // set available final mark sheets to the state
       } catch (e) {

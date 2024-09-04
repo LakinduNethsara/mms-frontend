@@ -402,7 +402,7 @@ function Navbar() {
                     
                 </div>
                 <a className="navbar-brand" href="#">
-                    <img src="src/assets/LOGO_OF_RUHUNA-removebg-preview.png" alt="Logo" width="17" height="24" className="d-inline-block align-text-top"/>
+                    <img src="/LOGO_OF_RUHUNA-removebg-preview.png" alt="Logo" width="17" height="24" className="d-inline-block align-text-top"/>
                     &nbsp;&nbsp;Faculty of Technology | UOR
                 </a>
                 {
