@@ -186,28 +186,28 @@ export default function CourseCriteriaByCC() {
               }
             } else if (no_of_conducted === 1) {
 
-              if(userSelectedMidType === 'Mid practical exam'){
-                console.log("userSelectedMidType : " + userSelectedMidType);
-                const assignment_name = userSelectedMidType; // Corrected string concatenation
-                const  newCriterion_name = {
-                  evaluationcriteria_id,
-                  assignment_name,
-                  course_id,
-                };
-                setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
+              // if(userSelectedMidType === 'Mid practical exam'){
+              //   console.log("userSelectedMidType : " + userSelectedMidType);
+              //   const assignment_name = userSelectedMidType; // Corrected string concatenation
+              //   const  newCriterion_name = {
+              //     evaluationcriteria_id,
+              //     assignment_name,
+              //     course_id,
+              //   };
+              //   setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
 
-              }
-              else if (userSelectedMidType === 'Mid theory exam'){
-                console.log("userSelectedMidType : " + userSelectedMidType);
-                const assignment_name = userSelectedMidType; // Corrected string concatenation
-                const  newCriterion_name = {
-                  evaluationcriteria_id,
-                  assignment_name,
-                  course_id,
-                };
-                setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
-              }
-              else{
+              // }
+              // else if (userSelectedMidType === 'Mid theory exam'){
+              //   console.log("userSelectedMidType : " + userSelectedMidType);
+              //   const assignment_name = userSelectedMidType; // Corrected string concatenation
+              //   const  newCriterion_name = {
+              //     evaluationcriteria_id,
+              //     assignment_name,
+              //     course_id,
+              //   };
+              //   setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
+              // }
+              // else{
                 const assignment_name = `${selectedAssessmentType}`;
                 const newCriterion_name = {
                   evaluationcriteria_id,
@@ -215,7 +215,7 @@ export default function CourseCriteriaByCC() {
                   course_id,
                 };
                 setCriteria_name((prevCriteriaName) => [...prevCriteriaName, newCriterion_name]); // Using functional update for state
-              }
+              // }
 
             }
           }
@@ -348,7 +348,7 @@ export default function CourseCriteriaByCC() {
           prevVal += parseFloat(newValue);
           setPercentage(prevVal);
           if (prevVal > 100) {
-              toast.error("Percentage cannot exceed 100%");
+              toast.warning("Your are exceeding Percentage 100%");
           }
       };
 
