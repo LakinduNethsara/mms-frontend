@@ -85,6 +85,11 @@ export default function AttendanceEligibilityManage() {
         XLSX.utils.book_append_sheet(wb, ws, "Attendance Eligibility Template");
         XLSX.writeFile(wb, "Attendance_Eligibility_Template.xlsx");
     };
+    // clear data function
+    const handleClearData = () => {
+        setData([]);
+        window.location.reload();
+    }
 
     return (
         <div className='container'>
@@ -118,6 +123,7 @@ export default function AttendanceEligibilityManage() {
                             </table>
                         )}
                         <button type='submit' style={{width:"100px"}} className='btn btn-outline-success btn-sm my-1'>Submit</button>
+                        <button type='button' style={{width:"100px",marginLeft:"10px"}} className=' btn btn-outline-danger btn-sm' onClick={handleClearData}>Clear</button>
                     </form>
                 </div>
             </div>

@@ -86,6 +86,14 @@ export default function StudentRegCourses() {
     // Write the workbook to a file and download it
     XLSX.writeFile(wb, "Students_Courses_Registration.xlsx");
   };
+
+  // clear data function
+  const handleClearData = () => {
+    setData([]);
+    window.location.reload();
+}
+
+
   return (
     <div className='container'>
       <div className='py-4'>
@@ -116,7 +124,8 @@ export default function StudentRegCourses() {
                 </tbody>
               </table>
             )}
-            <button type='submit' className='btn btn-outline-success btn-sm my-1'>Submit</button>
+            <button type='submit' className='btn btn-outline-success btn-sm my-1' style={{width:"100px"}}>Submit</button>
+            <button type='button' style={{width:"100px",marginLeft:"10px"}} className=' btn btn-outline-danger btn-sm' onClick={handleClearData}>Clear</button>
           </form>
         </div>
       </div>
