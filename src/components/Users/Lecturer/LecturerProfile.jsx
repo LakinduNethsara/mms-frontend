@@ -18,21 +18,21 @@ export default function LecturerProfile() {
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'}}>
                     <div className=' center' >
                         <div className='row g-3'>
-                            <div className="card shadow m-4" style={{width: "18rem"}}>
+                            {/* <div className="card shadow m-4" style={{width: "18rem"}}>
                                 <div className="card-body ">
                                     <h5 className="card-title py-2">Add CA Marks</h5>
                                     <p className="card-text">Click this button for access to the CA Marks feeding form</p>
                                     <a href="/lec_related_course"  className="btn btn-primary btn-sm mt-2">To Marks Form</a>
                                 </div>
-                            </div>
-                            <div className="card shadow m-4" style={{width: "18rem"}}>
+                            </div> */}
+                            {/* <div className="card shadow m-4" style={{width: "18rem"}}>
                                 <div className="card-body ">
                                     <h5 className="card-title py-2">Add FA Marks</h5>
                                     <p className="card-text">Click this button for access to the FA Marks feeding form</p>
 
                                     <a href="/lec_related_course_fa"  className="btn btn-primary btn-sm mt-2">To Marks Form</a>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="card shadow m-4" style={{width: "18rem"}}>
                                 <div className="card-body ">
                                     <h5 className="card-title py-2">Certify Marks Return Sheet</h5>

@@ -4,12 +4,13 @@ import axios from 'axios';
 import { fetchAcademicYear, loadAcademicYearFromLocal, saveAcademicYearToLocal } from '../../../common/AcademicYearManagerSingleton';
 
 
-export default function SetAcademicYear({ isVisible, onClose }) {
+export default function SetAcademicYear({ isVisible, onClose ,status }) {
     const [popupInputValue, setPopupInputValue] = useState('');
     const [selectedType, setSelectedType] = useState('');
     const [academicDetails, setAcademicDetails] = useState(loadAcademicYearFromLocal);
     const [academicYear, setAcademicYear] = useState('');
     const [cSemester, setCSemester] = useState('');
+    const [statusOfUpdate, setStatusOfUpdate] = useState(false);
 
     console.log(academicDetails);
 
@@ -23,6 +24,7 @@ export default function SetAcademicYear({ isVisible, onClose }) {
                 setAcademicDetails(details);
                 setAcademicYear(details.current_academic_year);
                 setCSemester(details.current_semester);
+                setPopupInputValue(details.current_academic_year);
             }
         };
 
@@ -33,26 +35,27 @@ export default function SetAcademicYear({ isVisible, onClose }) {
 
     const saveData = async () => {
         try {
-            const response = await axios.put("http://192.248.50.155:9090/api/AssistantRegistrar/updateAcademicYearDetailsBySA", {
-                previous_academic_year: academicYear,
+            const response = await axios.put("http://192.248.50.155:9090/api/AssistantRegistrar/updateAcademicYearDetailsBySA/1", {
                 current_academic_year: popupInputValue,
                 current_semester: selectedType
             });
+            status(statusOfUpdate);
+
             console.log(response);
 
         } catch (error) {
+            setStatusOfUpdate(false);
             console.error("Error fetching data from API:", error);
         }
     };
 
 
     const handleSave = () => {
-        if (!popupInputValue.trim() || !selectedType) {
-            alert("Please enter a values");
-            return;
-        }
+
+        setStatusOfUpdate(true);
         saveData();
         onClose();
+
     };
 
     const handleCancel = () => {

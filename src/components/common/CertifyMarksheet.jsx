@@ -83,7 +83,7 @@ export default function CertifyMarksheet(props) {
     );
 }
 
-console.log(approved_level,user,finalMarksheetList)
+console.log(approved_level,user,finalMarksheetList);
 
 
   return (
@@ -92,7 +92,7 @@ console.log(approved_level,user,finalMarksheetList)
     ):(
       
       <div className='certify-div-1'>
-        <BackButton/>
+        {/* <BackButton/> */}
         <div className='certify-div-2'>
           <table className='table table-striped certify-table'>
             <thead className='certify-table-head'>
@@ -160,7 +160,7 @@ console.log(approved_level,user,finalMarksheetList)
             </tbody>
           </table>
           <div className='right-aligned-div back-button-div'>
-            {/* <BackButton/>&nbsp; */}
+            <BackButton/>&nbsp;
           </div>
         </div>
       </div>
