@@ -45,21 +45,21 @@ export default function CertifyMarksheet(props) {
       let response;
 
       if(approved_level=="finalized"){
-        response=await axios.get(`http://localhost:9090/api/courses/getcourseforcc/${user.email}`);
+        response=await axios.get(`http://192.248.50.155:9090/api/courses/getcourseforcc/${user.email}`);
         setFinalMarksheetList(response.data.content);
         console.log(response.data)
       }
       else if (approved_level === "course_coordinator") {
-        response = await axios.get(`http://localhost:9090/api/courses/getCoursesforLectCertify/${user.email}`);
+        response = await axios.get(`http://192.248.50.155:9090/api/courses/getCoursesforLectCertify/${user.email}`);
         setFinalMarksheetList(response.data.content);
         console.log(response.data.content)
       }
       else if (approved_level === "AR" || approved_level === "Dean") {
 
-        response = await axios.get(`http://localhost:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approved_level}/${status}`);
+        response = await axios.get(`http://192.248.50.155:9090/api/AssistantRegistrar/getCertifyPendingResultBoards/${approved_level}/${status}`);
         setFinalMarksheetList(response.data);
       } else if (approved_level === "lecturer" && user?.department_id) {
-        response = await axios.get(`http://localhost:9090/api/approvalLevel/getMarksReturnSheetsForHODCertify/${user.department_id}`);
+        response = await axios.get(`http://192.248.50.155:9090/api/approvalLevel/getMarksReturnSheetsForHODCertify/${user.department_id}`);
         setFinalMarksheetList(response.data.content);
       }
     } catch (e) {
@@ -92,7 +92,7 @@ console.log(approved_level,user,finalMarksheetList);
     ):(
       
       <div className='certify-div-1'>
-        <BackButton/>
+        {/* <BackButton/> */}
         <div className='certify-div-2'>
           <table className='table table-striped certify-table'>
             <thead className='certify-table-head'>
@@ -160,7 +160,7 @@ console.log(approved_level,user,finalMarksheetList);
             </tbody>
           </table>
           <div className='right-aligned-div back-button-div'>
-            {/* <BackButton/>&nbsp; */}
+            <BackButton/>&nbsp;
           </div>
         </div>
       </div>

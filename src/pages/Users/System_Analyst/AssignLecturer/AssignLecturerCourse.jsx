@@ -61,7 +61,7 @@ export default function AssignLecturerCourse() {
             return;
         } else {
             try {
-                const response = await axios.get(`http://localhost:9090/api/courses/allcoursesids/${academicYear}/${current_semester}`);
+                const response = await axios.get(`http://192.248.50.155:9090/api/courses/allcoursesids/${academicYear}/${current_semester}`);
                 if (Array.isArray(response.data.content)) {
                     setCids(response.data.content.map(cid => ({ value: cid, label: cid })));
                 } else {
@@ -73,7 +73,7 @@ export default function AssignLecturerCourse() {
         }
 
         try {
-            const result = await axios.get(`http://localhost:9090/api/lecreg/get/getAllLecurerDetails/${getDeptID}`);
+            const result = await axios.get(`http://192.248.50.155:9090/api/lecreg/get/getAllLecurerDetails/${getDeptID}`);
             if (Array.isArray(result.data.content)) {
                 setCCoordinatorids(result.data.content.map(coordinator => ({
                     value: coordinator.user_id,
@@ -106,7 +106,7 @@ export default function AssignLecturerCourse() {
         try {
             
 
-            await axios.post('http://localhost:9090/api/ccmanage/insertacc', newCourseCoordinator);
+            await axios.post('http://192.248.50.155:9090/api/ccmanage/insertacc', newCourseCoordinator);
             toast.success("Course coordinator data inserted successfully.");
             handleClear();
 

@@ -30,13 +30,13 @@ export default function LecturersManagement() {
     }, [refreshKey]);
 
     const loadUsers = async () => {
-        const result = await axios.get("http://localhost:9090/api/lecreg/get/allusersdetails");
+        const result = await axios.get("http://192.248.50.155:9090/api/lecreg/get/allusersdetails");
         setUser(result.data.content);
         console.log(result.data.content);
     };
 
     const deleteUser = async (id) => {
-        await axios.delete(`http://localhost:9090/api/lecreg/delete/deleteById/${id}`);
+        await axios.delete(`http://192.248.50.155:9090/api/lecreg/delete/deleteById/${id}`);
         toast.success("User deleted successfully!");
         loadUsers();
     };
@@ -103,7 +103,7 @@ export default function LecturersManagement() {
 
     const handleEditSubmit = async (updatedUser) => {
 
-            await axios.put(`http://localhost:9090/api/lecreg/edit/alecdetails`, updatedUser);
+            await axios.put(`http://192.248.50.155:9090/api/lecreg/edit/alecdetails`, updatedUser);
 
             setRefreshKey(Date.now());
             toast.success("User details updated successfully!");
