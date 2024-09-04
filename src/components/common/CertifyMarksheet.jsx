@@ -83,7 +83,7 @@ export default function CertifyMarksheet(props) {
     );
 }
 
-console.log(approved_level,user,finalMarksheetList)
+console.log(approved_level,user,finalMarksheetList);
 
 
   return (
